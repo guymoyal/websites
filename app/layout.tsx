@@ -4,8 +4,6 @@ import { Inter } from 'next/font/google';
 import { getSiteConfig } from '@/lib/content';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import SideAds from '@/components/ads/SideAds';
-import MobileStickyAd from '@/components/ads/MobileStickyAd';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -72,7 +70,35 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google AdSense */}
+        {/* Monetag Push Notifications Only */}
+        <script
+          src="//vaugroar.com/ntfc.php?p=9764467"
+          data-cfasync="false"
+          async
+        />
+        
+        {/* Initialize Push Notifications */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Initialize Monetag Push Notifications
+              window.addEventListener('load', function() {
+                // Request notification permission after page loads
+                setTimeout(() => {
+                  if ('Notification' in window) {
+                    if (Notification.permission === 'default') {
+                      Notification.requestPermission().then(permission => {
+                        console.log('Push notification permission:', permission);
+                      });
+                    }
+                  }
+                }, 2000); // Wait 2 seconds after page load
+              });
+            `
+          }}
+        />
+        
+        {/* Google AdSense - Keep for testing */}
         <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID || process.env.GOOGLE_ADSENSE_CLIENT_ID || 'ca-pub-2858012859068424'}`}
@@ -106,8 +132,6 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer config={config} />
-          <SideAds />
-          <MobileStickyAd />
         </div>
       </body>
     </html>
