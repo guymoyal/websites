@@ -1,0 +1,100 @@
+[
+  {
+    "id": "1",
+    "name": "ChatGPT",
+    "slug": "chatgpt",
+    "description": "Advanced conversational AI for writing, coding, and problem-solving",
+    "longDescription": "ChatGPT is a state-of-the-art language model that can assist with a wide range of tasks including writing, coding, analysis, and creative projects. It's designed to understand context and provide helpful, accurate responses.",
+    "category": "Writing",
+    "website": "https://chat.openai.com",
+    "pricing": "Freemium",
+    "pricingDetails": "Free tier available, Plus subscription at $20/month",
+    "features": [
+      "Natural language processing",
+      "Code generation",
+      "Creative writing",
+      "Problem solving",
+      "Multi-language support"
+    ],
+    "tags": [
+      "chatbot",
+      "writing",
+      "coding",
+      "ai assistant"
+    ],
+    "logo": "/images/chatgpt-logo.svg",
+    "screenshots": [],
+    "rating": 4.8,
+    "reviewCount": 15420,
+    "verified": true,
+    "featured": true,
+    "createdAt": "2025-07-10T05:54:35.240Z",
+    "updatedAt": "2025-07-10T05:54:35.240Z",
+    "status": "active"
+  },
+  {
+    "id": "2",
+    "name": "Midjourney",
+    "slug": "midjourney",
+    "description": "AI-powered image generation tool for creating stunning artwork",
+    "longDescription": "Midjourney is an independent research lab exploring new mediums of thought and expanding the imaginative powers of the human species through AI-generated art.",
+    "category": "Design",
+    "website": "https://midjourney.com",
+    "pricing": "Paid",
+    "pricingDetails": "Plans start at $10/month",
+    "features": [
+      "High-quality image generation",
+      "Artistic styles",
+      "Discord integration",
+      "Commercial usage rights"
+    ],
+    "tags": [
+      "image generation",
+      "art",
+      "design",
+      "creativity"
+    ],
+    "logo": "/images/midjourney-logo.svg",
+    "screenshots": [],
+    "rating": 4.7,
+    "reviewCount": 8930,
+    "verified": true,
+    "featured": true,
+    "createdAt": "2025-07-10T05:54:35.240Z",
+    "updatedAt": "2025-07-10T05:54:35.240Z",
+    "status": "active"
+  },
+  {
+    "id": "3",
+    "name": "Notion AI",
+    "slug": "notion-ai",
+    "description": "AI-powered writing assistant integrated into Notion workspace",
+    "longDescription": "Notion AI helps you write better, think bigger, and work faster. It's seamlessly integrated into your Notion workspace to help with writing, brainstorming, editing, and summarizing.",
+    "category": "Productivity",
+    "website": "https://notion.so/ai",
+    "pricing": "Freemium",
+    "pricingDetails": "Free trial, then $10/month per user",
+    "features": [
+      "Writing assistance",
+      "Content generation",
+      "Summarization",
+      "Brainstorming",
+      "Workspace integration"
+    ],
+    "tags": [
+      "productivity",
+      "writing",
+      "workspace",
+      "collaboration"
+    ],
+    "logo": "/images/notion-logo.svg",
+    "screenshots": [],
+    "rating": 4.6,
+    "reviewCount": 5670,
+    "verified": true,
+    "featured": false,
+    "createdAt": "2025-07-10T05:54:35.240Z",
+    "updatedAt": "2025-07-10T05:54:35.240Z",
+    "status": "active"
+  }
+]

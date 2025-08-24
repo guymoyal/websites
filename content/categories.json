@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "Writing & Content",
+    "slug": "writing-and-content",
+    "description": "AI tools for content creation, copywriting, and text generation",
+    "icon": "✍️",
+    "toolCount": 5,
+    "featured": true
+  },
+  {
+    "id": "2",
+    "name": "Design & Creative",
+    "slug": "design-and-creative",
+    "description": "AI-powered design tools for images, graphics, and creative projects",
+    "icon": "🎨",
+    "toolCount": 5,
+    "featured": true
+  },
+  {
+    "id": "3",
+    "name": "Productivity",
+    "slug": "productivity",
+    "description": "AI tools to boost productivity and automate workflows",
+    "icon": "⚡",
+    "toolCount": 5,
+    "featured": true
+  },
+  {
+    "id": "4",
+    "name": "Development",
+    "slug": "development",
+    "description": "AI coding assistants and development tools",
+    "icon": "💻",
+    "toolCount": 7,
+    "featured": true
+  },
+  {
+    "id": "5",
+    "name": "Marketing",
+    "slug": "marketing",
+    "description": "AI tools for marketing automation and campaign optimization",
+    "icon": "📈",
+    "toolCount": 7,
+    "featured": true
+  },
+  {
+    "id": "6",
+    "name": "Analytics",
+    "slug": "analytics",
+    "description": "AI-powered analytics and data insights tools",
+    "icon": "📊",
+    "toolCount": 7,
+    "featured": true
+  },
+  {
+    "id": "7",
+    "name": "Video & Media",
+    "slug": "video-and-media",
+    "description": "AI tools for video editing, audio processing, and media creation",
+    "icon": "🎬",
+    "toolCount": 7,
+    "featured": true
+  },
+  {
+    "id": "8",
+    "name": "Business",
+    "slug": "business",
+    "description": "AI solutions for business operations and management",
+    "icon": "🏢",
+    "toolCount": 7,
+    "featured": true
+  }
+]

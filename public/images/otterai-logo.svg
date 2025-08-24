@@ -1,0 +1,8 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#6C5CE7"/>
+  <path d="M32 20C26 20 20 25 20 32C20 39 26 44 32 44C38 44 44 39 44 32C44 25 38 20 32 20ZM32 22C36 22 40 26 40 30V34C40 38 36 42 32 42C28 42 24 38 24 34V30C24 26 28 22 32 22Z" fill="white"/>
+  <circle cx="28" cy="30" r="2" fill="#6C5CE7"/>
+  <circle cx="36" cy="30" r="2" fill="#6C5CE7"/>
+  <path d="M28 36C28 34 30 32 32 32C34 32 36 34 36 36H28Z" fill="#6C5CE7"/>
+  <text x="32" y="58" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">O</text>
+</svg>

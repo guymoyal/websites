@@ -1,0 +1,51 @@
+{
+  "name": "AI Buzz World",
+  "description": "Discover the best AI tools with our comprehensive reviews, comparisons, and guides at AI Buzz World",
+  "url": "https://aibuzztools.com",
+  "topic": "AI Tools Directory",
+  "navigation": [
+    {
+      "name": "Home",
+      "href": "/"
+    },
+    {
+      "name": "Tools",
+      "href": "/tools"
+    },
+    {
+      "name": "Categories",
+      "href": "/categories"
+    },
+    {
+      "name": "Blog",
+      "href": "/blog"
+    },
+    {
+      "name": "About",
+      "href": "/about"
+    },
+    {
+      "name": "Submit Tool",
+      "href": "/submit"
+    }
+  ],
+  "social": {
+    "twitter": "https://twitter.com/aibuzztools",
+    "linkedin": "https://linkedin.com/company/aibuzztools",
+    "github": "https://github.com/aibuzztools"
+  },
+  "seo": {
+    "defaultTitle": "AI Buzz World - Discover the Best AI Tools",
+    "defaultDescription": "Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.",
+    "keywords": [
+      "ai tools",
+      "artificial intelligence",
+      "ai buzz world",
+      "technology",
+      "productivity",
+      "automation",
+      "machine learning",
+      "ai reviews"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#5E3BE8"/>
+  <path d="M32 20C25.4 20 20 25.4 20 32C20 38.6 25.4 44 32 44C38.6 44 44 38.6 44 32C44 25.4 38.6 20 32 20ZM32 40C27.6 40 24 36.4 24 32C24 27.6 27.6 24 32 24C36.4 24 40 27.6 40 32C40 36.4 36.4 40 32 40Z" fill="white"/>
+  <path d="M32 26C28.7 26 26 28.7 26 32C26 35.3 28.7 38 32 38C35.3 38 38 35.3 38 32C38 28.7 35.3 26 32 26Z" fill="#5E3BE8"/>
+  <text x="32" y="36" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">H</text>
+</svg>

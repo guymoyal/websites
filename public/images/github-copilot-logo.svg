@@ -1,0 +1,6 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#6e40c9"/>
+  <path d="M32 20L16 36L32 52L48 36L32 20Z" fill="#3a1d7a"/>
+  <path d="M32 28L24 36L32 44L40 36L32 28Z" fill="#a371f7"/>
+  <text x="32" y="40" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">GC</text>
+</svg>

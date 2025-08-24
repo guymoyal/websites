@@ -1,0 +1,6 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#4285F4"/>
+  <path d="M32 20C25.4 20 20 25.4 20 32C20 38.6 25.4 44 32 44C38.6 44 44 38.6 44 32C44 25.4 38.6 20 32 20ZM32 40C27.6 40 24 36.4 24 32C24 27.6 27.6 24 32 24C36.4 24 40 27.6 40 32C40 36.4 36.4 40 32 40Z" fill="#34A853"/>
+  <path d="M32 28C29.8 28 28 29.8 28 32C28 34.2 29.8 36 32 36C34.2 36 36 34.2 36 32C36 29.8 34.2 28 32 28Z" fill="#EA4335"/>
+  <text x="32" y="58" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">GA</text>
+</svg>

@@ -1,0 +1,24 @@
+name = "aibuzzworld"
+main = "src/worker.ts"
+compatibility_date = "2025-08-11"
+
+# Optional: if you prefer SPA-like routing, uncomment the next line
+# and ensure your app can handle client-side routes.
+# not_found_handling = "single-page-application"
+
+[assets]
+directory = "./out"
+binding = "ASSETS"
+
+# Tip: Set your account ID via `wrangler login` or add below if using API token based CI.
+# account_id = "<your-account-id>"
+
+# Route your custom domain(s) to this Worker
+[[routes]]
+pattern = "aibuzz.world/*"
+zone_name = "aibuzz.world"
+
+[[routes]]
+pattern = "www.aibuzz.world/*"
+zone_name = "aibuzz.world"
+
