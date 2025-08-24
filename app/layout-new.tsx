@@ -3,13 +3,10 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import { getSiteConfig } from '@/lib/content'
-
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://aibuzztools.com'),
   title: 'AI Buzz World - Discover the Best AI Tools',
   description: 'Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.',
   author: 'AI Buzz World',
@@ -44,13 +41,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const config = await getSiteConfig();
-
   return (
     <html lang="en">
       <head>
@@ -105,11 +100,11 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
-          <Header config={config} />
+          <Header />
           <main className="flex-1">
             {children}
           </main>
-          <Footer config={config} />
+          <Footer />
         </div>
       </body>
     </html>

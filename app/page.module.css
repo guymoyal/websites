@@ -123,6 +123,39 @@
   z-index: 1;
 }
 
+/* Monetag Ad Sections */
+.adSection {
+  margin: 2rem 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.topBannerAd {
+  max-width: 728px;
+  width: 100%;
+}
+
+.bottomBannerAd {
+  max-width: 728px;
+  width: 100%;
+}
+
+/* Responsive ad adjustments */
+@media (max-width: 768px) {
+  .adSection {
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+  
+  .topBannerAd,
+  .bottomBannerAd {
+    max-width: 320px;
+  }
+}
+
 .searchSection {
   padding: 3rem 0;
   background: #f8fafc;

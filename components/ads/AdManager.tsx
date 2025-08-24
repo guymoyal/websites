@@ -3,10 +3,11 @@
 import React from 'react';
 import MonetagAd from './MonetagAd';
 import AdSlot from './AdSlot';
+import { type MonetagZoneId } from '@/lib/monetagConfig';
 
 interface AdManagerProps {
   type: 'monetag' | 'google' | 'both';
-  zone?: string;
+  zone?: MonetagZoneId | string;
   slot?: string;
   format?: 'banner' | 'rectangle' | 'side' | 'mobile-sticky' | 'leaderboard';
   position?: 'left' | 'right';
@@ -17,7 +18,7 @@ interface AdManagerProps {
 
 const AdManager: React.FC<AdManagerProps> = ({
   type,
-  zone = '165771', // Default Monetag zone
+  zone = 'primary', // Default to primary Monetag zone
   slot = 'default',
   format = 'banner',
   position = 'right',
