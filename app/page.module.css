@@ -390,7 +390,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .toolsGrid > * {
     width: calc(50% - 1rem);
   }

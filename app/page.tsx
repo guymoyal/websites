@@ -7,7 +7,7 @@ import { getFeaturedTools, getCategories } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
 import AdSlot from '@/components/ads/AdSlot';
-import AdManager from '@/components/ads/AdManager';
+
 import styles from './page.module.css';
 
 export default async function HomePage() {
@@ -65,15 +65,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Top Banner Ad */}
-      <section className={styles.adSection}>
-        <AdManager 
-          type="monetag" 
-          zone="homepage-banner" 
-          format="banner"
-          className={styles.topBannerAd}
-        />
-      </section>
+
 
       {/* Featured Tools */}
       <section className={styles.featuredTools}>
@@ -132,15 +124,7 @@ export default async function HomePage() {
         className={styles.adSlot}
       />
 
-      {/* Bottom Banner Ad - Monetag */}
-      <section className={styles.adSection}>
-        <AdManager 
-          type="monetag" 
-          zone="secondary" 
-          format="leaderboard"
-          className={styles.bottomBannerAd}
-        />
-      </section>
+
 
       {/* CTA Section */}
       <section className={styles.cta}>

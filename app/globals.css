@@ -79,13 +79,14 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    padding-bottom: 80px; /* Space for sticky banner */
   }
 }
 
-/* Add padding to prevent mobile sticky ads from covering content */
+/* Mobile responsive padding for sticky banner */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 0;
+    padding-bottom: 70px;
     transition: padding-bottom 0.3s ease;
   }
   
