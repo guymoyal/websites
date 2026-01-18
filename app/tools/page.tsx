@@ -3,7 +3,6 @@ import { searchTools, getCategories } from '@/lib/tools';
 import { SearchFilters } from '@/lib/types';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
-import AdSlot from '@/components/ads/AdSlot';
 import { Filter, Grid, List } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -35,22 +34,7 @@ export default async function ToolsPage({ searchParams }: PageProps) {
   return (
     <div className={styles.container}>
       {/* Side ads for desktop - only show when searching */}
-      {hasSearchQuery && (
-        <>
-          <AdSlot 
-            slot="tools-search-left" 
-            format="side"
-            position="left"
-            keywords={['AI tools', 'search', 'productivity']}
-          />
-          <AdSlot 
-            slot="tools-search-right" 
-            format="side"
-            position="right"
-            keywords={['AI tools', 'search', 'productivity']}
-          />
-        </>
-      )}
+      {/* Monetization removed */}
       <div className={styles.header}>
         <h1 className={styles.title}>AI Tools Directory</h1>
         <p className={styles.subtitle}>
@@ -62,8 +46,6 @@ export default async function ToolsPage({ searchParams }: PageProps) {
         categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
         placeholder="Search from thousands of AI tools..."
       />
-
-
 
       <div className={styles.content}>
         <div className={styles.resultsHeader}>
@@ -77,7 +59,6 @@ export default async function ToolsPage({ searchParams }: PageProps) {
               </span>
             )}
           </div>
-          
           <div className={styles.viewToggle}>
             <button className={`${styles.viewButton} ${styles.active}`}>
               <Grid size={18} />
@@ -87,7 +68,6 @@ export default async function ToolsPage({ searchParams }: PageProps) {
             </button>
           </div>
         </div>
-
         {tools.length > 0 ? (
           <div className={styles.toolsGrid}>
             {tools.map((tool) => (
@@ -102,16 +82,7 @@ export default async function ToolsPage({ searchParams }: PageProps) {
           </div>
         )}
       </div>
-
-      {/* Only show bottom ad when NOT searching or when there are results */}
-      {(!hasSearchQuery || tools.length > 0) && (
-        <AdSlot 
-          slot="tools-bottom" 
-          format="leaderboard"
-          keywords={['AI tools', 'directory']}
-          className={styles.adSlot}
-        />
-      )}
+      {/* Bottom ad removed */}
     </div>
   );
 }

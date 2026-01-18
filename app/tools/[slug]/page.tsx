@@ -6,7 +6,6 @@ import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar }
 import { getTool, getTools, getToolsByCategory } from '@/lib/tools';
 import { getPricingColor } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
-import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -109,13 +108,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
       </div>
 
-      <AdSlot 
-        slot="tool-top" 
-        format="leaderboard"
-        keywords={tool.tags}
-        className={styles.adSlot}
-      />
-
       <div className={styles.content}>
         <div className={styles.main}>
           <section className={styles.section}>
@@ -181,13 +173,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
               ))}
             </div>
           </div>
-
-          <AdSlot 
-            slot="tool-sidebar" 
-            format="rectangle"
-            keywords={tool.tags}
-            className={styles.sidebarAd}
-          />
         </div>
       </div>
 
@@ -201,13 +186,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
           </div>
         </section>
       )}
-
-      <AdSlot 
-        slot="tool-bottom" 
-        format="leaderboard"
-        keywords={tool.tags}
-        className={styles.adSlot}
-      />
     </div>
   );
 }

@@ -66,62 +66,23 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-            {/* New Monetag Script from user */}
-    <script
-      data-cfasync="false"
-      type="text/javascript"
-      dangerouslySetInnerHTML={{
-        __html: `(()=>{var K='ChmaorrCfozdgenziMrattShzzyrtarnedpoomrzPteonSitfreidnzgtzcseljibcOezzerlebpalraucgeizfznfoocrzEwaocdhnziaWptpnleytzngoectzzdclriehaCtdenTeepxptaNzoldmetzhRzeegvEoxmpezraztdolbizhXCGtIs=rzicfozn>ceamtazr(fdio/c<u>m"eennto)nz:gyzaclaplslizdl"o=ceallySttso r"akgneazl_bd:attuaozbsae"t=Ictresm zegmeatrIftie<mzzLrMeTmHorveenIntiezmezdcolNeeanrozldcezcdoadeehUzReIdCooNmtpnoenreanptzzebnionndzzybatlopasziedvzaellzyJtSsOzNezmDaartfeizzAtrnreamyuzcPordozmyidsoebzzpeatrasteSIyndtazenrazvtipgiartcoSrtzneenrcroudcezUeRmIazNUgianTty8BAsrtrnaeymzesleEttTeigmzedoIuytBztsneetmIenltEetrevgazlSzNAtrnreamyeBluEfeftearezrcclzetanreTmigmaeroFuttnzecmluecaorDIenttaeerrvcazltznMeevsEshacgteaCphsaindnzelllzABrrootacdeclaesStyCrheaunqnzerloztecnecloedSeyUrReIuCqozmrpeonneetnstizLTtynpeevEErervoormzeErvzernetnzeEtrsrioLrtznIemvaEgdedzaszetsnseimoenlSEteotraaegrec'.split("").reduce((v,g,L)=>L%2?v+g:g+v).split("z");})();`
-      }}
-    />
-    
-
-        
-        {/* Global Callbacks */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window._lvtopv = function() { console.log('🔴 Monetag error'); };
-              window._lytby = function() { console.log('🟢 Monetag ready'); };
-              
-              // Register service worker for push notifications
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                    .then(function(registration) {
-                      console.log('🟢 SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('🔴 SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `
-          }}
-        />
-        
-        {/* Google AdSense */}
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2858012859068424`}
-          crossOrigin="anonymous"
-        />
-        
-        {/* Google Analytics */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-XXXXXXXXXX');
-            `
-          }}
-        />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2858012859068424" crossOrigin="anonymous"></script>
+      
+      {/* Google Analytics */}
+      <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+      />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXXXXX');
+          `
+        }}
+      />
       </head>
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">

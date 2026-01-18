@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Clock, User, ArrowLeft, ArrowRight } from 'lucide-react';
 import { getArticle, getArticles, getRelatedArticles, formatDate, parseMarkdown } from '@/lib/content';
-import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
 
 export const dynamicParams = false;
@@ -110,26 +109,12 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </div>
         )}
 
-        <AdSlot 
-          slot="article-top" 
-          format="leaderboard"
-          keywords={article.keywords}
-          className={styles.topAd}
-        />
-
         <div className={styles.articleContent}>
           <div 
             className={styles.prose}
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
-
-        <AdSlot 
-          slot="article-middle" 
-          format="rectangle"
-          keywords={article.keywords}
-          className={styles.middleAd}
-        />
 
         <footer className={styles.articleFooter}>
           <div className={styles.shareSection}>
@@ -155,13 +140,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </div>
         </footer>
       </article>
-
-      <AdSlot 
-        slot="article-bottom" 
-        format="leaderboard"
-        keywords={article.keywords}
-        className={styles.bottomAd}
-      />
 
       {relatedArticles.length > 0 && (
         <section className={styles.relatedArticles}>

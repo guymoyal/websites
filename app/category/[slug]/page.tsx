@@ -5,7 +5,6 @@ import { ArrowLeft } from 'lucide-react';
 import { getCategories, getToolsByCategory } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
-import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -69,20 +68,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         placeholder={`Search ${category.name.toLowerCase()} tools...`}
       />
 
-      {/* Side ads for category browsing */}
-      <AdSlot 
-        slot="category-search-left" 
-        format="side"
-        position="left"
-        keywords={[category.name.toLowerCase(), 'ai tools', 'category']}
-      />
-      <AdSlot 
-        slot="category-search-right" 
-        format="side"
-        position="right"
-        keywords={[category.name.toLowerCase(), 'ai tools', 'category']}
-      />
-
       {tools.length > 0 ? (
         <div className={styles.toolsGrid}>
           {tools.map((tool) => (
@@ -98,16 +83,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
             Browse All Tools
           </Link>
         </div>
-      )}
-
-      {/* Only show bottom ad if there are tools */}
-      {tools.length > 0 && (
-        <AdSlot 
-          slot="category-bottom" 
-          format="leaderboard"
-          keywords={[category.name.toLowerCase(), 'ai tools']}
-          className={styles.adSlot}
-        />
       )}
 
       {/* Related Categories */}

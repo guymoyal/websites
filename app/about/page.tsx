@@ -1,6 +1,5 @@
 import React from 'react';
 import { Users, Target, Award, Zap } from 'lucide-react';
-import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
 
 export default function AboutPage() {
@@ -12,12 +11,6 @@ export default function AboutPage() {
           Your trusted companion in discovering the best AI tools for every need
         </p>
       </div>
-
-      <AdSlot 
-        slot="about-top" 
-        format="leaderboard"
-        className={styles.adSlot}
-      />
 
       <div className={styles.content}>
         <section className={styles.section}>
@@ -153,12 +146,6 @@ export default function AboutPage() {
           </div>
         </section>
       </div>
-
-      <AdSlot 
-        slot="about-bottom" 
-        format="leaderboard"
-        className={styles.adSlot}
-      />
     </div>
   );
 }

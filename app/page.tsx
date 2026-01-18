@@ -6,7 +6,6 @@ import { getSiteConfig } from '@/lib/content';
 import { getFeaturedTools, getCategories } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
-import AdSlot from '@/components/ads/AdSlot';
 
 import styles from './page.module.css';
 
@@ -115,16 +114,6 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* Ad Slot - Google */}
-      <AdSlot 
-        slot="homepage-banner" 
-        format="leaderboard"
-        keywords={config.seo.keywords}
-        className={styles.adSlot}
-      />
-
-
 
       {/* CTA Section */}
       <section className={styles.cta}>
