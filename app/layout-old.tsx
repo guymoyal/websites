@@ -78,30 +78,6 @@ export default async function RootLayout({
           async
         />
         
-        {/* Global Callbacks */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window._lvtopv = function() { 
-                console.log('🔴 Monetag push notification error'); 
-                alert('Monetag push notifications failed');
-              };
-              window._lytby = function() { 
-                console.log('🟢 Monetag push notification ready'); 
-                alert('Monetag push notifications are working!');
-              };
-              
-              // Debug info
-              setTimeout(() => {
-                console.log('🔍 Monetag Debug Info:');
-                console.log('Scripts loaded:', document.querySelectorAll('script[src*="couphaithuph"]').length);
-                console.log('Service worker support:', 'serviceWorker' in navigator);
-                console.log('Notification permission:', 'Notification' in window ? Notification.permission : 'Not supported');
-              }, 3000);
-            `
-          }}
-        />
-        
         {/* Google AdSense - Keep for testing */}
         <script
           async

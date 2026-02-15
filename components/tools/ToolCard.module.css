@@ -9,14 +9,12 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 350px;
-  margin: 0 auto;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: #3b82f6;
+  box-shadow: 0 8px 25px rgba(47, 127, 216, 0.2);
+  border-color: #FFD700;
 }
 
 .cardHeader {
@@ -77,14 +75,14 @@
 }
 
 .toolName a:hover {
-  color: #3b82f6;
+  color: #2F7FD8;
 }
 
 .featuredBadge {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
+  background: linear-gradient(135deg, #FFD700, #FFC700);
+  color: #1E5FA8;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0.125rem 0.5rem;
   border-radius: 0.25rem;
   text-transform: uppercase;
@@ -154,11 +152,12 @@
 }
 
 .tag {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: hsl(214 50% 95%);
+  color: #2F7FD8;
   font-size: 0.75rem;
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
+  font-weight: 500;
 }
 
 .cardFooter {
@@ -194,14 +193,14 @@
 }
 
 .visitButton {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #2F7FD8 0%, #1E5FA8 100%);
   color: white;
-  border: 1px solid #3b82f6;
+  border: 1px solid #2F7FD8;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   text-decoration: none;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -210,8 +209,9 @@
 }
 
 .visitButton:hover {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: linear-gradient(135deg, #1E5FA8 0%, #2F7FD8 100%);
+  border-color: #FFD700;
+  box-shadow: 0 4px 12px rgba(47, 127, 216, 0.3);
 }
 
 /* Mobile Responsive */

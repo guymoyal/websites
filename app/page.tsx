@@ -40,10 +40,10 @@ export default async function HomePage() {
           </div>
           <div className={styles.heroImage}>
             <Image
-              src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop&crop=center"
-              alt="AI Tools Dashboard"
-              width={600}
-              height={400}
+              src="/images/hero-banner.png"
+              alt="AI Buzz World - Discover the Best AI Tools"
+              width={300}
+              height={225}
               className={styles.heroImg}
               priority
             />

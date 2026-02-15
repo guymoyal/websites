@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import StickyBanner from '@/components/ads/StickyBanner'
 import { getSiteConfig } from '@/lib/content'
 
 
@@ -72,7 +71,7 @@ export const metadata: Metadata = {
     initialScale: 1,
     maximumScale: 5,
   },
-  themeColor: '#000000',
+  themeColor: '#2F7FD8',
 }
 
 export default async function RootLayout({
@@ -114,7 +113,6 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer config={config} />
-          <StickyBanner />
         </div>
       </body>
     </html>

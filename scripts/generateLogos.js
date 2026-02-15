@@ -1,162 +1,168 @@
 const fs = require('fs-extra');
 const path = require('path');
-const slugify = require('slugify');
+const https = require('https');
+const http = require('http');
 
-// Load environment variables from .env.local
-require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
+// Try to use Gemini if available, otherwise use Clearbit
+let genAI = null;
+try {
+  const { GoogleGenerativeAI } = require('@google/generative-ai');
+  const GEMINI_API_KEY = 'AIzaSyBfmtHNmY2prqZ5E6NLXmMSqiZznRsRf7M';
+  genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+} catch (e) {
+  console.log('Gemini package not installed, using Clearbit API instead');
+}
 
-class LogoGenerator {
-  constructor() {
-    this.deepseekApiKey = process.env.DEEPSEEK_API_KEY || "sk-43d9c74deaf54e14be37d49afe836bc3";
-    this.contentDir = path.join(__dirname, '..', 'content');
-    this.imagesDir = path.join(__dirname, '..', 'public', 'images');
-  }
+const contentDir = path.join(process.cwd(), 'content');
+const imagesDir = path.join(process.cwd(), 'public', 'images', 'tools');
 
-  async generateLogos() {
-    console.log('🎨 Generating logos for AI tools...');
+// Ensure images directory exists
+async function ensureDirectories() {
+  await fs.ensureDir(imagesDir);
+}
+
+// Download logo from Clearbit API
+async function downloadLogo(domain, outputPath) {
+  return new Promise((resolve, reject) => {
+    const url = `https://logo.clearbit.com/${domain}`;
+    const file = fs.createWriteStream(outputPath);
     
-    await fs.ensureDir(this.imagesDir);
-
-    try {
-      // Read tools from tool-cards.json
-      const toolsPath = path.join(this.contentDir, 'tool-cards.json');
-      if (!await fs.pathExists(toolsPath)) {
-        console.error('❌ tool-cards.json not found. Run generateToolCards.js first.');
-        return;
-      }
-
-      const tools = await fs.readJSON(toolsPath);
-      console.log(`📦 Found ${tools.length} tools to generate logos for`);
-
-      for (const tool of tools) {
-        console.log(`🎨 Generating logo for: ${tool.name}`);
-        
-        try {
-          // Generate SVG logo using DeepSeek API
-          const logoSvg = await this.generateLogoSvg(tool.name, tool.category);
-          
-          if (logoSvg) {
-            // Save SVG logo
-            const logoPath = path.join(this.imagesDir, `${tool.slug}-logo.svg`);
-            await fs.writeFile(logoPath, logoSvg);
-            console.log(`✅ Generated logo: ${tool.slug}-logo.svg`);
-          }
-        } catch (error) {
-          console.error(`❌ Failed to generate logo for ${tool.name}:`, error.message);
-          // Create a simple placeholder SVG
-          await this.createPlaceholderLogo(tool.name, tool.slug);
-        }
-        
-        // Add delay to avoid rate limiting
-        console.log('⏳ Waiting 2 seconds before next logo...');
-        await new Promise(resolve => setTimeout(() => resolve(), 2000));
-      }
-      
-      console.log('✅ Logo generation completed!');
-      
-    } catch (error) {
-      console.error('❌ Logo generation failed:', error);
-    }
-  }
-
-  async generateLogoSvg(toolName, category) {
-    if (!this.deepseekApiKey) {
-      throw new Error('DEEPSEEK_API_KEY not found');
-    }
-
-    const prompt = `Create a simple, professional SVG logo for the AI tool "${toolName}" in the ${category} category.
-
-Requirements:
-- Return ONLY the SVG code (no explanations)
-- Use simple geometric shapes and clean design
-- Size: 64x64 viewBox
-- Use 2-3 colors maximum (prefer blue/purple tech colors)
-- Include the first letter or initials of "${toolName}"
-- Make it recognizable and professional
-- No complex illustrations, keep it minimal
-
-Example format:
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="12" fill="#3B82F6"/>
-  <text x="32" y="40" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">C</text>
-</svg>
-
-Generate SVG for "${toolName}":`;
-
-    try {
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.deepseekApiKey}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a professional logo designer. Create clean, minimal SVG logos. Return ONLY the SVG code without any explanations.'
-            },
-            {
-              role: 'user',
-              content: prompt
-            }
-          ],
-          temperature: 0.3,
-          max_tokens: 500
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`DeepSeek API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      let svgContent = data.choices[0].message.content.trim();
-      
-      // Clean up the response to extract only SVG
-      if (svgContent.includes('<svg')) {
-        const svgStart = svgContent.indexOf('<svg');
-        const svgEnd = svgContent.lastIndexOf('</svg>') + 6;
-        svgContent = svgContent.substring(svgStart, svgEnd);
-      }
-      
-      // Validate SVG
-      if (svgContent.startsWith('<svg') && svgContent.endsWith('</svg>')) {
-        return svgContent;
+    https.get(url, (response) => {
+      if (response.statusCode === 200) {
+        response.pipe(file);
+        file.on('finish', () => {
+          file.close();
+          resolve(true);
+        });
       } else {
-        throw new Error('Invalid SVG generated');
+        file.close();
+        fs.unlink(outputPath, () => {});
+        resolve(false);
       }
+    }).on('error', (err) => {
+      file.close();
+      fs.unlink(outputPath, () => {});
+      reject(err);
+    });
+  });
+}
 
+// Extract domain from URL
+function extractDomain(url) {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname.replace('www.', '');
+  } catch (e) {
+    return null;
+  }
+}
+
+// Create SVG logo placeholder
+function createSVGLogo(toolName, colors = { primary: '#2F7FD8', secondary: '#FFD700' }) {
+  const initials = toolName
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .substring(0, 2);
+  
+  return `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${colors.primary};stop-opacity:1" />
+        <stop offset="100%" style="stop-color:${colors.secondary};stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="20" fill="url(#grad)"/>
+    <text x="50" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">${initials}</text>
+  </svg>`;
+}
+
+// Generate logos for all tools
+async function generateAllLogos() {
+  await ensureDirectories();
+  
+  const toolsPath = path.join(contentDir, 'tools.json');
+  if (!await fs.pathExists(toolsPath)) {
+    console.error('tools.json not found');
+    return;
+  }
+  
+  const tools = await fs.readJSON(toolsPath);
+  console.log(`Found ${tools.length} tools`);
+  
+  let generated = 0;
+  let skipped = 0;
+  let failed = 0;
+  
+  for (const tool of tools) {
+    const logoPath = path.join(imagesDir, `${tool.slug}-logo.png`);
+    const logoSvgPath = path.join(imagesDir, `${tool.slug}-logo.svg`);
+    
+    // Skip if logo already exists
+    if (await fs.pathExists(logoPath) || await fs.pathExists(logoSvgPath)) {
+      console.log(`✓ Logo exists for ${tool.name}`);
+      skipped++;
+      continue;
+    }
+    
+    try {
+      const domain = extractDomain(tool.website);
+      
+      if (domain) {
+        // Try to download from Clearbit
+        const downloaded = await downloadLogo(domain, logoPath);
+        
+        if (downloaded) {
+          tool.logo = `/images/tools/${tool.slug}-logo.png`;
+          console.log(`✓ Downloaded logo for ${tool.name} from ${domain}`);
+          generated++;
+        } else {
+          // Fallback to SVG
+          const svgLogo = createSVGLogo(tool.name);
+          await fs.writeFile(logoSvgPath, svgLogo);
+          tool.logo = `/images/tools/${tool.slug}-logo.svg`;
+          console.log(`✓ Created SVG logo for ${tool.name}`);
+          generated++;
+        }
+      } else {
+        // No domain, create SVG
+        const svgLogo = createSVGLogo(tool.name);
+        await fs.writeFile(logoSvgPath, svgLogo);
+        tool.logo = `/images/tools/${tool.slug}-logo.svg`;
+        console.log(`✓ Created SVG logo for ${tool.name}`);
+        generated++;
+      }
+      
+      // Rate limiting - wait 500ms between requests
+      await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) {
-      console.error('DeepSeek API error:', error);
-      throw error;
+      console.error(`✗ Failed to generate logo for ${tool.name}:`, error.message);
+      failed++;
+      
+      // Create fallback SVG
+      try {
+        const logoSvgPath = path.join(imagesDir, `${tool.slug}-logo.svg`);
+        const svgLogo = createSVGLogo(tool.name);
+        await fs.writeFile(logoSvgPath, svgLogo);
+        tool.logo = `/images/tools/${tool.slug}-logo.svg`;
+        console.log(`  → Created fallback SVG logo`);
+      } catch (e) {
+        console.error(`  → Failed to create fallback:`, e.message);
+      }
     }
   }
-
-  async createPlaceholderLogo(toolName, slug) {
-    const firstLetter = toolName.charAt(0).toUpperCase();
-    const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    
-    const placeholderSvg = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="12" fill="${color}"/>
-  <text x="32" y="42" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">${firstLetter}</text>
-</svg>`;
-
-    const logoPath = path.join(this.imagesDir, `${slug}-logo.svg`);
-    await fs.writeFile(logoPath, placeholderSvg);
-    console.log(`🔄 Created placeholder logo: ${slug}-logo.svg`);
-  }
+  
+  // Save updated tools.json
+  await fs.writeJSON(toolsPath, tools, { spaces: 2 });
+  
+  console.log(`\nCompleted! Generated: ${generated}, Skipped: ${skipped}, Failed: ${failed}`);
 }
 
-async function main() {
-  const generator = new LogoGenerator();
-  await generator.generateLogos();
-}
 
+// Main execution
 if (require.main === module) {
-  main();
+  generateAllLogos().catch(console.error);
 }
 
-module.exports = { LogoGenerator };
+module.exports = { generateAllLogos, createSVGLogo, downloadLogo };

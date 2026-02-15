@@ -30,19 +30,39 @@ export async function getTool(slug: string): Promise<AITool | null> {
 
 export async function getFeaturedTools(): Promise<AITool[]> {
   const tools = await getTools();
-  // Get featured tools and sort by rating and review count (trending/popular)
-  const featured = tools.filter(tool => tool.featured);
-  // Sort by rating (descending) then by review count (descending) to show most popular first
-  return featured
+  // Get only newer tools (created or updated in 2026)
+  const now = new Date();
+  const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000); // 6 months ago
+  
+  const newerTools = tools.filter(tool => {
+    const createdAt = new Date(tool.createdAt);
+    const updatedAt = new Date(tool.updatedAt);
+    // Include tools created or updated in the last 6 months
+    return createdAt >= sixMonthsAgo || updatedAt >= sixMonthsAgo;
+  });
+  
+  // Sort by most recent (updatedAt first, then createdAt), then by rating
+  return newerTools
     .sort((a, b) => {
-      // First sort by rating
-      if (b.rating !== a.rating) {
-        return b.rating - a.rating;
+      const aUpdated = new Date(a.updatedAt).getTime();
+      const bUpdated = new Date(b.updatedAt).getTime();
+      
+      // First sort by most recently updated
+      if (bUpdated !== aUpdated) {
+        return bUpdated - aUpdated;
       }
-      // Then by review count (more reviews = more popular/trending)
-      return b.reviewCount - a.reviewCount;
+      
+      // Then by creation date
+      const aCreated = new Date(a.createdAt).getTime();
+      const bCreated = new Date(b.createdAt).getTime();
+      if (bCreated !== aCreated) {
+        return bCreated - aCreated;
+      }
+      
+      // Finally by rating
+      return b.rating - a.rating;
     })
-    .slice(0, 12); // Show top 12 trending tools
+    .slice(0, 12); // Show top 12 newest trending tools
 }
 
 export async function getToolsByCategory(category: string): Promise<AITool[]> {
