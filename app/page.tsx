@@ -28,12 +28,12 @@ export default async function HomePage() {
             </p>
             <div className={styles.heroActions}>
               <Link href="/tools" className={styles.primaryButton}>
-                <Search size={20} />
+                <Search size={18} />
                 Explore Tools
-                <ArrowRight size={20} />
+                <ArrowRight size={18} />
               </Link>
               <Link href="/categories" className={styles.secondaryButton}>
-                <TrendingUp size={20} />
+                <TrendingUp size={18} />
                 Browse Categories
               </Link>
             </div>
@@ -42,8 +42,8 @@ export default async function HomePage() {
             <Image
               src="/images/hero-banner.png"
               alt="AI Buzz World - Discover the Best AI Tools"
-              width={300}
-              height={225}
+              width={250}
+              height={188}
               className={styles.heroImg}
               priority
             />

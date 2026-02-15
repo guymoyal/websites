@@ -24,12 +24,14 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
         <div className={styles.nav}>
           <Link href="/" className={styles.logo}>
             <Image
-              src="/images/ai-buzz-logo.png"
+              src="/images/ai-buzz-logo.webp"
               alt="AI Buzz World"
               width={200}
               height={60}
               className={styles.logoImage}
               priority
+              unoptimized
+              style={{ background: 'transparent' }}
             />
           </Link>
 

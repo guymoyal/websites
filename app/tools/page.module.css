@@ -93,17 +93,26 @@
 }
 
 .toolsGrid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  justify-content: flex-start;
   margin: 2rem 0;
 }
 
-.toolsGrid > * {
-  flex: 0 0 auto;
-  width: calc(33.333% - 1.333rem);
-  min-width: 300px;
+/* Tablet: 2 cards per row */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .toolsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Mobile: 1 card per row */
+@media (max-width: 768px) {
+  .toolsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
 .noResults {
@@ -133,12 +142,6 @@
 }
 
 /* Mobile Responsive */
-@media (max-width: 900px) {
-  .toolsGrid > * {
-    width: calc(50% - 1rem);
-  }
-}
-
 @media (max-width: 768px) {
   .title {
     font-size: 2rem;
@@ -152,11 +155,6 @@
   
   .toolsGrid {
     gap: 1.5rem;
-  }
-  
-  .toolsGrid > * {
-    width: 100%;
-    min-width: auto;
   }
   
   .adSlot {

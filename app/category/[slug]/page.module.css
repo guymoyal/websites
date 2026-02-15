@@ -73,9 +73,25 @@
 
 .toolsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-bottom: 3rem;
+}
+
+/* Tablet: 2 cards per row */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .toolsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Mobile: 1 card per row */
+@media (max-width: 768px) {
+  .toolsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
 .noTools {
@@ -186,6 +202,7 @@
   
   .toolsGrid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   
   .relatedGrid {
