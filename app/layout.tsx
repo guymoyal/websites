@@ -47,13 +47,32 @@ export const metadata: Metadata = {
     siteName: 'AI Buzz World',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://aibuzztools.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'AI Buzz World - Discover the Best AI Tools',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    creator: '@yourusername',
+    creator: '@aibuzztools',
     title: 'AI Buzz World - Discover the Best AI Tools',
     description: 'Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.',
+    images: ['https://aibuzztools.com/og-image.jpg'],
   },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  themeColor: '#000000',
 }
 
 export default async function RootLayout({
@@ -66,25 +85,29 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2858012859068424" crossOrigin="anonymous"></script>
-      
-      {/* Google Analytics */}
-      <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-      />
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `
-        }}
-      />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201239508910470" crossOrigin="anonymous"></script>
       </head>
       <body className={inter.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'AI Buzz World',
+              url: 'https://aibuzztools.com',
+              description: 'Discover the best AI tools for every need. Find, compare, and choose from thousands of AI-powered tools.',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://aibuzztools.com/tools?search={search_term_string}',
+                },
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
         <div className="min-h-screen flex flex-col">
           <Header config={config} />
           <main className="flex-1">

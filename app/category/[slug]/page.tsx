@@ -27,9 +27,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${category.name} AI Tools - Directory`,
+    title: `${category.name} AI Tools - Directory | AI Buzz World`,
     description: `Discover the best ${category.name.toLowerCase()} AI tools. ${category.description}`,
-    keywords: [category.name.toLowerCase(), 'ai tools', 'directory', 'reviews'],
+    keywords: [category.name.toLowerCase(), 'ai tools', 'directory', 'reviews'].join(', '),
+    alternates: {
+      canonical: `https://aibuzztools.com/category/${category.slug}`,
+    },
+    openGraph: {
+      title: `${category.name} AI Tools`,
+      description: `Discover the best ${category.name.toLowerCase()} AI tools. ${category.description}`,
+      url: `https://aibuzztools.com/category/${category.slug}`,
+      siteName: 'AI Buzz World',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      creator: '@aibuzztools',
+      title: `${category.name} AI Tools`,
+      description: `Discover the best ${category.name.toLowerCase()} AI tools.`,
+    },
   };
 }
 

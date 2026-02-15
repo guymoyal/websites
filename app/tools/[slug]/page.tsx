@@ -27,13 +27,31 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${tool.name} - AI Tool Review`,
-    description: tool.description,
+    title: `${tool.name} - AI Tool Review | AI Buzz World`,
+    description: tool.longDescription || tool.description,
     keywords: tool.tags.join(', '),
+    alternates: {
+      canonical: `https://aibuzztools.com/tools/${tool.slug}`,
+    },
     openGraph: {
       title: `${tool.name} - AI Tool Review`,
-      description: tool.description,
+      description: tool.longDescription || tool.description,
       type: 'article',
+      url: `https://aibuzztools.com/tools/${tool.slug}`,
+      siteName: 'AI Buzz World',
+      images: tool.logo ? [
+        {
+          url: tool.logo,
+          width: 1200,
+          height: 630,
+          alt: `${tool.name} logo`,
+        }
+      ] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${tool.name} - AI Tool Review`,
+      description: tool.description,
       images: tool.logo ? [tool.logo] : [],
     },
   };

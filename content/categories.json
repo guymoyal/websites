@@ -5,7 +5,7 @@
     "slug": "writing-and-content",
     "description": "AI tools for content creation, copywriting, and text generation",
     "icon": "✍️",
-    "toolCount": 5,
+    "toolCount": 6,
     "featured": true
   },
   {
@@ -14,7 +14,7 @@
     "slug": "design-and-creative",
     "description": "AI-powered design tools for images, graphics, and creative projects",
     "icon": "🎨",
-    "toolCount": 5,
+    "toolCount": 8,
     "featured": true
   },
   {
@@ -23,7 +23,7 @@
     "slug": "productivity",
     "description": "AI tools to boost productivity and automate workflows",
     "icon": "⚡",
-    "toolCount": 5,
+    "toolCount": 10,
     "featured": true
   },
   {
@@ -32,7 +32,7 @@
     "slug": "development",
     "description": "AI coding assistants and development tools",
     "icon": "💻",
-    "toolCount": 7,
+    "toolCount": 10,
     "featured": true
   },
   {
@@ -41,7 +41,7 @@
     "slug": "marketing",
     "description": "AI tools for marketing automation and campaign optimization",
     "icon": "📈",
-    "toolCount": 7,
+    "toolCount": 3,
     "featured": true
   },
   {
@@ -50,7 +50,7 @@
     "slug": "analytics",
     "description": "AI-powered analytics and data insights tools",
     "icon": "📊",
-    "toolCount": 7,
+    "toolCount": 2,
     "featured": true
   },
   {
@@ -59,7 +59,7 @@
     "slug": "video-and-media",
     "description": "AI tools for video editing, audio processing, and media creation",
     "icon": "🎬",
-    "toolCount": 7,
+    "toolCount": 8,
     "featured": true
   },
   {
@@ -68,7 +68,52 @@
     "slug": "business",
     "description": "AI solutions for business operations and management",
     "icon": "🏢",
-    "toolCount": 7,
+    "toolCount": 1,
+    "featured": true
+  },
+  {
+    "id": "9",
+    "name": "Education",
+    "slug": "education",
+    "description": "AI tools for learning, teaching, and educational content creation",
+    "icon": "📚",
+    "toolCount": 2,
+    "featured": true
+  },
+  {
+    "id": "10",
+    "name": "Healthcare",
+    "slug": "healthcare",
+    "description": "AI solutions for healthcare professionals and medical applications",
+    "icon": "🏥",
+    "toolCount": 0,
+    "featured": false
+  },
+  {
+    "id": "11",
+    "name": "Automation",
+    "slug": "automation",
+    "description": "Workflow automation and integration tools for connecting apps and services",
+    "icon": "🔄",
+    "toolCount": 1,
+    "featured": true
+  },
+  {
+    "id": "12",
+    "name": "Developer Tools",
+    "slug": "developer-tools",
+    "description": "NPM packages, CLI tools, and developer utilities for building applications",
+    "icon": "🛠️",
+    "toolCount": 3,
+    "featured": true
+  },
+  {
+    "id": "13",
+    "name": "No-Code/Low-Code",
+    "slug": "no-code-low-code",
+    "description": "Platforms for building applications without extensive coding knowledge",
+    "icon": "🚀",
+    "toolCount": 2,
     "featured": true
   }
 ]

@@ -27,20 +27,33 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: article.title,
+    title: `${article.title} | AI Buzz World`,
     description: article.metaDescription,
     keywords: article.keywords.join(', '),
+    alternates: {
+      canonical: `https://aibuzztools.com/blog/${article.slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.metaDescription,
       type: 'article',
+      url: `https://aibuzztools.com/blog/${article.slug}`,
+      siteName: 'AI Buzz World',
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
-      authors: ['AI Tools Hub'],
-      images: article.image ? [article.image] : [],
+      authors: ['AI Buzz World'],
+      images: article.image ? [
+        {
+          url: article.image,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        }
+      ] : [],
     },
     twitter: {
       card: 'summary_large_image',
+      creator: '@aibuzztools',
       title: article.title,
       description: article.metaDescription,
       images: article.image ? [article.image] : [],

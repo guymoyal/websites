@@ -30,7 +30,19 @@ export async function getTool(slug: string): Promise<AITool | null> {
 
 export async function getFeaturedTools(): Promise<AITool[]> {
   const tools = await getTools();
-  return tools.filter(tool => tool.featured).slice(0, 6);
+  // Get featured tools and sort by rating and review count (trending/popular)
+  const featured = tools.filter(tool => tool.featured);
+  // Sort by rating (descending) then by review count (descending) to show most popular first
+  return featured
+    .sort((a, b) => {
+      // First sort by rating
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating;
+      }
+      // Then by review count (more reviews = more popular/trending)
+      return b.reviewCount - a.reviewCount;
+    })
+    .slice(0, 12); // Show top 12 trending tools
 }
 
 export async function getToolsByCategory(category: string): Promise<AITool[]> {

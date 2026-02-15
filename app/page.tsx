@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Search, Star, TrendingUp, Zap } from 'lucide-react';
 import { getSiteConfig } from '@/lib/content';
-import { getFeaturedTools, getCategories } from '@/lib/tools';
+import { getFeaturedTools, getCategories, getTools } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
 
@@ -70,11 +70,11 @@ export default async function HomePage() {
       <section className={styles.featuredTools}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
-            <Star className={styles.sectionIcon} />
-            Featured AI Tools
+            <TrendingUp className={styles.sectionIcon} />
+            Trending AI Tools Right Now
           </h2>
           <p className={styles.sectionSubtitle}>
-            Hand-picked tools that are making waves in the AI community
+            The most talked-about and popular AI tools that everyone is using in 2026
           </p>
         </div>
         

@@ -16,7 +16,8 @@
     "generate:images": "node scripts/generateImages.js",
     "generate:logo": "node scripts/generateLogo.js",
     "generate:all-content": "node scripts/generateComprehensiveContent.js",
-    "setup": "npm install && cp .env.local.example .env.local"
+    "setup": "npm install && cp .env.local.example .env.local",
+    "cursor": "./scripts/cursor-open.sh"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
