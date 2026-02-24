@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar } from 'lucide-react';
 import { getTool, getTools, getToolsByCategory } from '@/lib/tools';
-import { getPricingColor } from '@/lib/tools';
+import { getPricingColor } from '@/lib/utils';
 import ToolCard from '@/components/tools/ToolCard';
 import styles from './page.module.css';
 

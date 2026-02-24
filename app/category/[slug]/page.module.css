@@ -72,24 +72,33 @@
 }
 
 .toolsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
   margin-bottom: 3rem;
 }
 
+.toolsGrid > * {
+  flex: 0 0 calc(33.333% - 1.333rem);
+  min-width: 0;
+  max-width: calc(33.333% - 1.333rem);
+}
+
 /* Tablet: 2 cards per row */
 @media (max-width: 1024px) and (min-width: 769px) {
-  .toolsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+  .toolsGrid > * {
+    flex: 0 0 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
   }
 }
 
 /* Mobile: 1 card per row */
 @media (max-width: 768px) {
+  .toolsGrid > * {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
   .toolsGrid {
-    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 }

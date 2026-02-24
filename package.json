@@ -17,6 +17,7 @@
     "generate:logo": "node scripts/generateLogo.js",
     "generate:logos": "node scripts/generateLogos.js",
     "generate:all-content": "node scripts/generateComprehensiveContent.js",
+    "update:tools": "node scripts/updateTools.js",
     "setup": "npm install && cp .env.local.example .env.local",
     "cursor": "./scripts/cursor-open.sh"
   },

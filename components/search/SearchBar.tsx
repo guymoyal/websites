@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, Filter, X } from 'lucide-react';
 import { SearchFilters } from '@/lib/types';
 import styles from './SearchBar.module.css';
@@ -9,56 +9,86 @@ import styles from './SearchBar.module.css';
 interface SearchBarProps {
   categories: Array<{ name: string; slug: string }>;
   placeholder?: string;
+  initialQuery?: string;
+  initialFilters?: SearchFilters;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ 
   categories, 
-  placeholder = "Search AI tools..." 
+  placeholder = "Search AI tools...",
+  initialQuery = '',
+  initialFilters = {}
 }) => {
-  const router = useRouter();
-  const [query, setQuery] = useState('');
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(initialQuery || '');
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters || {});
 
-  const handleSearch = () => {
-    const searchParams = new URLSearchParams();
-    if (query) searchParams.set('q', query);
-    if (filters.category) searchParams.set('category', filters.category);
-    if (filters.pricing) searchParams.set('pricing', filters.pricing);
-    if (filters.rating) searchParams.set('rating', filters.rating.toString());
-    if (filters.featured) searchParams.set('featured', 'true');
+  // Sync state with URL params when they change
+  useEffect(() => {
+    try {
+      if (!searchParams) return;
+      
+      const urlQuery = searchParams.get('q') || '';
+      const urlCategory = searchParams.get('category') || undefined;
+      const urlPricing = searchParams.get('pricing') || undefined;
+      const urlRating = searchParams.get('rating') ? Number(searchParams.get('rating')) : undefined;
+      const urlFeatured = searchParams.get('featured') === 'true';
+
+      setQuery(urlQuery);
+      setFilters({
+        category: urlCategory,
+        pricing: urlPricing,
+        rating: urlRating,
+        featured: urlFeatured || undefined,
+      });
+    } catch (error) {
+      console.error('Error syncing search params:', error);
+    }
+  }, [searchParams]);
+
+  const buildSearchUrl = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
+    const params = new URLSearchParams();
+    if (searchQuery?.trim()) params.set('q', searchQuery.trim());
+    if (searchFilters?.category) params.set('category', searchFilters.category);
+    if (searchFilters?.pricing) params.set('pricing', searchFilters.pricing);
+    if (searchFilters?.rating) params.set('rating', searchFilters.rating.toString());
+    if (searchFilters?.featured) params.set('featured', 'true');
     
-    router.push(`/tools?${searchParams.toString()}`);
-  };
+    const queryString = params.toString();
+    return queryString ? `/tools?${queryString}` : '/tools';
+  }, []);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleSearch = useCallback(() => {
+    const url = buildSearchUrl(query, filters);
+    // Simple client-side navigation - just update URL without reload
+    window.history.pushState({}, '', url);
+    // Trigger a popstate event so useSearchParams updates
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, [query, filters, buildSearchUrl]);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSearch();
     }
   };
 
-  const clearFilters = () => {
-    setFilters({});
-    if (query) {
-      router.push(`/tools?q=${encodeURIComponent(query)}`);
-    } else {
-      router.push('/tools');
-    }
-  };
-
-  const updateFilter = (key: keyof SearchFilters, value: any) => {
-    const newFilters = { ...filters, [key]: value };
+  const clearFilters = useCallback(() => {
+    const newFilters: SearchFilters = {};
     setFilters(newFilters);
-    
-    const searchParams = new URLSearchParams();
-    if (query) searchParams.set('q', query);
-    if (newFilters.category) searchParams.set('category', newFilters.category);
-    if (newFilters.pricing) searchParams.set('pricing', newFilters.pricing);
-    if (newFilters.rating) searchParams.set('rating', newFilters.rating.toString());
-    if (newFilters.featured) searchParams.set('featured', 'true');
-    
-    router.push(`/tools?${searchParams.toString()}`);
-  };
+    const url = buildSearchUrl(query, newFilters);
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, [query, buildSearchUrl]);
+
+  const updateFilter = useCallback((key: keyof SearchFilters, value: any) => {
+    const newFilters = { ...filters, [key]: value || undefined };
+    setFilters(newFilters);
+    const url = buildSearchUrl(query, newFilters);
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, [query, filters, buildSearchUrl]);
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
@@ -78,18 +108,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
           {query && (
             <button
               onClick={() => {
-                setQuery('');
-                // Keep existing filters but remove query
-                const searchParams = new URLSearchParams();
-                if (filters.category) searchParams.set('category', filters.category);
-                if (filters.pricing) searchParams.set('pricing', filters.pricing);
-                if (filters.rating) searchParams.set('rating', filters.rating.toString());
-                if (filters.featured) searchParams.set('featured', 'true');
-                
-                const queryString = searchParams.toString();
-                router.push(queryString ? `/tools?${queryString}` : '/tools');
+                const newQuery = '';
+                setQuery(newQuery);
+                const url = buildSearchUrl(newQuery, filters);
+                window.history.pushState({}, '', url);
+                window.dispatchEvent(new PopStateEvent('popstate'));
               }}
               className={styles.clearButton}
+              aria-label="Clear search"
             >
               <X size={16} />
             </button>
@@ -97,7 +123,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </div>
         
         <button
-          onClick={handleSearch}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            handleSearch();
+          }}
           className={styles.searchButton}
         >
           Search

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export', // Commented out for development - uncomment only for static export builds
+  output: 'export', // Required for Cloudflare Pages/Workers static deployment
   trailingSlash: true,
   images: {
     unoptimized: true,
@@ -26,6 +26,11 @@ const nextConfig = {
       ...config.resolve.fallback,
       fs: false,
       path: false,
+    };
+    // Prevent fs-extra from being bundled in client code
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'fs-extra': false,
     };
     return config;
   },

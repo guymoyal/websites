@@ -84,26 +84,25 @@ export async function getCategories(): Promise<ToolCategory[]> {
 }
 
 export async function searchTools(query: string, filters?: SearchFilters): Promise<AITool[]> {
-  const tools = await getTools();
-  
-  let filteredTools = tools;
+  try {
+    const tools = await getTools();
+    const categories = await getCategories();
+    
+    // Create a map of slug to category name
+    const categoryMap = new Map<string, string>();
+    categories.forEach(cat => {
+      categoryMap.set(cat.slug.toLowerCase(), cat.name);
+    });
+    
+    let filteredTools = tools;
 
-  // Text search
-  if (query) {
-    const searchQuery = query.toLowerCase();
-    filteredTools = filteredTools.filter(tool =>
-      tool.name.toLowerCase().includes(searchQuery) ||
-      tool.description.toLowerCase().includes(searchQuery) ||
-      tool.tags.some(tag => tag.toLowerCase().includes(searchQuery)) ||
-      tool.category.toLowerCase().includes(searchQuery)
-    );
-  }
-
-  // Apply filters
+  // Apply filters first (before text search for better performance)
   if (filters) {
     if (filters.category) {
+      // Convert slug to category name if needed
+      const categoryName = categoryMap.get(filters.category.toLowerCase()) || filters.category;
       filteredTools = filteredTools.filter(tool => 
-        tool.category.toLowerCase() === filters.category!.toLowerCase()
+        tool.category.toLowerCase() === categoryName.toLowerCase()
       );
     }
 
@@ -126,7 +125,77 @@ export async function searchTools(query: string, filters?: SearchFilters): Promi
     }
   }
 
-  return filteredTools;
+  // Text search with relevance scoring
+  if (query && query.trim()) {
+    const searchQuery = query.toLowerCase().trim();
+    const searchTerms = searchQuery.split(/\s+/).filter(term => term.length > 0);
+    
+    // Score each tool based on relevance
+    const scoredTools = filteredTools.map(tool => {
+      let score = 0;
+      const toolNameLower = tool.name.toLowerCase();
+      const toolDescLower = tool.description.toLowerCase();
+      const toolCategoryLower = tool.category.toLowerCase();
+      
+      searchTerms.forEach(term => {
+        // Exact name match gets highest score
+        if (toolNameLower === term) {
+          score += 100;
+        } else if (toolNameLower.startsWith(term)) {
+          score += 50;
+        } else if (toolNameLower.includes(term)) {
+          score += 30;
+        }
+        
+        // Description matches
+        if (toolDescLower.includes(term)) {
+          score += 10;
+        }
+        
+        // Tag matches
+        const tagMatches = tool.tags.filter(tag => 
+          tag.toLowerCase().includes(term)
+        ).length;
+        score += tagMatches * 15;
+        
+        // Category match
+        if (toolCategoryLower.includes(term)) {
+          score += 5;
+        }
+      });
+      
+      return { tool, score };
+    });
+    
+    // Filter out tools with score 0 and sort by relevance
+    filteredTools = scoredTools
+      .filter(item => item.score > 0)
+      .sort((a, b) => {
+        // Sort by score (descending), then by rating, then by review count
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        if (b.tool.rating !== a.tool.rating) {
+          return b.tool.rating - a.tool.rating;
+        }
+        return b.tool.reviewCount - a.tool.reviewCount;
+      })
+      .map(item => item.tool);
+  } else {
+    // No query, sort by rating and review count
+    filteredTools = filteredTools.sort((a, b) => {
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating;
+      }
+      return b.reviewCount - a.reviewCount;
+    });
+  }
+
+    return filteredTools;
+  } catch (error) {
+    console.error('Error searching tools:', error);
+    return [];
+  }
 }
 
 export function getPricingColor(pricing: string): string {
