@@ -144,6 +144,12 @@
   border-radius: 8px;
 }
 
+.homepageAd {
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+}
+
 .topBannerAd {
   max-width: 728px;
   width: 100%;

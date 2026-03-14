@@ -6,6 +6,7 @@ import { SearchFilters, AITool } from '@/lib/types';
 import ToolCard from '@/components/tools/ToolCard';
 import SmallToolCard from '@/components/tools/SmallToolCard';
 import SearchBar from '@/components/search/SearchBar';
+import AdSlot from '@/components/ads/AdSlot';
 import { Grid, List } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -186,6 +187,13 @@ export default function ToolsPage() {
         initialFilters={filters}
       />
 
+      {/* Top Ad */}
+      <AdSlot 
+        slot="tools-bottom" 
+        format="leaderboard"
+        className={styles.topAd}
+      />
+
       <div className={styles.content}>
         <div className={styles.resultsHeader}>
           <div className={styles.resultsInfo}>
@@ -232,6 +240,13 @@ export default function ToolsPage() {
           </div>
         )}
       </div>
+
+      {/* Bottom Ad */}
+      <AdSlot 
+        slot="tools-bottom" 
+        format="leaderboard"
+        className={styles.bottomAd}
+      />
     </div>
   );
 }

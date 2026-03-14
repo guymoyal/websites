@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar }
 import { getTool, getTools, getToolsByCategory } from '@/lib/tools';
 import { getPricingColor } from '@/lib/utils';
 import ToolCard from '@/components/tools/ToolCard';
+import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -126,6 +127,13 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
       </div>
 
+      {/* Top Ad */}
+      <AdSlot 
+        slot="tool-top" 
+        format="leaderboard"
+        className={styles.topAd}
+      />
+
       <div className={styles.content}>
         <div className={styles.main}>
           <section className={styles.section}>
@@ -166,6 +174,13 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
 
         <div className={styles.sidebar}>
+          {/* Sidebar Ad */}
+          <AdSlot 
+            slot="tool-sidebar" 
+            format="rectangle"
+            className={styles.sidebarAd}
+          />
+
           <div className={styles.sidebarCard}>
             <h3>Tool Information</h3>
             <div className={styles.infoList}>
@@ -193,6 +208,13 @@ export default async function ToolPage({ params }: { params: { slug: string } })
           </div>
         </div>
       </div>
+
+      {/* Bottom Ad */}
+      <AdSlot 
+        slot="tool-bottom" 
+        format="leaderboard"
+        className={styles.bottomAd}
+      />
 
       {filteredRelatedTools.length > 0 && (
         <section className={styles.relatedTools}>

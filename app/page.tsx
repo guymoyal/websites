@@ -6,6 +6,7 @@ import { getSiteConfig } from '@/lib/content';
 import { getFeaturedTools, getCategories, getTools } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
+import AdSlot from '@/components/ads/AdSlot';
 
 import styles from './page.module.css';
 
@@ -62,6 +63,15 @@ export default async function HomePage() {
             categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
           />
         </div>
+      </section>
+
+      {/* Homepage Banner Ad */}
+      <section className={styles.adSection}>
+        <AdSlot 
+          slot="homepage-banner" 
+          format="leaderboard"
+          className={styles.homepageAd}
+        />
       </section>
 
 
@@ -133,6 +143,15 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* Homepage Bottom Ad */}
+      <section className={styles.adSection}>
+        <AdSlot 
+          slot="homepage-banner" 
+          format="leaderboard"
+          className={styles.homepageAd}
+        />
       </section>
     </div>
   );

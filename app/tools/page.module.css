@@ -39,6 +39,22 @@
   max-width: 1200px;
 }
 
+.topAd {
+  margin: 2rem auto;
+  max-width: 728px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.bottomAd {
+  margin: 3rem auto;
+  max-width: 728px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .content {
   margin-top: 2rem;
 }
