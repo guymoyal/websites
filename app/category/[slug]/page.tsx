@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -79,10 +79,12 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         </div>
       </div>
 
-      <SearchBar 
-        categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
-        placeholder={`Search ${category.name.toLowerCase()} tools...`}
-      />
+      <Suspense fallback={<div style={{ padding: '1rem', textAlign: 'center' }}>Loading search...</div>}>
+        <SearchBar 
+          categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
+          placeholder={`Search ${category.name.toLowerCase()} tools...`}
+        />
+      </Suspense>
 
       {tools.length > 0 ? (
         <div className={styles.toolsGrid}>

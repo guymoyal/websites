@@ -1,21 +1,31 @@
-import fs from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
 import { AITool, ToolCategory, SearchFilters } from './types';
 
 const contentDir = path.join(process.cwd(), 'content');
 
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.promises.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function getTools(): Promise<AITool[]> {
   try {
     // Try tool-cards.json first, then fallback to tools.json
     let toolsPath = path.join(contentDir, 'tool-cards.json');
-    if (!await fs.pathExists(toolsPath)) {
+    if (!await fileExists(toolsPath)) {
       toolsPath = path.join(contentDir, 'tools.json');
     }
     
-    if (!await fs.pathExists(toolsPath)) {
+    if (!await fileExists(toolsPath)) {
       return [];
     }
-    const tools = await fs.readJSON(toolsPath);
+    const toolsData = await fs.promises.readFile(toolsPath, 'utf-8');
+    const tools = JSON.parse(toolsData);
     return tools.filter((tool: AITool) => tool.status === 'active');
   } catch (error) {
     console.error('Error loading tools:', error);
@@ -73,10 +83,11 @@ export async function getToolsByCategory(category: string): Promise<AITool[]> {
 export async function getCategories(): Promise<ToolCategory[]> {
   try {
     const categoriesPath = path.join(contentDir, 'categories.json');
-    if (!await fs.pathExists(categoriesPath)) {
+    if (!await fileExists(categoriesPath)) {
       return [];
     }
-    return await fs.readJSON(categoriesPath);
+    const categoriesData = await fs.promises.readFile(categoriesPath, 'utf-8');
+    return JSON.parse(categoriesData);
   } catch (error) {
     console.error('Error loading categories:', error);
     return [];

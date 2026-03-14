@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { SearchFilters, AITool } from '@/lib/types';
 import ToolCard from '@/components/tools/ToolCard';
@@ -97,7 +97,7 @@ function searchToolsClient(tools: AITool[], query: string, filters?: SearchFilte
   return filteredTools;
 }
 
-export default function ToolsPage() {
+function ToolsPageContent() {
   const searchParams = useSearchParams();
   const [allTools, setAllTools] = useState<AITool[]>([]);
   const [categories, setCategories] = useState<Array<{ name: string; slug: string }>>([]);
@@ -180,12 +180,14 @@ export default function ToolsPage() {
         </p>
       </div>
 
-      <SearchBar 
-        categories={categories}
-        placeholder="Search from thousands of AI tools..."
-        initialQuery={query}
-        initialFilters={filters}
-      />
+      <Suspense fallback={<div style={{ padding: '1rem', textAlign: 'center' }}>Loading search...</div>}>
+        <SearchBar 
+          categories={categories}
+          placeholder="Search from thousands of AI tools..."
+          initialQuery={query}
+          initialFilters={filters}
+        />
+      </Suspense>
 
       {/* Top Ad */}
       <AdSlot 
@@ -248,5 +250,20 @@ export default function ToolsPage() {
         className={styles.bottomAd}
       />
     </div>
+  );
+}
+
+export default function ToolsPage() {
+  return (
+    <Suspense fallback={
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>AI Tools Directory</h1>
+          <p className={styles.subtitle}>Loading...</p>
+        </div>
+      </div>
+    }>
+      <ToolsPageContent />
+    </Suspense>
   );
 }

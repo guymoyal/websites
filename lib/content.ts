@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
 import matter from 'gray-matter';
@@ -64,7 +64,8 @@ const contentDir = path.join(process.cwd(), 'content');
 export async function getSiteConfig(): Promise<SiteConfig> {
   try {
     const configPath = path.join(contentDir, 'config.json');
-    const config = await fs.readJSON(configPath);
+    const configData = await fs.promises.readFile(configPath, 'utf-8');
+    const config = JSON.parse(configData);
     return config;
   } catch (error) {
     console.error('Error loading site config:', error);
@@ -97,7 +98,8 @@ export async function getSiteConfig(): Promise<SiteConfig> {
 export async function getArticles(): Promise<Article[]> {
   try {
     const articlesPath = path.join(contentDir, 'articles.json');
-    const articles = await fs.readJSON(articlesPath);
+    const articlesData = await fs.promises.readFile(articlesPath, 'utf-8');
+    const articles = JSON.parse(articlesData);
     return articles.filter((article: Article) => article.status === 'published');
   } catch (error) {
     console.error('Error loading articles:', error);
@@ -123,7 +125,8 @@ export async function getArticlesByCategory(category: string): Promise<Article[]
 export async function getPageContent(): Promise<PageContent> {
   try {
     const pagesPath = path.join(contentDir, 'pages.json');
-    const pages = await fs.readJSON(pagesPath);
+    const pagesData = await fs.promises.readFile(pagesPath, 'utf-8');
+    const pages = JSON.parse(pagesData);
     return pages;
   } catch (error) {
     console.error('Error loading page content:', error);

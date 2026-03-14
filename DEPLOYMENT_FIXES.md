@@ -1,0 +1,131 @@
+# Deployment Fixes Applied
+
+## ✅ Build Errors Fixed
+
+### 1. Fixed `fs.readJSON` Error
+**Problem:** `fs-extra.readJSON` was not available during Next.js static export build.
+
+**Solution:** Replaced `fs-extra` with native Node.js `fs` module:
+- Changed `fs.readJSON()` to `fs.promises.readFile()` + `JSON.parse()`
+- Updated `/lib/content.ts` and `/lib/tools.ts`
+- Added helper function `fileExists()` to replace `fs.pathExists()`
+
+### 2. Fixed `useSearchParams()` Suspense Error
+**Problem:** `useSearchParams()` requires Suspense boundary for static export.
+
+**Solution:** Wrapped `SearchBar` component in `<Suspense>` boundaries:
+- Updated `/app/page.tsx` (homepage)
+- Updated `/app/category/[slug]/page.tsx`
+- Updated `/app/tools/page.tsx` (wrapped entire page component)
+
+## ✅ Build Status
+
+**Build:** ✅ Successful
+**Output Directory:** `/out` (ready for deployment)
+**Static Pages Generated:** 90 pages
+
+## 🚀 Deployment Options
+
+### Option 1: Cloudflare Pages (Recommended)
+
+Since your `next.config.js` has `output: 'export'`, you should use **Cloudflare Pages** instead of Workers:
+
+1. **Build your site:**
+   ```bash
+   yarn build
+   ```
+
+2. **Deploy to Cloudflare Pages:**
+   - Go to [Cloudflare Dashboard](https://dash.cloudflare.com) → Pages
+   - Click "Create a project"
+   - Choose "Upload assets"
+   - Upload the entire `./out` folder
+   - Or connect via Git for automatic deployments
+
+3. **Configure Custom Domain:**
+   - Add `aibuzztools.com` in Pages → Custom domains
+   - Update DNS records as instructed
+
+### Option 2: Cloudflare Workers (Current Setup)
+
+If you want to use Workers (as configured in `wrangler.toml`):
+
+1. **Make sure you're logged in:**
+   ```bash
+   yarn cf:login
+   ```
+
+2. **Deploy:**
+   ```bash
+   yarn deploy:cloudflare
+   ```
+
+   This will:
+   - Build the site (`yarn build`)
+   - Deploy via `wrangler deploy`
+
+3. **Verify `wrangler.toml`:**
+   - Check that `directory = "./out"` is correct
+   - Verify routes match your domain
+
+### Option 3: Manual Upload
+
+1. **Build:**
+   ```bash
+   yarn build
+   ```
+
+2. **Upload `./out` folder** to any static hosting:
+   - Netlify
+   - Vercel
+   - GitHub Pages
+   - Any static file host
+
+## 📋 Pre-Deployment Checklist
+
+- [x] Build completes successfully
+- [x] All pages generate without errors
+- [x] `ads.txt` is in `/out` directory
+- [ ] Verify `ads.txt` is accessible at `https://yourdomain.com/ads.txt` after deployment
+- [ ] Test site after deployment
+- [ ] Check AdSense dashboard for Auto Ads activation
+
+## 🔍 Verify Deployment
+
+After deploying, check:
+
+1. **Site loads:** Visit your domain
+2. **ads.txt accessible:** `https://yourdomain.com/ads.txt`
+3. **AdSense script loads:** Check page source for AdSense script
+4. **Auto Ads status:** Check AdSense dashboard → Ads → Auto ads
+
+## ⚠️ Important Notes
+
+- **Auto Ads:** Since you enabled Auto Ads, you don't need to create manual ad units
+- **Wait Time:** Auto Ads may take 24-48 hours to fully activate after deployment
+- **Traffic:** Very low traffic sites may see fewer ads initially
+
+## 🐛 If Deployment Fails
+
+1. **Check wrangler login:**
+   ```bash
+   yarn cf:login
+   ```
+
+2. **Check wrangler.toml:**
+   - Verify account_id is set (or logged in)
+   - Check routes match your domain
+
+3. **Try Cloudflare Pages instead:**
+   - More reliable for static sites
+   - Better performance
+   - Easier setup
+
+## 📊 Next Steps
+
+1. **Deploy your site** using one of the methods above
+2. **Wait 24-48 hours** for Auto Ads to activate
+3. **Monitor AdSense dashboard** for ad performance
+4. **Submit sitemap** to Google Search Console for SEO
+
+Your site is ready to deploy! 🎉

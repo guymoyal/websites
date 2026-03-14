@@ -59,9 +59,11 @@ export default async function HomePage() {
             <Zap className={styles.searchIcon} />
             Find Your Perfect AI Tool
           </h2>
-          <SearchBar 
-            categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
-          />
+          <Suspense fallback={<div className={styles.searchBarPlaceholder}>Loading search...</div>}>
+            <SearchBar 
+              categories={categories.map(cat => ({ name: cat.name, slug: cat.slug }))}
+            />
+          </Suspense>
         </div>
       </section>
 
