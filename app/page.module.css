@@ -5,7 +5,7 @@
 .hero {
   background: linear-gradient(135deg, #1a4d8c 0%, #2F7FD8 50%, #1E5FA8 100%);
   color: white;
-  padding: 4rem 0 5rem;
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3rem, 7vw, 5rem);
   position: relative;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(30, 95, 168, 0.3);
@@ -65,7 +65,7 @@
 }
 
 .heroTitle {
-  font-size: 3rem;
+  font-size: clamp(1.875rem, 5vw, 3rem);
   font-weight: 900;
   margin-bottom: 1rem;
   line-height: 1.1;
@@ -73,28 +73,17 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) {
-  .heroTitle {
-    font-size: 2.25rem;
-  }
-}
-
 .heroSubtitle {
-  font-size: 1.375rem;
+  font-size: clamp(1rem, 2.8vw, 1.375rem);
   opacity: 0.95;
   margin-bottom: 2rem;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 0.5rem;
   line-height: 1.6;
   font-weight: 400;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-  .heroSubtitle {
-    font-size: 1.125rem;
-  }
 }
 
 .heroActions {
@@ -179,6 +168,14 @@
   z-index: 1;
 }
 
+.affiliateSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .adSection {
   margin: 2rem 0;
   padding: 1rem;
@@ -186,6 +183,10 @@
   justify-content: center;
   background-color: #f8f9fa;
   border-radius: 8px;
+  max-width: 1200px;
+  margin-inline: auto;
+  width: calc(100% - 2rem);
+  box-sizing: border-box;
 }
 
 .homepageAd {
@@ -286,7 +287,7 @@
 }
 
 .sectionTitle {
-  font-size: 2.5rem;
+  font-size: clamp(1.625rem, 4vw, 2.5rem);
   font-weight: 800;
   background: linear-gradient(135deg, #1E5FA8 0%, #2F7FD8 100%);
   -webkit-background-clip: text;
@@ -445,9 +446,23 @@
 }
 
 .categoriesGrid > * {
-  flex: 0 0 auto;
-  width: calc(25% - 1.125rem);
-  min-width: 250px;
+  flex: 1 1 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 560px) {
+  .categoriesGrid > * {
+    flex: 1 1 calc(50% - 0.5rem);
+    max-width: calc(50% - 0.5rem);
+  }
+}
+
+@media (min-width: 960px) {
+  .categoriesGrid > * {
+    flex: 1 1 calc(25% - 0.75rem);
+    max-width: calc(25% - 0.75rem);
+  }
 }
 
 .categoryCard {
@@ -564,7 +579,7 @@
   }
   
   .heroTitle {
-    font-size: 3.25rem;
+    font-size: clamp(2rem, 4vw, 3.25rem);
   }
   
   .heroActions {
@@ -580,10 +595,6 @@
 }
 
 @media (max-width: 768px) {
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-  
   .toolsGrid {
     gap: 1.5rem;
   }

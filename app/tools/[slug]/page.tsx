@@ -6,7 +6,9 @@ import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar, 
 import { getTool, getTools, getToolsByCategory } from '@/lib/tools';
 import { getPricingColor } from '@/lib/utils';
 import ToolCard from '@/components/tools/ToolCard';
-import AdSlot from '@/components/ads/AdSlot';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import MonetizationSidebar from '@/components/ads/MonetizationSidebar';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -133,9 +135,8 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
       </div>
 
-      {/* Top Ad */}
-      <AdSlot 
-        slot="tool-top" 
+      <MonetizationLeaderboard
+        slot="tool-top"
         format="leaderboard"
         className={styles.topAd}
       />
@@ -180,12 +181,7 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
 
         <div className={styles.sidebar}>
-          {/* Sidebar Ad */}
-          <AdSlot 
-            slot="tool-sidebar" 
-            format="rectangle"
-            className={styles.sidebarAd}
-          />
+          <MonetizationSidebar adsenseSlot="tool-sidebar" />
 
           <div className={styles.sidebarCard}>
             <h3>Tool Information</h3>
@@ -215,9 +211,8 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
       </div>
 
-      {/* Bottom Ad */}
-      <AdSlot 
-        slot="tool-bottom" 
+      <ResidualDisplayAd
+        slot="tool-bottom"
         format="leaderboard"
         className={styles.bottomAd}
       />

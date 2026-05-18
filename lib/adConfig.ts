@@ -4,8 +4,10 @@
 export const AD_SLOTS = {
   // Homepage ads
   'homepage-banner': '1234567890',
+  'homepage-bottom': '1234567915',
   
   // Tools page ads
+  'tools-top': '1234567916',
   'tools-bottom': '1234567891',
   'tool-top': '1234567892',
   'tool-sidebar': '1234567893', 

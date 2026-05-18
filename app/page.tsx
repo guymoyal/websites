@@ -6,7 +6,9 @@ import { getSiteConfig, getArticles, formatDate } from '@/lib/content';
 import { getFeaturedTools, getCategories, getNewToolsThisWeek, getTrendingTools } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
-import AdSlot from '@/components/ads/AdSlot';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
+import AffiliateStrip from '@/components/ads/AffiliateStrip';
 
 import styles from './page.module.css';
 
@@ -29,7 +31,7 @@ export default async function HomePage() {
               Discover the Best AI Tools for Every Need
             </h1>
             <p className={styles.heroSubtitle}>
-              Find, compare, and choose from thousands of AI-powered tools to boost your productivity and creativity
+              Find, compare, and choose curated AI-powered tools—updated regularly—to boost productivity and creativity
             </p>
             <div className={styles.heroActions}>
               <Link href="/tools" className={styles.primaryButton}>
@@ -61,13 +63,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Homepage Banner Ad */}
+      {/* Primary sponsor / AdSense */}
       <section className={styles.adSection}>
-        <AdSlot 
-          slot="homepage-banner" 
+        <MonetizationLeaderboard
+          slot="homepage-banner"
           format="leaderboard"
           className={styles.homepageAd}
         />
+      </section>
+
+      <section className={styles.affiliateSection} aria-label="Partner recommendations">
+        <AffiliateStrip variant="row" />
       </section>
 
 
@@ -236,10 +242,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Homepage Bottom Ad */}
+      {/* Secondary: AdSense only (avoids repeating sponsor banners) */}
       <section className={styles.adSection}>
-        <AdSlot 
-          slot="homepage-banner" 
+        <ResidualDisplayAd
+          slot="homepage-bottom"
           format="leaderboard"
           className={styles.homepageAd}
         />

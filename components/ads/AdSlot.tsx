@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { getAdSlotId } from '@/lib/adConfig';
+import { isAdSenseActive, getAdSensePublisherId } from '@/lib/monetization';
 
 interface AdSlotProps {
   slot: string;
@@ -10,18 +11,23 @@ interface AdSlotProps {
 }
 
 const AdSlot: React.FC<AdSlotProps> = ({ slot, format = 'auto', className = '' }) => {
+  const clientId = getAdSensePublisherId();
+
   useEffect(() => {
+    if (!isAdSenseActive() || !clientId) return;
     try {
-      // @ts-ignore - adsbygoogle is loaded from Google AdSense script
-      if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      if (typeof window !== 'undefined' && window.adsbygoogle) {
+        window.adsbygoogle.push({});
       }
     } catch (e) {
       console.error('AdSense error:', e);
     }
-  }, []);
+  }, [clientId]);
 
-  // Get actual slot ID from config if slot is a named slot, otherwise use as-is
+  if (!isAdSenseActive() || !clientId) {
+    return null;
+  }
+
   const slotId = getAdSlotId(slot);
 
   return (
@@ -29,7 +35,7 @@ const AdSlot: React.FC<AdSlotProps> = ({ slot, format = 'auto', className = '' }
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
-        data-ad-client="ca-pub-2201239508910470"
+        data-ad-client={clientId}
         data-ad-slot={slotId}
         data-ad-format={format}
         data-full-width-responsive="true"

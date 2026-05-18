@@ -7,7 +7,7 @@
 .header {
   text-align: center;
   margin-bottom: 3rem;
-  padding: 3rem 2rem;
+  padding: clamp(1.75rem, 4vw, 3rem) 1rem;
   background: linear-gradient(135deg, #1a4d8c 0%, #2F7FD8 50%, #1E5FA8 100%);
   border-radius: 1rem;
   color: white;
@@ -25,7 +25,7 @@
 }
 
 .title {
-  font-size: 2.75rem;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: white;
   margin-bottom: 0.75rem;
@@ -42,8 +42,8 @@
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
@@ -97,7 +97,7 @@
 
 .articlesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }
@@ -251,17 +251,37 @@
 /* Tablet and Desktop */
 @media (min-width: 768px) {
   .content {
-    grid-template-columns: 300px 1fr;
-    gap: 3rem;
+    display: grid;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
   }
-  
+
+  .main {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .sidebar {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
   .articlesGrid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .articlesGrid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
   }
 }

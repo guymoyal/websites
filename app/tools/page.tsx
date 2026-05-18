@@ -6,7 +6,8 @@ import { SearchFilters, AITool } from '@/lib/types';
 import ToolCard from '@/components/tools/ToolCard';
 import SmallToolCard from '@/components/tools/SmallToolCard';
 import SearchBar from '@/components/search/SearchBar';
-import AdSlot from '@/components/ads/AdSlot';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
 import { Grid, List } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -191,7 +192,7 @@ function ToolsPageContent() {
       <div className={styles.header}>
         <h1 className={styles.title}>AI Tools Directory</h1>
         <p className={styles.subtitle}>
-          Discover and explore {filteredTools.length} AI tools to boost your productivity
+          Discover and explore {filteredTools.length} curated AI tools for every workflow—instant search, filtered by category
         </p>
       </div>
 
@@ -204,9 +205,8 @@ function ToolsPageContent() {
         />
       </Suspense>
 
-      {/* Top Ad */}
-      <AdSlot 
-        slot="tools-bottom" 
+      <MonetizationLeaderboard
+        slot="tools-top"
         format="leaderboard"
         className={styles.topAd}
       />
@@ -247,9 +247,8 @@ function ToolsPageContent() {
         )}
       </div>
 
-      {/* Bottom Ad */}
-      <AdSlot 
-        slot="tools-bottom" 
+      <ResidualDisplayAd
+        slot="tools-bottom"
         format="leaderboard"
         className={styles.bottomAd}
       />

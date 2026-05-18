@@ -4,6 +4,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getSiteConfig } from '@/lib/content'
+import { getAdSensePublisherId, isAdSenseActive } from '@/lib/monetization'
 
 
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
@@ -80,12 +81,21 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const config = await getSiteConfig();
+  const adsenseClient = isAdSenseActive() ? getAdSensePublisherId() : undefined
 
   return (
     <html lang="en">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-2201239508910470" />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201239508910470" crossOrigin="anonymous"></script>
+        {adsenseClient ? (
+          <>
+            <meta name="google-adsense-account" content={adsenseClient} />
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+              crossOrigin="anonymous"
+            />
+          </>
+        ) : null}
       </head>
       <body className={dmSans.className}>
         <a href="#main-content" className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-[#2F7FD8] focus-visible:text-white focus-visible:rounded">

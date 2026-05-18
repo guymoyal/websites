@@ -3,8 +3,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Clock, User, ArrowLeft, RefreshCw } from 'lucide-react';
-import { getArticle, getArticles, getRelatedArticles, formatDate, parseMarkdown } from '@/lib/content';
-import AdSlot from '@/components/ads/AdSlot';
+import { getArticle, getArticles, getRelatedArticles, formatDate, parseMarkdown, getSiteConfig } from '@/lib/content';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
+import AffiliateStrip from '@/components/ads/AffiliateStrip';
 import styles from './page.module.css';
 
 export const dynamicParams = false;
@@ -71,6 +73,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
   const relatedArticles = await getRelatedArticles(article.slug);
   const htmlContent = parseMarkdown(article.content);
+  const site = await getSiteConfig();
+  const origin = site.url.replace(/\/+$/, '');
+  const shareUrl = `${origin}/blog/${article.slug}/`;
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -82,7 +87,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     dateModified: article.updatedAt,
     author: { '@type': 'Organization', name: 'AI Buzz World' },
     publisher: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzztools.com' },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://aibuzztools.com/blog/${article.slug}` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': shareUrl },
   };
 
   return (
@@ -147,9 +152,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </div>
         )}
 
-        {/* Top Ad */}
-        <AdSlot 
-          slot="article-top" 
+        <MonetizationLeaderboard
+          slot="article-top"
           format="leaderboard"
           className={styles.topAd}
         />
@@ -161,9 +165,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           />
         </div>
 
-        {/* Middle Ad */}
-        <AdSlot 
-          slot="article-middle" 
+        <ResidualDisplayAd
+          slot="article-middle"
           format="leaderboard"
           className={styles.middleAd}
         />
@@ -173,29 +176,38 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             <h3>Share this article</h3>
             <div className={styles.shareButtons}>
               <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(shareUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.shareButton}
               >
-                Share on Twitter
+                Share on X
               </a>
               <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.shareButton}
               >
                 Share on LinkedIn
               </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.shareButton}
+              >
+                Share on Facebook
+              </a>
             </div>
           </div>
         </footer>
       </article>
 
-      {/* Bottom Ad */}
-      <AdSlot 
-        slot="article-bottom" 
+      <AffiliateStrip variant="row" className={styles.articleAffiliateRow} />
+
+      <ResidualDisplayAd
+        slot="article-bottom"
         format="leaderboard"
         className={styles.bottomAd}
       />

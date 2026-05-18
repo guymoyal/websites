@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { getCategories } from '@/lib/tools';
-import AdSlot from '@/components/ads/AdSlot';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
 import { ArrowRight } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -17,8 +18,8 @@ export default async function CategoriesPage() {
         </p>
       </div>
 
-      <AdSlot 
-        slot="categories-top" 
+      <MonetizationLeaderboard
+        slot="categories-top"
         format="leaderboard"
         className={styles.adSlot}
       />
@@ -43,8 +44,8 @@ export default async function CategoriesPage() {
         ))}
       </div>
 
-      <AdSlot 
-        slot="categories-bottom" 
+      <ResidualDisplayAd
+        slot="categories-bottom"
         format="leaderboard"
         className={styles.adSlot}
       />
