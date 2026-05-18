@@ -105,8 +105,22 @@ ai-buzz-tools/
 ├── content/               # Generated content (JSON files)
 ├── scripts/               # Content generation scripts
 ├── public/                # Static assets
-└── docs/                  # Documentation
+├── _bmad/                 # BMAD Method module config (BMM)
+├── _bmad-output/          # BMAD planning & implementation artifacts
+└── docs/                  # Documentation (BMAD project_knowledge)
 ```
+
+## 🧭 BMAD Method (product, dev, tech writing, SEO)
+
+This repo includes the **[BMAD Method](https://docs.bmad-method.org)** (BMM) for structured AI-assisted product work.
+
+- **Install / update:** `npx bmad-method install --directory . --modules bmm --tools cursor --output-folder _bmad-output --yes`
+- **Orientation:** In Cursor Agent, use the **`bmad-help`** skill.
+- **Multi-agent discussion:** **`bmad-party-mode`** (PM, architect, dev, QA, UX, etc.).
+- **Your stack here:** **`bmad-agent-pm`**, **`bmad-agent-dev`**, **`bmad-agent-tech-writer`**, plus project skill **`aibuzz-seo-expert`** for search/content alignment.
+- **Grounding doc:** [`docs/PROJECT_KNOWLEDGE_BMAD.md`](docs/PROJECT_KNOWLEDGE_BMAD.md)
+
+Artifacts land in `_bmad-output/planning-artifacts/` and `_bmad-output/implementation-artifacts/`.
 
 ## 📊 Content Management
 

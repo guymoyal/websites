@@ -1,12 +1,13 @@
 .header {
-  background: #ffffff;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(30, 95, 168, 0.08);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
   z-index: 50;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .container {
@@ -19,7 +20,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
+  min-height: 64px;
+  padding: 0.25rem 0;
 }
 
 .logo {
@@ -33,14 +35,14 @@
   transform: scale(1.05);
 }
 
-.logoImage {
-  height: auto;
-  width: auto;
-  max-height: 60px;
-  max-width: 200px;
-  object-fit: contain;
-  background: transparent;
-  mix-blend-mode: normal;
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1E5FA8 0%, #2F7FD8 50%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
 }
 
 .desktopNav {
@@ -50,15 +52,22 @@
 
 .navLink {
   text-decoration: none;
-  color: #2F7FD8;
+  color: #475569;
   font-weight: 600;
-  transition: all 0.2s ease;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .navLink:hover {
-  color: #2F7FD8;
-  font-weight: 700;
-  text-decoration: underline;
+  color: #1E5FA8;
+  background-color: rgba(47, 127, 216, 0.08);
+}
+
+.navLinkActive {
+  color: #1E5FA8;
+  background-color: rgba(47, 127, 216, 0.12);
 }
 
 .mobileMenuButton {
@@ -87,17 +96,22 @@
 
 .mobileNavLink {
   display: block;
-  padding: 0.75rem 0;
+  padding: 0.75rem 0.75rem;
   text-decoration: none;
-  color: #2F7FD8;
+  color: #475569;
   font-weight: 600;
-  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .mobileNavLink:hover {
-  color: #2F7FD8;
-  font-weight: 700;
-  text-decoration: underline;
+  color: #1E5FA8;
+  background-color: rgba(47, 127, 216, 0.08);
+}
+
+.mobileNavLinkActive {
+  color: #1E5FA8;
+  background-color: rgba(47, 127, 216, 0.12);
 }
 
 @keyframes slideDown {

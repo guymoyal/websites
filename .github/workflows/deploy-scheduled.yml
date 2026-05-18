@@ -1,0 +1,43 @@
+# Keeps the live site fresh: bump content dates, rebuild static export, deploy to Cloudflare.
+# Schedule: every day at 06:00 UTC (meets “at least every 2 days”). Edit cron to change frequency.
+#
+# Secrets (repo → Settings → Secrets):
+#   CLOUDFLARE_API_TOKEN — API token with Workers + Account read, edit on the target worker
+#
+# Optional for AI-heavy refresh (add workflow step or use workflow_dispatch input):
+#   GEMINI_API_KEY — only if you add generateWeeklyNews / refreshOldContent to this file
+
+name: Deploy site (scheduled)
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-aibuzz
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn install --frozen-lockfile || yarn install
+
+      - name: Refresh content dates & build
+        run: |
+          node scripts/updateContentDates.js
+          yarn build
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

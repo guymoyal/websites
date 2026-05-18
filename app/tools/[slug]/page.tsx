@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Verified, Globe, DollarSign, Users, Calendar, Clock } from 'lucide-react';
 import { getTool, getTools, getToolsByCategory } from '@/lib/tools';
 import { getPricingColor } from '@/lib/utils';
 import ToolCard from '@/components/tools/ToolCard';
@@ -109,6 +109,12 @@ export default async function ToolPage({ params }: { params: { slug: string } })
               <span className={`${styles.pricing} ${getPricingColor(tool.pricing)}`}>
                 {tool.pricing}
               </span>
+              {tool.lastUpdated && (
+                <span className={styles.lastUpdated}>
+                  <Clock size={14} />
+                  Updated {new Date(tool.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              )}
             </div>
           </div>
         </div>

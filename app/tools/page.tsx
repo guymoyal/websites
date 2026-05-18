@@ -113,8 +113,22 @@ function ToolsPageContent() {
           fetch('/content/categories.json')
         ]);
         
+        if (!toolsRes.ok) {
+          throw new Error(`Failed to load tools: ${toolsRes.status}`);
+        }
+        if (!categoriesRes.ok) {
+          throw new Error(`Failed to load categories: ${categoriesRes.status}`);
+        }
+        
         const toolsData = await toolsRes.json();
         const categoriesData = await categoriesRes.json();
+        
+        if (!Array.isArray(toolsData)) {
+          throw new Error('Tools data is not an array');
+        }
+        if (!Array.isArray(categoriesData)) {
+          throw new Error('Categories data is not an array');
+        }
         
         const activeTools = (toolsData as AITool[]).filter((tool: AITool) => tool.status === 'active');
         setAllTools(activeTools);
@@ -122,6 +136,9 @@ function ToolsPageContent() {
         setLoading(false);
       } catch (error) {
         console.error('Error loading tools:', error);
+        // Set empty arrays on error so UI can show error state
+        setAllTools([]);
+        setCategories([]);
         setLoading(false);
       }
     }
@@ -157,8 +174,6 @@ function ToolsPageContent() {
   const filteredTools = useMemo(() => {
     return searchToolsClient(allTools, query, effectiveFilters);
   }, [allTools, query, effectiveFilters]);
-
-  const hasSearchQuery = Boolean(query || filters.category || filters.pricing || filters.rating || filters.featured);
 
   if (loading) {
     return (
@@ -218,22 +233,11 @@ function ToolsPageContent() {
           </div>
         </div>
         {filteredTools.length > 0 ? (
-          <>
-            {/* Show small cards when searching */}
-            {hasSearchQuery && (
-              <div className={styles.smallCardsGrid}>
-                {filteredTools.slice(0, 6).map((tool) => (
-                  <SmallToolCard key={tool.id} tool={tool} />
-                ))}
-              </div>
-            )}
-            {/* Show regular cards (3 per row) */}
-            <div className={styles.toolsGrid}>
-              {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
-              ))}
-            </div>
-          </>
+          <div className={styles.toolsGrid}>
+            {filteredTools.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
         ) : (
           <div className={styles.noResults}>
             <div className={styles.noResultsIcon}>🔍</div>

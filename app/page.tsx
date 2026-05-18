@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Search, Star, TrendingUp, Zap } from 'lucide-react';
-import { getSiteConfig } from '@/lib/content';
-import { getFeaturedTools, getCategories, getTools } from '@/lib/tools';
+import { ArrowRight, Search, Star, TrendingUp, Zap, Sparkles, BookOpen } from 'lucide-react';
+import { getSiteConfig, getArticles, formatDate } from '@/lib/content';
+import { getFeaturedTools, getCategories, getNewToolsThisWeek, getTrendingTools } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
 import AdSlot from '@/components/ads/AdSlot';
@@ -14,6 +14,9 @@ export default async function HomePage() {
   const config = await getSiteConfig();
   const featuredTools = await getFeaturedTools();
   const categories = await getCategories();
+  const newToolsThisWeek = await getNewToolsThisWeek();
+  const trendingTools = await getTrendingTools();
+  const articles = await getArticles();
 
   return (
     <div className={styles.container}>
@@ -21,6 +24,7 @@ export default async function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroText}>
+            <span className={styles.heroBadge}>2026 Edition</span>
             <h1 className={styles.heroTitle}>
               Discover the Best AI Tools for Every Need
             </h1>
@@ -38,16 +42,6 @@ export default async function HomePage() {
                 Browse Categories
               </Link>
             </div>
-          </div>
-          <div className={styles.heroImage}>
-            <Image
-              src="/images/hero-banner.png"
-              alt="AI Buzz World - Discover the Best AI Tools"
-              width={250}
-              height={188}
-              className={styles.heroImg}
-              priority
-            />
           </div>
         </div>
       </section>
@@ -78,15 +72,71 @@ export default async function HomePage() {
 
 
 
+      {/* New Tools This Week */}
+      {newToolsThisWeek.length > 0 && (
+        <section className={styles.newTools}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>
+              <Sparkles className={styles.sectionIcon} />
+              New AI Tools This Week
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Discover the latest AI tools added to our directory
+            </p>
+          </div>
+          
+          <div className={styles.toolsGrid}>
+            {newToolsThisWeek.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
+          
+          <div className={styles.sectionFooter}>
+            <Link href="/tools" className={styles.viewAllButton}>
+              View All Tools
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Trending Tools */}
+      {trendingTools.length > 0 && (
+        <section className={styles.trendingTools}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>
+              <TrendingUp className={styles.sectionIcon} />
+              Trending AI Tools Right Now
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              The most popular and highly-rated AI tools that everyone is using in 2026
+            </p>
+          </div>
+          
+          <div className={styles.toolsGrid}>
+            {trendingTools.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
+          
+          <div className={styles.sectionFooter}>
+            <Link href="/tools" className={styles.viewAllButton}>
+              View All Tools
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* Featured Tools */}
       <section className={styles.featuredTools}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
-            <TrendingUp className={styles.sectionIcon} />
-            Trending AI Tools Right Now
+            <Star className={styles.sectionIcon} />
+            Featured AI Tools
           </h2>
           <p className={styles.sectionSubtitle}>
-            The most talked-about and popular AI tools that everyone is using in 2026
+            Hand-picked AI tools that stand out for their innovation and value
           </p>
         </div>
         
@@ -103,6 +153,48 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Latest Articles */}
+      {articles.length > 0 && (
+        <section className={styles.latestArticles}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>
+              <BookOpen className={styles.sectionIcon} />
+              Latest from the Blog
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Guides, tips, and insights to help you get the most from AI tools
+            </p>
+          </div>
+          <div className={styles.articlesPreview}>
+            {articles.slice(0, 6).map((article) => (
+              <Link key={article.slug} href={`/blog/${article.slug}`} className={styles.articlePreviewCard}>
+                <div className={styles.articlePreviewImage}>
+                  <Image
+                    src={article.image || '/images/hero-placeholder.jpg'}
+                    alt={article.title}
+                    width={320}
+                    height={180}
+                    className={styles.articlePreviewImg}
+                  />
+                </div>
+                <div className={styles.articlePreviewContent}>
+                  <h3 className={styles.articlePreviewTitle}>{article.title}</h3>
+                  <p className={styles.articlePreviewMeta}>
+                    {formatDate(article.publishedAt)} · {article.readingTime} min read
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className={styles.sectionFooter}>
+            <Link href="/blog" className={styles.viewAllButton}>
+              View All Articles
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Categories Section */}
       <section className={styles.categories}>
@@ -139,9 +231,6 @@ export default async function HomePage() {
           <div className={styles.ctaActions}>
             <Link href="/tools" className={styles.primaryButton}>
               Explore All Tools
-            </Link>
-            <Link href="/submit" className={styles.secondaryButton}>
-              Submit a Tool
             </Link>
           </div>
         </div>

@@ -125,16 +125,25 @@ export default function AboutPage() {
         </section>
 
         <section className={styles.section}>
+          <h2>Editorial Policy</h2>
+          <p>
+            We are committed to providing accurate, unbiased, and helpful information about AI tools.
+          </p>
+          <ul className={styles.policyList}>
+            <li><strong>Accuracy:</strong> We verify tool features, pricing, and capabilities before publishing. Information is updated regularly.</li>
+            <li><strong>Independence:</strong> Our reviews are based on hands-on testing and research. We disclose any affiliate or partnership relationships.</li>
+            <li><strong>Transparency:</strong> Some content is AI-assisted. All articles are fact-checked and edited by our team before publication.</li>
+            <li><strong>User-first:</strong> We prioritize helping you find the right tools for your needs, not promoting specific products.</li>
+          </ul>
+        </section>
+
+        <section className={styles.section}>
           <h2>Join Our Community</h2>
           <p>
             We're more than just a directory – we're a community of AI enthusiasts 
             helping each other navigate the rapidly evolving world of artificial intelligence.
           </p>
           <div className={styles.community}>
-            <div className={styles.communityItem}>
-              <h4>Submit Tools</h4>
-              <p>Know of a great AI tool? Submit it for review and help others discover it.</p>
-            </div>
             <div className={styles.communityItem}>
               <h4>Share Reviews</h4>
               <p>Share your experiences with AI tools to help the community make better decisions.</p>

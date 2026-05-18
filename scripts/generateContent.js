@@ -1,389 +1,211 @@
-const fs = require('fs-extra');
+#!/usr/bin/env node
+/**
+ * Generate blog articles using DeepSeek (chat API). No Gemini required.
+ * Usage: yarn generate:content
+ * Env: DEEPSEEK_API_KEY, optional ARTICLES_TO_GENERATE, WEBSITE_TOPIC
+ */
+const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
 
-// Load environment variables from .env.local
+require('dotenv').config();
 require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
-async function generateArticleContent(topic) {
-  const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
-  
-  if (!deepseekApiKey) {
-    throw new Error('DEEPSEEK_API_KEY is required');
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+
+async function callDeepSeek(systemPrompt, userPrompt, maxTokens = 4000) {
+  const response = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 0.7,
+      max_tokens: maxTokens,
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`DeepSeek API ${response.status}: ${errText}`);
   }
 
-  // Article topics related to AI tools
+  const data = await response.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Empty response from DeepSeek');
+  return text.trim();
+}
+
+async function generateArticleContent() {
+  if (!DEEPSEEK_API_KEY) {
+    throw new Error('DEEPSEEK_API_KEY is required. Set it in .env.local (https://platform.deepseek.com).');
+  }
+
+  const currentYear = new Date().getFullYear();
   const articleTopics = [
-    'Best AI Writing Tools for Content Creators',
-    'Top AI Image Generators Revolutionizing Design',
+    `Best AI Writing Tools for Content Creators ${currentYear}`,
+    `ChatGPT vs Claude vs Gemini comparison ${currentYear}`,
+    `Best AI coding assistants ${currentYear}`,
+    'AI Video Editing Tools: Sora, Runway, Pika compared',
     'AI Productivity Tools Every Professional Needs',
-    'Machine Learning Platforms for Beginners',
-    'AI Video Editing Tools Changing Content Creation',
-    'Conversational AI Chatbots for Business',
-    'AI Code Assistants for Developers',
+    'AI Marketing Automation Tools for 2026',
+    `Best AI tools for small business ${currentYear}`,
     'AI Analytics Tools for Data-Driven Decisions',
     'Voice AI Technology and Speech Recognition',
-    'AI Marketing Automation Tools',
-    'Computer Vision Applications in Business',
-    'Natural Language Processing Tools',
     'AI-Powered Customer Service Solutions',
+    'AI Tools for Social Media Management',
+    `Best free AI tools ${currentYear}`,
+    'AI image generators: Midjourney vs DALL-E vs Ideogram',
+    'Natural Language Processing Tools',
     'Automated Content Generation Platforms',
-    'AI Tools for Social Media Management'
   ];
 
   const randomTopic = articleTopics[Math.floor(Math.random() * articleTopics.length)];
-  
-  const prompt = `Write a comprehensive, SEO-optimized blog article about "${randomTopic}". 
+
+  const userPrompt = `Write a comprehensive, SEO-optimized blog article about "${randomTopic}" for an AI tools directory website.
 
 The article should be:
 - 1500-2000 words long
 - Written in an engaging, professional tone
 - Include practical tips and actionable advice
-- Have clear headings and subheadings
-- Include specific tool recommendations
+- Have clear headings and subheadings (use ## for H2, ### for H3)
+- Include specific tool recommendations with brief descriptions and current pricing where known
 - Be valuable for both beginners and experienced users
+- Include real-world use cases and examples
+- Reflect the latest ${currentYear} AI landscape: mention recent product updates, new entrants, and industry shifts
+- Avoid generic AI-sounding phrases; use concrete, specific language
+- Ground recommendations in practical experience (e.g., "we tested X and found...")
+- Add unique perspectives or comparisons that readers won't find elsewhere
 
 Structure the article with:
-1. Introduction (hook the reader)
-2. Main content with 4-5 sections
+1. Introduction (hook the reader, explain why this matters in ${currentYear})
+2. Main content with 4-5 sections covering different aspects
 3. Practical examples and use cases
 4. Pros and cons where relevant
-5. Conclusion with key takeaways
+5. Conclusion with key takeaways and actionable next steps
 
-Write in markdown format.`;
+Write in markdown format. Be specific, accurate, and helpful. Do not hallucinate facts or pricing—use approximate or "starts at" if uncertain.`;
 
-  try {
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${deepseekApiKey}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a professional SEO content writer specializing in AI tools and technology. Write engaging, informative articles that provide real value to readers.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 3000
-      })
-    });
+  console.log(`📝 Generating article about: ${randomTopic}`);
 
-    if (!response.ok) {
-      throw new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
-    }
+  const content = await callDeepSeek(
+    'You are an expert technology and SEO writer for an AI tools directory. Output only the article markdown, no preamble.',
+    userPrompt,
+    6000
+  );
 
-    const data = await response.json();
-    const content = data.choices[0].message.content;
+  const slug = slugify(randomTopic, { lower: true, strict: true });
+  const keywords = generateKeywords(randomTopic);
+  const category = categorizeArticle(randomTopic);
 
-    // Generate article metadata
-    const slug = slugify(randomTopic, { lower: true, strict: true });
-    const keywords = generateKeywords(randomTopic);
-    const category = categorizeArticle(randomTopic);
-    
-    return {
-      title: randomTopic,
-      slug: slug,
-      metaDescription: generateMetaDescription(randomTopic),
-      keywords: keywords,
-      category: category,
-      readingTime: Math.ceil(content.split(' ').length / 200),
-      targetAudience: 'AI enthusiasts, business professionals, content creators',
-      content: content,
-      publishedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      featured: Math.random() > 0.7, // 30% chance of being featured
-      imagePrompt: generateImagePrompt(randomTopic),
-      status: 'published'
-    };
-
-  } catch (error) {
-    console.error('Error generating article:', error);
-    throw error;
-  }
+  return {
+    title: randomTopic,
+    slug,
+    metaDescription: generateMetaDescription(randomTopic),
+    keywords,
+    category,
+    readingTime: Math.ceil(content.split(/\s+/).length / 200),
+    targetAudience: 'AI enthusiasts, business professionals, content creators',
+    content,
+    publishedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    featured: Math.random() > 0.7,
+    imagePrompt: generateImagePrompt(randomTopic),
+    status: 'published',
+  };
 }
 
 function generateKeywords(title) {
   const baseKeywords = ['ai tools', 'artificial intelligence', 'technology', 'productivity'];
-  const titleWords = title.toLowerCase().split(' ').filter(word => word.length > 3);
+  const titleWords = title.toLowerCase().split(' ').filter((word) => word.length > 3);
   return [...baseKeywords, ...titleWords].slice(0, 8);
 }
 
 function categorizeArticle(title) {
-  const categories = {
-    'writing': ['writing', 'content', 'text', 'copywriting'],
-    'design': ['image', 'design', 'visual', 'graphics', 'video'],
-    'productivity': ['productivity', 'automation', 'workflow', 'efficiency'],
-    'development': ['code', 'programming', 'development', 'software'],
-    'marketing': ['marketing', 'social media', 'advertising', 'seo'],
-    'analytics': ['analytics', 'data', 'insights', 'metrics'],
-    'business': ['business', 'enterprise', 'customer', 'service']
-  };
-
   const titleLower = title.toLowerCase();
-  
-  for (const [category, keywords] of Object.entries(categories)) {
-    if (keywords.some(keyword => titleLower.includes(keyword))) {
-      return category.charAt(0).toUpperCase() + category.slice(1);
-    }
+  if (titleLower.includes('writing') || titleLower.includes('content') || titleLower.includes('copywriting')) {
+    return 'Writing & Content';
   }
-  
-  return 'AI Tools';
+  if (titleLower.includes('image') || titleLower.includes('design') || titleLower.includes('creative')) {
+    return 'Design & Creative';
+  }
+  if (titleLower.includes('productivity') || titleLower.includes('automation')) {
+    return 'Productivity';
+  }
+  if (titleLower.includes('code') || titleLower.includes('developer') || titleLower.includes('programming')) {
+    return 'Development';
+  }
+  if (titleLower.includes('marketing') || titleLower.includes('social media')) {
+    return 'Marketing';
+  }
+  if (
+    titleLower.includes('analytics') ||
+    titleLower.includes('data') ||
+    titleLower.includes('business intelligence')
+  ) {
+    return 'Analytics';
+  }
+  if (titleLower.includes('video') || titleLower.includes('media')) {
+    return 'Video & Media';
+  }
+  return 'General';
 }
 
 function generateMetaDescription(title) {
-  return `Discover the best ${title.toLowerCase()} in 2024. Complete guide with reviews, features, pricing, and recommendations for professionals and businesses.`;
+  const year = new Date().getFullYear();
+  return `Discover the best ${title.toLowerCase()}. Comprehensive guide with reviews, comparisons, and recommendations for ${year}.`;
 }
 
 function generateImagePrompt(title) {
-  return `Professional illustration for ${title}, modern AI technology theme, clean design, suitable for blog article`;
-}
-
-async function generateSiteConfig() {
-  return {
-    name: "AI Buzz Tools",
-    description: "Discover the best AI tools with our comprehensive reviews, comparisons, and guides",
-    url: "https://aibuzztools.com",
-    topic: "AI Tools Directory",
-    navigation: [
-      { name: "Home", href: "/" },
-      { name: "Tools", href: "/tools" },
-      { name: "Categories", href: "/categories" },
-      { name: "Blog", href: "/blog" },
-      { name: "About", href: "/about" },
-      { name: "Submit Tool", href: "/submit" }
-    ],
-    social: {
-      twitter: "https://twitter.com/aibuzztools",
-      linkedin: "https://linkedin.com/company/aibuzztools",
-      github: "https://github.com/aibuzztools"
-    },
-    seo: {
-      defaultTitle: "AI Buzz Tools - Discover the Best AI Tools",
-      defaultDescription: "Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.",
-      keywords: ["ai tools", "artificial intelligence", "ai buzz", "technology", "productivity", "automation", "machine learning", "ai reviews"]
-    }
-  };
-}
-
-async function generateToolsData() {
-  return [
-    {
-      id: "1",
-      name: "ChatGPT",
-      slug: "chatgpt",
-      description: "Advanced conversational AI for writing, coding, and problem-solving",
-      longDescription: "ChatGPT is a state-of-the-art language model that can assist with a wide range of tasks including writing, coding, analysis, and creative projects. It's designed to understand context and provide helpful, accurate responses.",
-      category: "Writing",
-      website: "https://chat.openai.com",
-      pricing: "Freemium",
-      pricingDetails: "Free tier available, Plus subscription at $20/month",
-      features: ["Natural language processing", "Code generation", "Creative writing", "Problem solving", "Multi-language support"],
-      tags: ["chatbot", "writing", "coding", "ai assistant"],
-      logo: "/images/chatgpt-logo.svg",
-      screenshots: [],
-      rating: 4.8,
-      reviewCount: 15420,
-      verified: true,
-      featured: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: "active"
-    },
-    {
-      id: "2",
-      name: "Midjourney",
-      slug: "midjourney",
-      description: "AI-powered image generation tool for creating stunning artwork",
-      longDescription: "Midjourney is an independent research lab exploring new mediums of thought and expanding the imaginative powers of the human species through AI-generated art.",
-      category: "Design",
-      website: "https://midjourney.com",
-      pricing: "Paid",
-      pricingDetails: "Plans start at $10/month",
-      features: ["High-quality image generation", "Artistic styles", "Discord integration", "Commercial usage rights"],
-      tags: ["image generation", "art", "design", "creativity"],
-      logo: "/images/midjourney-logo.svg",
-      screenshots: [],
-      rating: 4.7,
-      reviewCount: 8930,
-      verified: true,
-      featured: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: "active"
-    },
-    {
-      id: "3",
-      name: "Notion AI",
-      slug: "notion-ai",
-      description: "AI-powered writing assistant integrated into Notion workspace",
-      longDescription: "Notion AI helps you write better, think bigger, and work faster. It's seamlessly integrated into your Notion workspace to help with writing, brainstorming, editing, and summarizing.",
-      category: "Productivity",
-      website: "https://notion.so/ai",
-      pricing: "Freemium",
-      pricingDetails: "Free trial, then $10/month per user",
-      features: ["Writing assistance", "Content generation", "Summarization", "Brainstorming", "Workspace integration"],
-      tags: ["productivity", "writing", "workspace", "collaboration"],
-      logo: "/images/notion-logo.svg",
-      screenshots: [],
-      rating: 4.6,
-      reviewCount: 5670,
-      verified: true,
-      featured: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: "active"
-    }
-  ];
-}
-
-async function generateCategoriesData() {
-  return [
-    {
-      id: "1",
-      name: "Writing & Content",
-      slug: "writing-content",
-      description: "AI tools for content creation, copywriting, and text generation",
-      icon: "✍️",
-      toolCount: 25,
-      featured: true
-    },
-    {
-      id: "2",
-      name: "Design & Creative",
-      slug: "design-creative",
-      description: "AI-powered design tools for images, graphics, and creative projects",
-      icon: "🎨",
-      toolCount: 18,
-      featured: true
-    },
-    {
-      id: "3",
-      name: "Productivity",
-      slug: "productivity",
-      description: "AI tools to boost productivity and automate workflows",
-      icon: "⚡",
-      toolCount: 22,
-      featured: true
-    },
-    {
-      id: "4",
-      name: "Development",
-      slug: "development",
-      description: "AI coding assistants and development tools",
-      icon: "💻",
-      toolCount: 15,
-      featured: true
-    },
-    {
-      id: "5",
-      name: "Marketing",
-      slug: "marketing",
-      description: "AI tools for marketing automation and campaign optimization",
-      icon: "📈",
-      toolCount: 20,
-      featured: true
-    },
-    {
-      id: "6",
-      name: "Analytics",
-      slug: "analytics",
-      description: "AI-powered analytics and data insights tools",
-      icon: "📊",
-      toolCount: 12,
-      featured: true
-    },
-    {
-      id: "7",
-      name: "Video & Media",
-      slug: "video-media",
-      description: "AI tools for video editing, audio processing, and media creation",
-      icon: "🎬",
-      toolCount: 16,
-      featured: false
-    },
-    {
-      id: "8",
-      name: "Business",
-      slug: "business",
-      description: "AI solutions for business operations and management",
-      icon: "🏢",
-      toolCount: 14,
-      featured: false
-    }
-  ];
+  return `Modern, professional illustration representing ${title}, tech/AI theme, clean design, blue and yellow color scheme`;
 }
 
 async function generateContent() {
-  console.log('🚀 Starting content generation for AI Buzz Tools...');
-  
-  // Check if DEEPSEEK_API_KEY is available
-  if (!process.env.DEEPSEEK_API_KEY) {
-    console.error('❌ DEEPSEEK_API_KEY is required. Please set it in your .env.local file.');
+  console.log('🚀 Starting content generation with DeepSeek…');
+
+  if (!DEEPSEEK_API_KEY) {
+    console.error('❌ DEEPSEEK_API_KEY is required. Add it to .env.local — https://platform.deepseek.com');
     process.exit(1);
   }
 
-  const articlesToGenerate = parseInt(process.env.ARTICLES_TO_GENERATE) || 10;
+  const articlesToGenerate = parseInt(process.env.ARTICLES_TO_GENERATE, 10) || 10;
   const websiteTopic = process.env.WEBSITE_TOPIC || 'AI Tools Directory';
-  
-  console.log(`📝 Generating ${articlesToGenerate} articles about ${websiteTopic}...`);
 
-  try {
-    // Create content directory if it doesn't exist
-    const contentDir = path.join(__dirname, '..', 'content');
-    await fs.ensureDir(contentDir);
+  console.log(`📝 Generating ${articlesToGenerate} articles (topic context: ${websiteTopic})…`);
 
-    // Generate site configuration
-    console.log('⚙️ Generating site configuration...');
-    const siteConfig = await generateSiteConfig();
-    await fs.writeJSON(path.join(contentDir, 'config.json'), siteConfig, { spaces: 2 });
-
-    // Generate tools data
-    console.log('🛠️ Generating tools data...');
-    const toolsData = await generateToolsData();
-    await fs.writeJSON(path.join(contentDir, 'tools.json'), toolsData, { spaces: 2 });
-
-    // Generate categories data
-    console.log('📂 Generating categories data...');
-    const categoriesData = await generateCategoriesData();
-    await fs.writeJSON(path.join(contentDir, 'categories.json'), categoriesData, { spaces: 2 });
-
-    // Generate articles
-    const articles = [];
-    for (let i = 0; i < articlesToGenerate; i++) {
-      console.log(`📄 Generating article ${i + 1}/${articlesToGenerate}...`);
-      
-      const article = await generateArticleContent(websiteTopic);
-      articles.push(article);
-      
-      // Add a small delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(() => resolve(), 1000));
-    }
-
-    // Save articles to JSON file
-    const articlesPath = path.join(contentDir, 'articles.json');
-    await fs.writeJSON(articlesPath, articles, { spaces: 2 });
-    
-    console.log(`✅ Successfully generated ${articles.length} articles!`);
-    console.log(`📁 Content saved to: ${contentDir}`);
-    console.log('🎉 AI Buzz Tools is ready to launch!');
-    
-  } catch (error) {
-    console.error('❌ Error generating content:', error.message);
-    process.exit(1);
+  const contentDir = path.join(__dirname, '..', 'content');
+  if (!fs.existsSync(contentDir)) {
+    fs.mkdirSync(contentDir, { recursive: true });
   }
+
+  const articlesPath = path.join(contentDir, 'articles.json');
+  let articles = [];
+  if (fs.existsSync(articlesPath)) {
+    articles = JSON.parse(fs.readFileSync(articlesPath, 'utf-8'));
+  }
+
+  for (let i = 0; i < articlesToGenerate; i++) {
+    console.log(`📄 Article ${i + 1}/${articlesToGenerate}…`);
+    const article = await generateArticleContent();
+    articles.push(article);
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+
+  fs.writeFileSync(articlesPath, JSON.stringify(articles, null, 2));
+  console.log(`\n✅ Saved ${articlesToGenerate} articles → ${articlesPath}`);
 }
 
-// Run the script
 if (require.main === module) {
-  generateContent();
+  generateContent().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
 
-module.exports = { generateContent };
+module.exports = { generateArticleContent, generateContent, callDeepSeek };

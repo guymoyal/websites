@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getSiteConfig } from '@/lib/content'
 
 
-const inter = Inter({ subsets: ['latin'] })
+const dmSans = DM_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aibuzztools.com'),
@@ -87,7 +87,10 @@ export default async function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-2201239508910470" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201239508910470" crossOrigin="anonymous"></script>
       </head>
-      <body className={inter.className}>
+      <body className={dmSans.className}>
+        <a href="#main-content" className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-[#2F7FD8] focus-visible:text-white focus-visible:rounded">
+          Skip to main content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -110,7 +113,7 @@ export default async function RootLayout({
         />
         <div className="min-h-screen flex flex-col">
           <Header config={config} />
-          <main className="flex-1">
+          <main id="main-content" className="flex-1" tabIndex={-1}>
             {children}
           </main>
           <Footer config={config} />

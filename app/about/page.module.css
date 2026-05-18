@@ -120,6 +120,23 @@
   margin: 0;
 }
 
+.policyList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.policyList li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.policyList li:last-child {
+  border-bottom: none;
+}
+
 .community {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

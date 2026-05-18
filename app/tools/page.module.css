@@ -10,20 +10,38 @@
 .header {
   text-align: center;
   margin-bottom: 2rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #1a4d8c 0%, #2F7FD8 50%, #1E5FA8 100%);
+  border-radius: 1rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(30, 95, 168, 0.2);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 0.75rem;
+  position: relative;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .subtitle {
-  font-size: 1.25rem;
-  color: #6b7280;
+  font-size: 1.125rem;
+  color: rgba(255,255,255,0.9);
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
 }
 
 .adSlot {
@@ -103,8 +121,8 @@
 }
 
 .viewButton.active {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #2F7FD8 0%, #1E5FA8 100%);
+  border-color: #2F7FD8;
   color: white;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { Clock, User, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Clock, User, ArrowLeft, RefreshCw } from 'lucide-react';
 import { getArticle, getArticles, getRelatedArticles, formatDate, parseMarkdown } from '@/lib/content';
 import AdSlot from '@/components/ads/AdSlot';
 import styles from './page.module.css';
@@ -72,8 +72,25 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const relatedArticles = await getRelatedArticles(article.slug);
   const htmlContent = parseMarkdown(article.content);
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.metaDescription,
+    image: article.image ? `https://aibuzztools.com${article.image}` : undefined,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+    author: { '@type': 'Organization', name: 'AI Buzz World' },
+    publisher: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzztools.com' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://aibuzztools.com/blog/${article.slug}` },
+  };
+
   return (
     <div className={styles.container}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <article className={styles.article}>
         <header className={styles.articleHeader}>
           <div className={styles.breadcrumb}>
@@ -92,8 +109,14 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               </span>
               <span className={styles.metaItem}>
                 <User size={16} />
-                {formatDate(article.publishedAt)}
+                Published {formatDate(article.publishedAt)}
               </span>
+              {article.updatedAt !== article.publishedAt && (
+                <span className={styles.metaItem}>
+                  <RefreshCw size={16} />
+                  Updated {formatDate(article.updatedAt)}
+                </span>
+              )}
             </div>
           </div>
           
@@ -117,6 +140,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               alt={article.title}
               width={1200}
               height={600}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               className={styles.articleImg}
               priority
             />
@@ -184,10 +208,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               <article key={relatedArticle.slug} className={styles.relatedCard}>
                 <div className={styles.relatedImage}>
                   <Image
-                    src={relatedArticle.image || '/images/placeholder.jpg'}
+                    src={relatedArticle.image || '/images/hero-placeholder.jpg'}
                     alt={relatedArticle.title}
                     width={300}
                     height={200}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 300px"
                     className={styles.relatedImg}
                   />
                 </div>

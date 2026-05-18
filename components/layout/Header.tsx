@@ -2,10 +2,22 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { SiteConfig } from '@/lib/content';
 import styles from './Header.module.css';
+
+function normalizePath(p: string) {
+  if (!p || p === '/') return '/';
+  return p.replace(/\/+$/, '') || '/';
+}
+
+function isNavActive(pathname: string, href: string) {
+  const p = normalizePath(pathname);
+  const h = normalizePath(href);
+  if (h === '/') return p === '/';
+  return p === h || p.startsWith(`${h}/`);
+}
 
 interface HeaderProps {
   config: SiteConfig;
@@ -13,6 +25,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ config }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname() || '/';
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -23,16 +36,7 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
       <div className={styles.container}>
         <div className={styles.nav}>
           <Link href="/" className={styles.logo}>
-            <Image
-              src="/images/ai-buzz-logo.webp"
-              alt="AI Buzz World"
-              width={200}
-              height={60}
-              className={styles.logoImage}
-              priority
-              unoptimized
-              style={{ background: 'transparent' }}
-            />
+            <span className={styles.logoText}>AI Buzz World</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -41,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={styles.navLink}
+                className={`${styles.navLink} ${isNavActive(pathname, item.href) ? styles.navLinkActive : ''}`}
               >
                 {item.name}
               </Link>
@@ -65,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={styles.mobileNavLink}
+                className={`${styles.mobileNavLink} ${isNavActive(pathname, item.href) ? styles.mobileNavLinkActive : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}

@@ -2,20 +2,40 @@ const fs = require('fs-extra');
 const path = require('path');
 const sharp = require('sharp');
 
+// Load environment variables (check both .env and .env.local)
+require('dotenv').config(); // Loads .env by default
+require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') }); // Override with .env.local if exists
+
+// Size limits (in bytes): logos ≤50kb, article banners ≤100kb
+const BANNER_MAX_BYTES = 100 * 1024;
+
 class ImageGenerator {
   constructor() {
     this.contentDir = path.join(__dirname, '../content');
     this.imagesDir = path.join(__dirname, '../public/images');
+    this.articlesImagesDir = path.join(__dirname, '../public/images/articles');
     this.replicateApiToken = process.env.REPLICATE_API_TOKEN;
     this.openaiApiKey = process.env.OPENAI_API_KEY;
-    this.provider = process.env.IMAGE_PROVIDER || 'replicate'; // 'replicate', 'openai', or 'placeholder'
+    this.geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
+    // Default: placeholder only. Paid APIs run ONLY when IMAGE_GENERATION_ENABLED=true (see below).
+    this.provider = process.env.IMAGE_PROVIDER || 'placeholder';
+    this.paidImagesEnabled = process.env.IMAGE_GENERATION_ENABLED === 'true';
+    if (!this.paidImagesEnabled && this.provider !== 'placeholder') {
+      console.warn(
+        '⚠️  Paid image generation is OFF (IMAGE_GENERATION_ENABLED is not "true"). Using placeholders only — no Gemini/Replicate/OpenAI image spend.'
+      );
+      this.provider = 'placeholder';
+    }
   }
 
   async generateImages() {
     console.log('🖼️ Generating AI images for articles...');
     
     // Check API keys based on provider
-    if (this.provider === 'replicate' && !this.replicateApiToken) {
+    if (this.provider === 'gemini' && !this.geminiApiKey) {
+      console.warn('⚠️ GEMINI_API_KEY not found. Using placeholder images.');
+      this.provider = 'placeholder';
+    } else if (this.provider === 'replicate' && !this.replicateApiToken) {
       console.warn('⚠️ REPLICATE_API_TOKEN not found. Using placeholder images.');
       this.provider = 'placeholder';
     } else if (this.provider === 'openai' && !this.openaiApiKey) {
@@ -36,39 +56,43 @@ class ImageGenerator {
       const articles = await fs.readJSON(articlesPath);
       
       await fs.ensureDir(this.imagesDir);
+      await fs.ensureDir(this.articlesImagesDir);
       
       for (const article of articles) {
         console.log(`🎨 Generating image for: ${article.title}`);
+        const prompt = this.buildArticleImagePrompt(article);
         
         try {
-          let imageUrl = null;
-          
+          let imageUrl = null, imageBuffer = null;
           switch (this.provider) {
+            case 'gemini':
+              imageBuffer = await this.generateImageWithGeminiWithRetry(prompt);
+              break;
             case 'replicate':
-              imageUrl = await this.generateImageWithReplicate(article.imagePrompt || article.title);
+              imageUrl = await this.generateImageWithReplicate(prompt);
               break;
             case 'openai':
-              imageUrl = await this.generateImageWithOpenAI(article.imagePrompt || article.title);
+              imageUrl = await this.generateImageWithOpenAI(prompt);
               break;
             default:
-              imageUrl = await this.generatePlaceholderImage(article.slug);
+              imageUrl = await this.generatePlaceholderImage(article.slug, article.title);
               break;
           }
           
-          if (imageUrl) {
-            // Download and save image (or use placeholder path)
+          if (imageUrl || imageBuffer) {
             const imagePath = this.provider === 'placeholder' 
               ? imageUrl 
-              : await this.downloadAndSaveImage(imageUrl, article.slug);
+              : imageBuffer 
+                ? await this.saveBufferAsBanner(imageBuffer, article.slug)
+                : await this.downloadAndSaveImage(imageUrl, article.slug);
             
             article.image = imagePath;
             console.log(`✅ Generated image: ${imagePath}`);
           }
         } catch (error) {
           console.error(`❌ Failed to generate image for ${article.title}:`, error.message);
-          // Use placeholder image as fallback
-          article.image = await this.generatePlaceholderImage(article.slug);
-          console.log(`🔄 Using placeholder image instead: ${article.image}`);
+          article.image = await this.generatePlaceholderImage(article.slug, article.title);
+          console.log(`🔄 Using placeholder (retry later for real image): ${article.image}`);
         }
         
         // Add delay to avoid rate limiting
@@ -89,6 +113,9 @@ class ImageGenerator {
   }
 
   async generateImageWithReplicate(prompt) {
+    if (process.env.IMAGE_GENERATION_ENABLED !== 'true') {
+      throw new Error('Replicate blocked: set IMAGE_GENERATION_ENABLED=true to opt in (costs money).');
+    }
     if (!this.replicateApiToken) {
       throw new Error('REPLICATE_API_TOKEN not found');
     }
@@ -161,7 +188,109 @@ class ImageGenerator {
     }
   }
 
+  async generateImageWithGemini(prompt) {
+    if (process.env.IMAGE_GENERATION_ENABLED !== 'true') {
+      throw new Error('Gemini image generation blocked: set IMAGE_GENERATION_ENABLED=true to opt in (costs money).');
+    }
+    if (!this.geminiApiKey) {
+      throw new Error('GEMINI_API_KEY not found');
+    }
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent?key=${this.geminiApiKey}`;
+    const body = {
+      contents: [{ role: 'user', parts: [{ text: this.enhancePromptForGemini(prompt) }] }],
+      generationConfig: { responseModalities: ['TEXT', 'IMAGE'] },
+    };
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error.message || JSON.stringify(data.error));
+    }
+    let b64 = null;
+    for (const cand of data.candidates || []) {
+      for (const part of (cand.content?.parts || [])) {
+        const inline = part.inlineData || part.inline_data;
+        if (inline && (inline.data || inline.bytesBase64Encoded)) {
+          b64 = inline.data || inline.bytesBase64Encoded;
+          break;
+        }
+      }
+      if (b64) break;
+    }
+    if (!b64) {
+      throw new Error('No image in response');
+    }
+    return Buffer.from(b64, 'base64');
+  }
+
+  /** Build a prompt that produces an illustration clearly related to the article topic. */
+  buildArticleImagePrompt(article) {
+    const topic = article.imagePrompt || article.title;
+    const category = article.category || 'General';
+    const categoryScenes = {
+      'Writing & Content': 'writer at laptop with AI assistant, modern desk, documents, creative workspace',
+      'Design & Creative': 'designer using digital canvas, creative studio, art tools, vibrant visuals',
+      'Productivity': 'professional at organized desk, workflow tools, calendar, task management',
+      'Development': 'developer coding with AI pair programmer, code on screen, terminal',
+      'Marketing': 'marketer at dashboard with charts, campaign analytics, social media',
+      'Analytics': 'analyst viewing data visualization, charts, insights, business intelligence',
+      'Video & Media': 'creator editing video, multimedia production, camera, studio setup',
+      'General': 'modern AI technology concept, innovation, automation, professional',
+    };
+    const sceneHint = categoryScenes[category] || categoryScenes.General;
+    return `Create a striking illustration for a blog article. The article is about: "${topic}". 
+Scene: ${sceneHint}. Show a clear visual subject in the foreground - people, objects, or a conceptual scene that illustrates the topic.
+Do NOT output just a background, gradient, or abstract pattern. There must be a definite illustrated subject.
+Style: professional, modern, vibrant, suitable for tech/AI blog. Tight crop, no borders, centered composition.`;
+  }
+
+  async generateImageWithGeminiWithRetry(prompt, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await this.generateImageWithGemini(prompt);
+      } catch (err) {
+        console.warn(`  ⚠️ Attempt ${attempt}/${maxRetries} failed:`, err.message);
+        if (attempt < maxRetries) {
+          const delay = attempt * 5000;
+          console.log(`  ⏳ Retrying in ${delay / 1000}s...`);
+          await new Promise(r => setTimeout(r, delay));
+        } else {
+          throw err;
+        }
+      }
+    }
+  }
+
+  enhancePromptForGemini(prompt) {
+    return prompt;
+  }
+
+  async saveBufferAsBanner(buffer, slug) {
+    await fs.ensureDir(this.articlesImagesDir);
+    const fullPath = path.join(this.articlesImagesDir, `${slug}.webp`);
+    let quality = 85;
+    let output = await sharp(buffer)
+      .resize(1024, 768, { fit: 'cover' })
+      .webp({ quality })
+      .toBuffer();
+    while (output.length > BANNER_MAX_BYTES && quality > 20) {
+      quality -= 10;
+      output = await sharp(buffer)
+        .resize(1024, 768, { fit: 'cover' })
+        .webp({ quality })
+        .toBuffer();
+    }
+    await fs.writeFile(fullPath, output);
+    return `/images/articles/${slug}.webp`;
+  }
+
   async generateImageWithOpenAI(prompt) {
+    if (process.env.IMAGE_GENERATION_ENABLED !== 'true') {
+      throw new Error('OpenAI image generation blocked: set IMAGE_GENERATION_ENABLED=true to opt in (costs money).');
+    }
     if (!this.openaiApiKey) {
       throw new Error('OPENAI_API_KEY not found');
     }
@@ -200,55 +329,30 @@ class ImageGenerator {
   async downloadAndSaveImage(imageUrl, slug) {
     try {
       const response = await fetch(imageUrl);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const buffer = await response.arrayBuffer();
-      const imagePath = `/images/${slug}.webp`;
-      const fullPath = path.join(this.imagesDir, `${slug}.webp`);
-
-      // Convert to WebP for better performance
-      await sharp(Buffer.from(buffer))
-        .webp({ quality: 85 })
-        .resize(1024, 768, { fit: 'cover' })
-        .toFile(fullPath);
-
-      return imagePath;
-
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const buffer = Buffer.from(await response.arrayBuffer());
+      return await this.saveBufferAsBanner(buffer, slug);
     } catch (error) {
       console.error('Error downloading image:', error);
       throw error;
     }
   }
 
-  async generatePlaceholderImage(slug) {
+  async generatePlaceholderImage(slug, title = '') {
     const imagePath = `/images/${slug}-placeholder.jpg`;
     const fullPath = path.join(this.imagesDir, `${slug}-placeholder.jpg`);
-    
-    // Generate a simple gradient placeholder
+    const shortTitle = (title || slug).replace(/-/g, ' ').slice(0, 50);
     const colors = [
-      { r: 59, g: 130, b: 246 },   // Blue
-      { r: 139, g: 92, b: 246 },   // Purple
-      { r: 245, g: 158, b: 11 },   // Orange
-      { r: 34, g: 197, b: 94 },    // Green
-      { r: 239, g: 68, b: 68 },    // Red
+      [59, 130, 246], [139, 92, 246], [245, 158, 11], [34, 197, 94], [239, 68, 68]
     ];
-    
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    
-    await sharp({
-      create: {
-        width: 1024,
-        height: 768,
-        channels: 3,
-        background: color
-      }
-    })
-    .jpeg({ quality: 80 })
-    .toFile(fullPath);
-    
+    const [r1, g1, b1] = colors[Math.floor(Math.random() * colors.length)];
+    const [r2, g2, b2] = colors[(Math.floor(Math.random() * colors.length) + 1) % colors.length];
+    const svg = `<svg width="1024" height="768" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="rgb(${r1},${g1},${b1})"/><stop offset="100%" stop-color="rgb(${r2},${g2},${b2})"/></linearGradient></defs>
+      <rect width="1024" height="768" fill="url(#g)"/>
+      <text x="512" y="384" font-family="Arial,sans-serif" font-size="28" font-weight="bold" fill="rgba(255,255,255,0.9)" text-anchor="middle">${shortTitle}</text>
+    </svg>`;
+    await sharp(Buffer.from(svg)).jpeg({ quality: 80 }).toFile(fullPath);
     return imagePath;
   }
 

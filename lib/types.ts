@@ -19,6 +19,7 @@ export interface AITool {
   featured: boolean;
   createdAt: string;
   updatedAt: string;
+  lastUpdated?: string;
   status: 'active' | 'inactive';
 }
 

@@ -58,10 +58,11 @@ export default async function BlogPage() {
               <article key={article.slug} className={styles.articleCard}>
                 <div className={styles.articleImage}>
                   <Image
-                    src={article.image || '/images/placeholder.jpg'}
+                    src={article.image || '/images/hero-placeholder.jpg'}
                     alt={article.title}
                     width={400}
                     height={250}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 350px"
                     className={styles.articleImg}
                   />
                   <div className={styles.articleCategory}>

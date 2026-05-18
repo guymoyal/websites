@@ -1,7 +1,8 @@
 .searchContainer {
   background: white;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(47, 127, 216, 0.12);
+  box-shadow: 0 4px 24px rgba(30, 95, 168, 0.06);
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -38,7 +39,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #2F7FD8;
+  box-shadow: 0 0 0 3px rgba(47, 127, 216, 0.15);
 }
 
 .clearButton {
@@ -58,19 +60,21 @@
 }
 
 .searchButton {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #2F7FD8 0%, #1E5FA8 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.625rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(47, 127, 216, 0.25);
 }
 
 .searchButton:hover {
-  background: #2563eb;
+  box-shadow: 0 4px 14px rgba(47, 127, 216, 0.35);
+  transform: translateY(-1px);
 }
 
 .filterButton {
@@ -92,13 +96,13 @@
 }
 
 .filterButton.hasFilters {
-  background: #dbeafe;
-  border-color: #3b82f6;
-  color: #1d4ed8;
+  background: rgba(47, 127, 216, 0.1);
+  border-color: #2F7FD8;
+  color: #1E5FA8;
 }
 
 .filterCount {
-  background: #3b82f6;
+  background: #2F7FD8;
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
@@ -134,7 +138,7 @@
 .clearFilters {
   background: none;
   border: none;
-  color: #3b82f6;
+  color: #2F7FD8;
   font-size: 0.875rem;
   cursor: pointer;
   text-decoration: underline;
@@ -169,7 +173,7 @@
 
 .select:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #2F7FD8;
 }
 
 .checkboxLabel {
@@ -183,7 +187,7 @@
 .checkbox {
   width: 1rem;
   height: 1rem;
-  accent-color: #3b82f6;
+  accent-color: #2F7FD8;
 }
 
 /* Mobile Responsive */

@@ -75,6 +75,38 @@ export async function getFeaturedTools(): Promise<AITool[]> {
     .slice(0, 12); // Show top 12 newest trending tools
 }
 
+export async function getNewToolsThisWeek(): Promise<AITool[]> {
+  const tools = await getTools();
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  
+  return tools
+    .filter(tool => {
+      const lastUpdated = tool.lastUpdated ? new Date(tool.lastUpdated) : new Date(tool.updatedAt);
+      return lastUpdated >= oneWeekAgo;
+    })
+    .sort((a, b) => {
+      const aDate = a.lastUpdated ? new Date(a.lastUpdated).getTime() : new Date(a.updatedAt).getTime();
+      const bDate = b.lastUpdated ? new Date(b.lastUpdated).getTime() : new Date(b.updatedAt).getTime();
+      return bDate - aDate;
+    })
+    .slice(0, 6);
+}
+
+export async function getTrendingTools(): Promise<AITool[]> {
+  const tools = await getTools();
+  // Sort by rating and review count (simulating trending)
+  return tools
+    .sort((a, b) => {
+      // First by rating
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating;
+      }
+      // Then by review count
+      return b.reviewCount - a.reviewCount;
+    })
+    .slice(0, 6);
+}
+
 export async function getToolsByCategory(category: string): Promise<AITool[]> {
   const tools = await getTools();
   return tools.filter(tool => tool.category.toLowerCase() === category.toLowerCase());

@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
 class ComprehensiveContentGenerator {
   constructor() {
-    this.deepseekApiKey = process.env.DEEPSEEK_API_KEY ?? "sk-43d9c74deaf54e14be37d49afe836bc3";
+    this.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
     this.contentDir = path.join(__dirname, '..', 'content');
   }
 
