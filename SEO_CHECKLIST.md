@@ -1,4 +1,4 @@
-# SEO & AdSense Readiness Checklist
+# SEO & Monetization Readiness Checklist
 
 ## ✅ SEO - COMPLETE
 
@@ -64,46 +64,9 @@
 - Currently referenced but may not exist
 - Action: Create favicon files
 
-## ✅ Google AdSense - CONFIGURED
+## 💰 Monetization (optional — Ezoic)
 
-### 1. AdSense Script ✓
-- ✅ Script loaded in `<head>` of layout.tsx
-- ✅ Client ID: `ca-pub-2201239508910470`
-- ✅ Proper async loading
-- ✅ CrossOrigin set correctly
-
-### 2. AdSlot Component ✓
-- ✅ Created and ready to use
-- ✅ Uses correct client ID
-- ✅ Proper initialization code
-- ✅ Responsive ads enabled
-
-### 3. ads.txt File ✓
-- ✅ Located at `/public/ads.txt`
-- ✅ Contains correct publisher ID
-- ✅ Format: `google.com, pub-2201239508910470, DIRECT, f08c47fec0942fa0`
-
-## ⚠️ Google AdSense - ACTION NEEDED
-
-### 1. Create Ad Units in AdSense Dashboard
-After your site is approved by Google AdSense:
-1. Go to AdSense Dashboard → Ads → By ad unit
-2. Create ad units for each slot:
-   - Homepage Banner
-   - Tool pages (top, sidebar, bottom)
-   - Blog pages (sidebar, bottom)
-   - Category pages
-   - etc.
-
-### 2. Update Ad Slot IDs
-- ⚠️ Update `lib/adConfig.ts` with actual slot IDs from AdSense
-- Current: Placeholder IDs (1234567890, etc.)
-- Action: Replace with real slot IDs after creating ad units
-
-### 3. Test Ad Display
-- ⚠️ After approval, ads will automatically show
-- ⚠️ Use AdSense preview tool to test
-- ⚠️ Check ad placement on different pages
+Display ads run through **EzoicAds** when enabled (`NEXT_PUBLIC_EZOIC_ENABLED` and placements JSON — see `.env.local.example`). Ensure `ads.txt` is correct (often a redirect via Cloudflare Workers / `EZOIC_ADSTXT_REDIRECT`). Sponsors and affiliates use `NEXT_PUBLIC_SPONSOR_*` and `NEXT_PUBLIC_AFFILIATES_JSON`.
 
 ## 📋 Pre-Launch Checklist
 
@@ -113,15 +76,10 @@ After your site is approved by Google AdSense:
 3. ✅ Create favicon.ico and apple-touch-icon.png
 4. ⚠️ Submit site to Google Search Console
 5. ⚠️ Submit sitemap to Google Search Console
-6. ⚠️ Submit site to Google AdSense for approval
-7. ⚠️ After AdSense approval, create ad units and update slot IDs
+6. ⚠️ If using Ezoic: finish Ezoic setup and verify `ads.txt`
 
 ## 🚀 Current Status
 
-**SEO:** ✅ Ready (95% - just need verification code and images)
-**AdSense:** ✅ Script ready, ⚠️ Waiting for approval and ad unit creation
+**SEO:** ✅ Ready (pending verification code and OG/favicon assets).
 
-Your site is SEO-ready and will automatically display Google AdSense ads once:
-1. Your site is approved by Google AdSense
-2. You create ad units in the AdSense dashboard
-3. You update the slot IDs in `lib/adConfig.ts`
+**Ads:** Optional Ezoic via env configuration; sponsors/affiliates via env JSON.

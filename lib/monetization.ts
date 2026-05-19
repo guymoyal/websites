@@ -5,25 +5,6 @@ export type AffiliateItem = {
   cta?: string;
 };
 
-function adsenseClientId(): string | undefined {
-  return (
-    process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID ||
-    process.env.GOOGLE_ADSENSE_CLIENT_ID ||
-    ''
-  ).trim() || undefined;
-}
-
-/** AdSense scripts and slots only load when explicitly enabled (avoids empty boxes). */
-export function isAdSenseActive(): boolean {
-  if (process.env.NEXT_PUBLIC_ADSENSE_ENABLED !== 'true') return false;
-  const id = adsenseClientId();
-  return Boolean(id && !id.includes('your-adsense') && !id.includes('placeholder'));
-}
-
-export function getAdSensePublisherId(): string | undefined {
-  return isAdSenseActive() ? adsenseClientId() : undefined;
-}
-
 export type SponsorConfig = {
   label: string;
   imageUrl: string;

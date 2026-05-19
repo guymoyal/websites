@@ -13,7 +13,7 @@ Complete checklist for downloading and setting up the AI Buzz World project.
 ### API Keys (Optional but Recommended)
 - [ ] **DeepSeek API Key** for content generation ([platform.deepseek.com](https://platform.deepseek.com))
 - [ ] **Replicate Token** for AI images ([replicate.com](https://replicate.com))
-- [ ] **Google AdSense** account for monetization ([adsense.google.com](https://adsense.google.com))
+- [ ] **EzoicAds** account (optional) for display ads ([docs.ezoic.com](https://docs.ezoic.com/docs/ezoicads/integration/))
 - [ ] **Google Analytics** for tracking ([analytics.google.com](https://analytics.google.com))
 
 ## 📥 Download & Setup
@@ -62,8 +62,8 @@ Visit `http://localhost:3000` to see your site!
 ### Environment Variables
 - [ ] `DEEPSEEK_API_KEY` - For content generation
 - [ ] `REPLICATE_API_TOKEN` - For AI images
-- [ ] `GOOGLE_ADSENSE_CLIENT_ID` - For ads
-- [ ] `GOOGLE_ANALYTICS_ID` - For analytics
+- [ ] `NEXT_PUBLIC_EZOIC_ENABLED` / `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (optional ads)
+- [ ] `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (or legacy `GOOGLE_ANALYTICS_ID`) - For analytics
 - [ ] `WEBSITE_NAME` - Your site name
 - [ ] `WEBSITE_URL` - Your domain
 
@@ -95,7 +95,7 @@ Visit `http://localhost:3000` to see your site!
 ### Styling
 - [ ] Test responsive design on mobile
 - [ ] Verify card layouts look good
-- [ ] Check ad placement and styling
+- [ ] Check monetization placeholders (if enabled) blend with layout
 - [ ] Ensure proper spacing and margins
 
 ## 🚀 Deployment Checklist
@@ -132,12 +132,11 @@ Visit `http://localhost:3000` to see your site!
 
 ## 💰 Monetization Setup
 
-### Google AdSense
-- [ ] Apply for AdSense account
-- [ ] Wait for approval (1-14 days)
-- [ ] Get publisher ID
-- [ ] Add to environment variables
-- [ ] Verify ads display correctly
+### EzoicAds (optional)
+- [ ] Sign up / connect site in Ezoic
+- [ ] Set env vars (`NEXT_PUBLIC_EZOIC_*`) per `.env.local.example`
+- [ ] Align `ads.txt` with Ezoic (Worker redirect if used)
+- [ ] Verify placeholders / inventory in dashboard after deploy
 
 ### Analytics
 - [ ] Create Google Analytics property
@@ -185,7 +184,7 @@ Visit `http://localhost:3000` to see your site!
 - [ ] Tool cards display properly
 - [ ] Search bar works on mobile
 - [ ] Navigation menu functions
-- [ ] Ads display correctly
+- [ ] Monetization placeholders (if any) do not break layout
 - [ ] Text is readable
 - [ ] Buttons are touch-friendly
 
@@ -274,7 +273,7 @@ Once you've completed this checklist, your AI Buzz World website should be:
 ✅ **Fully Functional** - All features working properly
 ✅ **Well-Designed** - Professional appearance on all devices  
 ✅ **SEO Optimized** - Ready for search engine traffic
-✅ **Monetization Ready** - AdSense and analytics configured
+✅ **Monetization Ready** - Optional Ezoic plus analytics when configured in env
 ✅ **Performance Optimized** - Fast loading and responsive
 ✅ **Production Ready** - Deployed and accessible to users
 

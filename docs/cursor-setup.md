@@ -38,8 +38,7 @@ Edit `.env.local` with your API keys:
 ```env
 DEEPSEEK_API_KEY=your_deepseek_api_key_here
 REPLICATE_API_TOKEN=your_replicate_token_here
-GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-adsense-id
-GOOGLE_ANALYTICS_ID=G-your-analytics-id
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-analytics-id
 ```
 
 ### 3. Generate Content (if needed)
@@ -94,7 +93,7 @@ ai-buzz-tools/
 ├── components/            # React components
 │   ├── tools/             # Tool components
 │   ├── search/            # Search components
-│   ├── ads/               # AdSense components
+│   ├── ads/               # Monetization (Ezoic, sponsors, affiliates)
 │   └── layout/            # Layout components
 ├── lib/                   # Utilities and types
 │   ├── types.ts           # TypeScript types
@@ -160,7 +159,7 @@ Update the card hover effects to be more subtle and professional
 ### Core Components
 - `components/tools/ToolCard.tsx` - Individual tool cards
 - `components/search/SearchBar.tsx` - Search functionality
-- `components/ads/AdSlot.tsx` - Google AdSense integration
+- `components/ads/MonetizationSidebar.tsx`, `ResidualDisplayAd.tsx`, `MonetizationLeaderboard.tsx` - Optional display ads (Ezoic) + sponsor/affiliate blocks
 
 ### Pages
 - `app/page.tsx` - Homepage

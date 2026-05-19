@@ -1,33 +1,34 @@
 'use client';
 
 import React from 'react';
-import AdSlot from '@/components/ads/AdSlot';
 import AffiliateStrip from '@/components/ads/AffiliateStrip';
+import EzoicPlaceholder from '@/components/ads/EzoicPlaceholder';
 import SponsorBanner from '@/components/ads/SponsorBanner';
-import { getAffiliateItems, getSponsorConfig, isAdSenseActive } from '@/lib/monetization';
+import { getAffiliateItems, getSponsorConfig } from '@/lib/monetization';
+import { getEzoicPlacementForSlot } from '@/lib/ezoic';
 import styles from './MonetizationSidebar.module.css';
 
 interface MonetizationSidebarProps {
-  adsenseSlot: string;
+  /** Maps to zones in NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON via lib/ezoicZones.ts */
+  slot: string;
   className?: string;
 }
 
-/** Sidebar monetization: partner links, optional compact sponsor, else AdSense. */
+/** Sidebar: affiliate compact strip, sponsor, then Ezoic when mapped. */
 export default function MonetizationSidebar({
-  adsenseSlot,
+  slot,
   className,
 }: MonetizationSidebarProps) {
-  const hasAffiliate = getAffiliateItems().length > 0;
   const hasSponsor = Boolean(getSponsorConfig());
-  const showAdsense = !hasAffiliate && !hasSponsor && isAdSenseActive();
+  const ezoSidebarId = getEzoicPlacementForSlot(slot);
 
   return (
     <div className={`${styles.stack} ${className ?? ''}`}>
       <AffiliateStrip variant="compact" maxItems={2} />
       {hasSponsor && <SponsorBanner variant="compact" />}
-      {showAdsense && (
-        <AdSlot slot={adsenseSlot} format="rectangle" className={styles.adSlot} />
-      )}
+      {ezoSidebarId != null ? (
+        <EzoicPlaceholder placementId={ezoSidebarId} className={styles.adSlot} />
+      ) : null}
     </div>
   );
 }

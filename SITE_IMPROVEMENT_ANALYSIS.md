@@ -52,7 +52,7 @@ Your site has a solid foundation but needs significant improvements in:
 - Clear value proposition (AI tools directory)
 - Good SEO foundation (sitemap, meta tags)
 - Responsive design
-- AdSense properly configured
+- Monetization placeholders (Ezoic when enabled in env); sponsors and affiliates configurable
 - Clean URL structure
 
 #### Weaknesses ❌

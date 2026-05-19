@@ -4,6 +4,9 @@
 # Secrets (repo → Settings → Secrets):
 #   CLOUDFLARE_API_TOKEN — API token with Workers + Account read, edit on the target worker
 #
+# Variables (repo → Settings → Variables → Actions) suggested:
+#   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID — GA4 Measurement ID (e.g. G-xxxxxxxxxx) inlined at build time
+#
 # Optional for AI-heavy refresh (add workflow step or use workflow_dispatch input):
 #   GEMINI_API_KEY — only if you add generateWeeklyNews / refreshOldContent to this file
 
@@ -33,6 +36,8 @@ jobs:
         run: yarn install --frozen-lockfile || yarn install
 
       - name: Refresh content dates & build
+        env:
+          NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID }}
         run: |
           node scripts/updateContentDates.js
           yarn build

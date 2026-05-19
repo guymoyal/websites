@@ -15,10 +15,10 @@ Visit the live site: **https://aibuzztools.com**
 - **Smart Search & Filtering** to find the perfect tools
 
 ### 💰 Monetization Ready
-- **Google AdSense Integration** with strategic ad placement
-- **Affiliate Marketing Ready** with tool referral links
+- **EzoicAds** (optional) with env-driven placements
+- **Partner / affiliate** blocks via `NEXT_PUBLIC_SPONSOR_*` and `NEXT_PUBLIC_AFFILIATES_JSON`
 - **SEO Optimized** for organic traffic growth
-- **Analytics Integration** with Google Analytics
+- **Analytics Integration** with Google Analytics 4
 
 ### 🎨 Modern Design
 - **Responsive Design** works perfectly on all devices
@@ -65,9 +65,8 @@ Visit the live site: **https://aibuzztools.com**
    REPLICATE_API_TOKEN=your_replicate_token_here
    IMAGE_GENERATION_ENABLED=true
    
-   # Optional for monetization
-   GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-adsense-id
-   GOOGLE_ANALYTICS_ID=G-your-analytics-id
+   # Optional monetization (see .env.local.example)
+   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-analytics-id
    ```
 
 5. **Generate content (if needed)**
@@ -99,7 +98,7 @@ ai-buzz-tools/
 ├── components/            # Reusable React components
 │   ├── tools/             # Tool-related components
 │   ├── search/            # Search functionality
-│   ├── ads/               # Google AdSense components
+│   ├── ads/               # Monetization (Ezoic, sponsors, affiliates)
 │   └── layout/            # Header, Footer, etc.
 ├── lib/                   # Utility functions and types
 ├── content/               # Generated content (JSON files)
@@ -170,16 +169,11 @@ npm run generate:logos
 
 ## 💰 Monetization Setup
 
-### Google AdSense
-1. **Apply for AdSense**
-   - Visit [Google AdSense](https://adsense.google.com)
-   - Submit your site for review
-   - Wait for approval (1-14 days)
+### EzoicAds (optional)
 
-2. **Configure Ads**
-   - Get your publisher ID: `ca-pub-xxxxxxxxx`
-   - Add to `GOOGLE_ADSENSE_CLIENT_ID` in `.env.local`
-   - Ads are pre-configured in strategic locations
+1. Docs: [Ezoic integration](https://docs.ezoic.com/docs/ezoicads/integration/)
+2. Set `NEXT_PUBLIC_EZOIC_ENABLED=true` and `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (see `.env.local.example` and `lib/ezoicZones.ts`).
+3. Configure `ads.txt` (redirect in `wrangler.toml` / Worker `EZOIC_ADSTXT_REDIRECT` recommended).
 
 ### Google Analytics
 1. **Create GA4 Property**
@@ -335,7 +329,7 @@ Ready to launch your AI tools directory? This codebase provides everything you n
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
 - [DeepSeek API](https://platform.deepseek.com/docs)
-- [Google AdSense](https://adsense.google.com)
+- [EzoicAds](https://docs.ezoic.com/docs/ezoicads/integration/)
 - [Netlify Deployment](https://netlify.com)
 
 **Happy coding!** 🎉

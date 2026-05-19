@@ -63,11 +63,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Primary sponsor / AdSense */}
+      {/* Primary sponsor / Ezoic */}
       <section className={styles.adSection}>
         <MonetizationLeaderboard
           slot="homepage-banner"
-          format="leaderboard"
           className={styles.homepageAd}
         />
       </section>
@@ -242,11 +241,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Secondary: AdSense only (avoids repeating sponsor banners) */}
+      {/* Secondary leaderboard (Ezoic / empty if unmapped) */}
       <section className={styles.adSection}>
         <ResidualDisplayAd
           slot="homepage-bottom"
-          format="leaderboard"
           className={styles.homepageAd}
         />
       </section>

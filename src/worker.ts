@@ -1,17 +1,28 @@
+interface WorkerEnv {
+  ASSETS: { fetch: typeof fetch };
+  /** Optional: ads.txt redirect from Ezoic (Step 2) — https://docs.ezoic.com/docs/ezoicads/adstxt/ */
+  EZOIC_ADSTXT_REDIRECT?: string;
+}
+
 export default {
-  async fetch(request: Request, env: { ASSETS: any }): Promise<Response> {
+  async fetch(request: Request, env: WorkerEnv): Promise<Response> {
     const url = new URL(request.url);
 
-    // Example API route handled by the Worker. Adjust/remove as needed.
-    if (url.pathname.startsWith("/api/")) {
-      return new Response(JSON.stringify({ name: "Cloudflare" }), {
-        headers: { "Content-Type": "application/json" },
+    if (url.pathname.startsWith('/api/')) {
+      return new Response(JSON.stringify({ name: 'Cloudflare' }), {
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // Serve static files from the bound assets directory
+    const redirectUrl = env.EZOIC_ADSTXT_REDIRECT?.trim();
+    if (
+      redirectUrl &&
+      /^https:\/\/.+/.test(redirectUrl) &&
+      (url.pathname === '/ads.txt' || url.pathname === '/ads.txt/')
+    ) {
+      return Response.redirect(redirectUrl, 301);
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
-
-

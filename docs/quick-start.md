@@ -69,20 +69,21 @@ yarn generate:images  # Generates AI images
 
 ## 💰 10-Minute Setup (With Monetization)
 
-### Additional Steps: Setup AdSense & Analytics
+### Optional: Ezoic & Analytics
 
-1. **Google AdSense**
-   - Apply at [Google AdSense](https://adsense.google.com)
-   - Get publisher ID: `ca-pub-xxxxxxxxx`
-
-2. **Google Analytics**
+1. **Google Analytics**
    - Create property at [Google Analytics](https://analytics.google.com)
    - Get measurement ID: `G-xxxxxxxxx`
 
+2. **EzoicAds** (optional display ads)
+   - Follow [Ezoic integration](https://docs.ezoic.com/docs/ezoicads/integration/) and align `ads.txt`
+
 3. **Add to `.env.local`:**
 ```env
-GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-id
-GOOGLE_ANALYTICS_ID=G-your-id
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-id
+# Optional Ezoic — see .env.local.example
+NEXT_PUBLIC_EZOIC_ENABLED=true
+NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON={}
 ```
 
 ---

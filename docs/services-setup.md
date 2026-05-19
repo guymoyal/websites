@@ -150,36 +150,24 @@ CONTENT_SOURCE=json
 
 ## 💰 Monetization Services (Optional)
 
-### Google AdSense
+### EzoicAds
 
 **Setup Steps:**
 
-1. **Apply for AdSense**
-   - Visit [Google AdSense](https://adsense.google.com)
-   - Sign in with Google account
-   - Add your website URL
-   - Wait for approval (1-14 days)
+1. **Sign up & connect site**
+   - Follow [Ezoic integration](https://docs.ezoic.com/docs/ezoicads/integration/)
 
-2. **Get Publisher ID**
-   - After approval, go to AdSense dashboard
-   - Find your Publisher ID (format: `ca-pub-xxxxxxxxx`)
-
-3. **Create Ad Units**
-   - Go to Ads > By ad unit
-   - Create different ad units:
-     - Homepage Banner (728x90)
-     - Article Top (728x90)
-     - Article Rectangle (300x250)
-     - Sidebar (300x600)
-
-4. **Add to Environment**
+2. **Configure environment**
    ```env
-   GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-publisher-id
+   NEXT_PUBLIC_EZOIC_ENABLED=true
+   NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON={}
    ```
 
-5. **Update Ad Slots**
-   - Edit `components/ads/AdSlot.tsx`
-   - Replace placeholder slot IDs with your actual slot IDs
+3. **Placements**
+   - Map placeholders to Ezoic placement IDs (`lib/ezoicZones.ts` + env JSON)
+
+4. **`ads.txt`**
+   - Use the snippet Ezoic provides; this project may redirect `/ads.txt` via Cloudflare Worker (`EZOIC_ADSTXT_REDIRECT`).
 
 ### Google Analytics
 
@@ -196,7 +184,7 @@ CONTENT_SOURCE=json
 
 3. **Add to Environment**
    ```env
-   GOOGLE_ANALYTICS_ID=G-your-measurement-id
+   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-measurement-id
    ```
 
 ---
@@ -372,8 +360,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
 # Monetization (Optional)
-GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-publisher-id
-GOOGLE_ANALYTICS_ID=G-your-measurement-id
+NEXT_PUBLIC_EZOIC_ENABLED=false
+NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON={}
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-measurement-id
 
 # Email (Optional)
 EMAILJS_SERVICE_ID=your-service-id
@@ -398,7 +387,7 @@ ARTICLES_TO_GENERATE=10
 ### Recommended Setup
 - [ ] Get DeepSeek API key
 - [ ] Get Replicate API token
-- [ ] Apply for Google AdSense
+- [ ] Optionally enable Ezoic via env (`NEXT_PUBLIC_EZOIC_*`)
 - [ ] Set up Google Analytics
 - [ ] Deploy with custom domain
 

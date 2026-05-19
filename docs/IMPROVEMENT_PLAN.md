@@ -146,7 +146,7 @@ yarn content:update-all       # Full content pipeline
 | **growth-marketer** | Acquisition, conversion, engagement |
 | **product-manager** | Roadmap, prioritization, user needs |
 
-> **Revenue & traffic focus**: See [NEXT_STEPS_REVENUE_GROWTH.md](./NEXT_STEPS_REVENUE_GROWTH.md) for AdSense monetization, trend-based SEO, and traffic growth.
+> **Revenue & traffic focus**: Use **growth-marketer** and **seo-expert** skills for monetization posture (optional Ezoic, sponsors/affiliates via env), trend-based SEO, and traffic growth.
 
 ---
 

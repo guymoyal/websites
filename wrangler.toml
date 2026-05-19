@@ -13,6 +13,11 @@ binding = "ASSETS"
 # Tip: Set your account ID via `wrangler login` or add below if using API token based CI.
 # account_id = "<your-account-id>"
 
+# Ezoic ads.txt (optional HTTPS redirect from Ezoic Ads.txt dashboard):
+#
+# [[vars]]
+# EZOIC_ADSTXT_REDIRECT = "https://srv.adstxtmanager.com/XXXX/aibuzz.world"
+
 # Route your custom domain(s) to this Worker
 [[routes]]
 pattern = "aibuzz.world/*"

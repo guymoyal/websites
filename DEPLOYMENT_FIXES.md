@@ -86,24 +86,22 @@ If you want to use Workers (as configured in `wrangler.toml`):
 - [x] Build completes successfully
 - [x] All pages generate without errors
 - [x] `ads.txt` is in `/out` directory
-- [ ] Verify `ads.txt` is accessible at `https://yourdomain.com/ads.txt` after deployment
+- [ ] Verify `ads.txt` is accessible at `https://yourdomain.com/ads.txt` after deployment (Ezoic or your network’s required content)
 - [ ] Test site after deployment
-- [ ] Check AdSense dashboard for Auto Ads activation
+- [ ] If using Ezoic: confirm placement script and placements in dashboard
 
 ## 🔍 Verify Deployment
 
 After deploying, check:
 
 1. **Site loads:** Visit your domain
-2. **ads.txt accessible:** `https://yourdomain.com/ads.txt`
-3. **AdSense script loads:** Check page source for AdSense script
-4. **Auto Ads status:** Check AdSense dashboard → Ads → Auto ads
+2. **`ads.txt` accessible:** `https://yourdomain.com/ads.txt` with the redirect or content your ad network expects
+3. **Ezoic / analytics:** If enabled in env, confirm tags in page source match your dashboard
 
 ## ⚠️ Important Notes
 
-- **Auto Ads:** Since you enabled Auto Ads, you don't need to create manual ad units
-- **Wait Time:** Auto Ads may take 24-48 hours to fully activate after deployment
-- **Traffic:** Very low traffic sites may see fewer ads initially
+- **`ads.txt`:** Static export puts a file under `public/` or your Worker may redirect to Ezoic’s hosted `ads.txt` — keep this aligned with what Ezoic shows in their dashboard.
+- **Ads:** Placement and activation depend on your Ezoic approval and traffic; sponsors/affiliates are driven by `.env.local` only.
 
 ## 🐛 If Deployment Fails
 
@@ -124,8 +122,7 @@ After deploying, check:
 ## 📊 Next Steps
 
 1. **Deploy your site** using one of the methods above
-2. **Wait 24-48 hours** for Auto Ads to activate
-3. **Monitor AdSense dashboard** for ad performance
-4. **Submit sitemap** to Google Search Console for SEO
+2. **If using Ezoic:** complete setup in their dashboard and monitor placement performance
+3. **Submit sitemap** to Google Search Console for SEO
 
 Your site is ready to deploy! 🎉

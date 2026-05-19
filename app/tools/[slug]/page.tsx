@@ -137,7 +137,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
 
       <MonetizationLeaderboard
         slot="tool-top"
-        format="leaderboard"
         className={styles.topAd}
       />
 
@@ -181,7 +180,7 @@ export default async function ToolPage({ params }: { params: { slug: string } })
         </div>
 
         <div className={styles.sidebar}>
-          <MonetizationSidebar adsenseSlot="tool-sidebar" />
+          <MonetizationSidebar slot="tool-sidebar" />
 
           <div className={styles.sidebarCard}>
             <h3>Tool Information</h3>
@@ -213,7 +212,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
 
       <ResidualDisplayAd
         slot="tool-bottom"
-        format="leaderboard"
         className={styles.bottomAd}
       />
 

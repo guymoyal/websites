@@ -1,21 +1,21 @@
 'use client';
 
 import React from 'react';
-import AdSlot from '@/components/ads/AdSlot';
-import { isAdSenseActive } from '@/lib/monetization';
+import EzoicPlaceholder from '@/components/ads/EzoicPlaceholder';
+import { getEzoicPlacementForSlot } from '@/lib/ezoic';
 
 interface ResidualDisplayAdProps {
+  /** Maps to zones in NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON via lib/ezoicZones.ts */
   slot: string;
-  format?: 'auto' | 'rectangle' | 'horizontal' | 'vertical' | 'leaderboard';
   className?: string;
 }
 
-/** Uses AdSense only (no sponsor), for secondary placements on a page. */
+/** Secondary horizontal placement (Ezoic only in this codebase). */
 export default function ResidualDisplayAd({
   slot,
-  format = 'leaderboard',
   className,
 }: ResidualDisplayAdProps) {
-  if (!isAdSenseActive()) return null;
-  return <AdSlot slot={slot} format={format} className={className} />;
+  const ezoId = getEzoicPlacementForSlot(slot);
+  if (ezoId == null) return null;
+  return <EzoicPlaceholder placementId={ezoId} className={className} />;
 }

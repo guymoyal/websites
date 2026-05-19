@@ -207,7 +207,6 @@ function ToolsPageContent() {
 
       <MonetizationLeaderboard
         slot="tools-top"
-        format="leaderboard"
         className={styles.topAd}
       />
 
@@ -249,7 +248,6 @@ function ToolsPageContent() {
 
       <ResidualDisplayAd
         slot="tools-bottom"
-        format="leaderboard"
         className={styles.bottomAd}
       />
     </div>

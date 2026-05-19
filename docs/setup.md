@@ -45,8 +45,9 @@ IMAGE_GENERATION_ENABLED=true
 CONTENT_SOURCE=json
 
 # Optional: Monetization
-GOOGLE_ADSENSE_CLIENT_ID=ca-pub-your-adsense-id
-GOOGLE_ANALYTICS_ID=G-your-analytics-id
+NEXT_PUBLIC_EZOIC_ENABLED=false
+NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON={}
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-your-analytics-id
 ```
 
 ### 3. Generate Initial Content
@@ -97,19 +98,17 @@ Your site will be available at `http://localhost:3000`
 4. Generate an API token
 5. Copy the token to `REPLICATE_API_TOKEN` in your `.env.local`
 
-### Google AdSense (Optional)
+### EzoicAds (Optional display ads)
 
-1. Apply for [Google AdSense](https://adsense.google.com)
-2. Wait for approval (1-7 days)
-3. Get your publisher ID (format: ca-pub-xxxxxxxxx)
-4. Add to `GOOGLE_ADSENSE_CLIENT_ID` in your `.env.local`
+1. Follow [Ezoic integration](https://docs.ezoic.com/docs/ezoicads/integration/)
+2. Set `NEXT_PUBLIC_EZOIC_ENABLED` and `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` in `.env.local` (see `.env.local.example`)
 
 ### Google Analytics (Optional)
 
 1. Go to [Google Analytics](https://analytics.google.com)
 2. Create a new property
 3. Get your Measurement ID (format: G-xxxxxxxxx)
-4. Add to `GOOGLE_ANALYTICS_ID` in your `.env.local`
+4. Add to `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (or `GOOGLE_ANALYTICS_ID`) in your `.env.local`
 
 ## Content Customization
 
@@ -257,21 +256,16 @@ Sitemap is automatically generated at `/sitemap.xml`
 
 ## Monetization Setup
 
-### AdSense Integration
+### Optional display ads (EzoicAds)
 
-1. **Get Approved**
-   - Apply for Google AdSense
-   - Wait for approval
-   - Get your publisher ID
+1. **Connect site**
+   - Complete onboarding in Ezoic and align `ads.txt`
 
-2. **Configure Ads**
-   - Create ad units in AdSense dashboard
-   - Note the ad slot IDs
-   - Update `AdSlot` components with your slot IDs
+2. **Configure env**
+   - Set `NEXT_PUBLIC_EZOIC_ENABLED` and placements JSON (`lib/ezoicZones.ts` documents slot keys)
 
-3. **Ad Placement**
-   - Ads are pre-configured in strategic locations
-   - Customize ad sizes and positions as needed
+3. **Customize**
+   - Adjust sponsor block (`NEXT_PUBLIC_SPONSOR_*`) and affiliate strip (`NEXT_PUBLIC_AFFILIATES_JSON`) if needed
 
 ### Analytics Setup
 

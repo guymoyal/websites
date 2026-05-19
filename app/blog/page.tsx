@@ -75,7 +75,6 @@ export default async function BlogPage() {
 
           <ResidualDisplayAd
             slot="blog-bottom"
-            format="leaderboard"
             className={styles.bottomAd}
           />
         </main>
@@ -105,7 +104,7 @@ export default async function BlogPage() {
             </ul>
           </div>
 
-          <MonetizationSidebar adsenseSlot="blog-sidebar" />
+          <MonetizationSidebar slot="blog-sidebar" />
         </aside>
       </div>
     </div>

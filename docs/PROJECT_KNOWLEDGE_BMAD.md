@@ -7,7 +7,7 @@ BMAD `project_knowledge` in `_bmad/bmm/config.yaml` points to this `docs/` folde
 
 - **Name:** AI Buzz World  
 - **URL:** https://aibuzztools.com  
-- **Purpose:** Directory of AI tools (cards, categories, search), blog (guides), comparisons. Monetization: AdSense, outbound tool links.
+- **Purpose:** Directory of AI tools (cards, categories, search), blog (guides), comparisons. Monetization: optional Ezoic / sponsors / affiliates (env-driven), outbound tool links.
 
 ## Users & goals
 

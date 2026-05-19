@@ -20,7 +20,6 @@ export default async function CategoriesPage() {
 
       <MonetizationLeaderboard
         slot="categories-top"
-        format="leaderboard"
         className={styles.adSlot}
       />
 
@@ -46,7 +45,6 @@ export default async function CategoriesPage() {
 
       <ResidualDisplayAd
         slot="categories-bottom"
-        format="leaderboard"
         className={styles.adSlot}
       />
     </div>

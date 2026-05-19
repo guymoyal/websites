@@ -71,8 +71,7 @@ Deploy your AI Buzz World static website to CloudFlare Pages for fast, global di
    REPLICATE_API_TOKEN=your_replicate_token_here
    IMAGE_PROVIDER=replicate
    IMAGE_GENERATION_ENABLED=true
-   GOOGLE_ADSENSE_CLIENT_ID=your_adsense_id
-   GOOGLE_ANALYTICS_ID=your_analytics_id
+   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=your_analytics_id
    ARTICLES_TO_GENERATE=10
    ```
 
@@ -164,7 +163,7 @@ Node.js version: 18.x
 
 ### Custom Analytics
 - Your Google Analytics is already configured
-- AdSense integration ready for monetization
+- Optional **Ezoic** / sponsors / affiliates are configured via env (`NEXT_PUBLIC_EZOIC_*`, `NEXT_PUBLIC_SPONSOR_*`, etc.). See `.env.local.example`.
 
 ## 🛡️ Security Features
 
@@ -228,7 +227,7 @@ Node.js version: 18.x
 - [ ] All pages and links work
 - [ ] Images display properly
 - [ ] Google Analytics tracking works
-- [ ] AdSense ads display (if configured)
+- [ ] Ezoic or other ad placeholders behave as expected (if enabled in env)
 - [ ] Mobile responsiveness verified
 - [ ] SEO meta tags present
 

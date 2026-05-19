@@ -154,7 +154,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
         <MonetizationLeaderboard
           slot="article-top"
-          format="leaderboard"
           className={styles.topAd}
         />
 
@@ -167,7 +166,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
         <ResidualDisplayAd
           slot="article-middle"
-          format="leaderboard"
           className={styles.middleAd}
         />
 
@@ -208,7 +206,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
       <ResidualDisplayAd
         slot="article-bottom"
-        format="leaderboard"
         className={styles.bottomAd}
       />
 
