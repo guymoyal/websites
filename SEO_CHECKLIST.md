@@ -66,7 +66,7 @@
 
 ## 💰 Monetization (optional — Ezoic)
 
-Display ads run through **EzoicAds** when enabled (`NEXT_PUBLIC_EZOIC_ENABLED` and placements JSON — see `.env.local.example`). Ensure `ads.txt` is correct (often a redirect via Cloudflare Workers / `EZOIC_ADSTXT_REDIRECT`). Sponsors and affiliates use `NEXT_PUBLIC_SPONSOR_*` and `NEXT_PUBLIC_AFFILIATES_JSON`.
+Display ads run through **EzoicAds** (production builds include Ezoic scripts by default; placements JSON in `.env.local.example`). Ensure `ads.txt` is correct (often a redirect via Cloudflare Workers / `EZOIC_ADSTXT_REDIRECT`). Sponsors and affiliates use `NEXT_PUBLIC_SPONSOR_*` and `NEXT_PUBLIC_AFFILIATES_JSON`.
 
 ## 📋 Pre-Launch Checklist
 

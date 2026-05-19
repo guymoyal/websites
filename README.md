@@ -172,7 +172,7 @@ npm run generate:logos
 ### EzoicAds (optional)
 
 1. Docs: [Ezoic integration](https://docs.ezoic.com/docs/ezoicads/integration/)
-2. Set `NEXT_PUBLIC_EZOIC_ENABLED=true` and `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (see `.env.local.example` and `lib/ezoicZones.ts`).
+2. Set `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (production builds load Ezoic scripts by default; see `.env.local.example` and `lib/ezoicZones.ts`). Use `NEXT_PUBLIC_EZOIC_DISABLED=true` only to omit Ezoic from a production build.
 3. Configure `ads.txt` (redirect in `wrangler.toml` / Worker `EZOIC_ADSTXT_REDIRECT` recommended).
 
 ### Google Analytics

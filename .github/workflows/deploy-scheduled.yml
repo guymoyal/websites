@@ -6,8 +6,8 @@
 #
 # Variables (repo → Settings → Variables → Actions) suggested:
 #   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID — GA4 Measurement ID (e.g. G-xxxxxxxxxx) inlined at build time
-#   NEXT_PUBLIC_EZOIC_ENABLED — must be exactly true / 1 / yes (case-insensitive) for Ezoic head + runner
-#   NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON — single-line JSON, keys per lib/ezoicZones.ts (also build-time)
+#   NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON — single-line JSON, keys per lib/ezoicZones.ts (build-time; required for placeholder divs)
+#   NEXT_PUBLIC_EZOIC_DISABLED — optional; set true to omit Ezoic from a production build (staging only)
 #
 # Optional for AI-heavy refresh (add workflow step or use workflow_dispatch input):
 #   GEMINI_API_KEY — only if you add generateWeeklyNews / refreshOldContent to this file
@@ -40,8 +40,8 @@ jobs:
       - name: Refresh content dates & build
         env:
           NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID }}
-          NEXT_PUBLIC_EZOIC_ENABLED: ${{ vars.NEXT_PUBLIC_EZOIC_ENABLED }}
           NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON: ${{ vars.NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON }}
+          NEXT_PUBLIC_EZOIC_DISABLED: ${{ vars.NEXT_PUBLIC_EZOIC_DISABLED }}
         run: |
           node scripts/updateContentDates.js
           yarn build

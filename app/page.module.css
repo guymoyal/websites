@@ -317,30 +317,40 @@
 
 .toolsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  /* minmax(0, 1fr) prevents track min-content from forcing overlap in 3-col layout */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  row-gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  box-sizing: border-box;
+  align-content: start;
+  align-items: start;
 }
 
 .toolsGrid > * {
   width: 100%;
+  max-width: 100%;
   min-width: 0;
+  box-sizing: border-box;
+  align-self: start;
+  height: auto;
 }
 
 /* Tablet: 2 cards per row */
 @media (max-width: 1024px) and (min-width: 769px) {
   .toolsGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 /* Mobile: 1 card per row */
 @media (max-width: 768px) {
   .toolsGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    row-gap: 1.25rem;
   }
 }
 
@@ -351,8 +361,9 @@
 
 .articlesPreview {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
+  align-items: start;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -419,13 +430,13 @@
 
 @media (max-width: 1024px) {
   .articlesPreview {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .articlesPreview {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
 }
@@ -595,10 +606,6 @@
 }
 
 @media (max-width: 768px) {
-  .toolsGrid {
-    gap: 1.5rem;
-  }
-  
   .categoriesGrid {
     gap: 1rem;
   }

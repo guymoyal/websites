@@ -62,7 +62,7 @@ Visit `http://localhost:3000` to see your site!
 ### Environment Variables
 - [ ] `DEEPSEEK_API_KEY` - For content generation
 - [ ] `REPLICATE_API_TOKEN` - For AI images
-- [ ] `NEXT_PUBLIC_EZOIC_ENABLED` / `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (optional ads)
+- [ ] `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` (optional; real placement IDs from Ezoic — production loads Ezoic scripts by default)
 - [ ] `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (or legacy `GOOGLE_ANALYTICS_ID`) - For analytics
 - [ ] `WEBSITE_NAME` - Your site name
 - [ ] `WEBSITE_URL` - Your domain

@@ -129,42 +129,48 @@
 
 .toolsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), minmax(0, 1fr)));
+  /* row / column gap — extra row space stops stacked-row bleed */
+  gap: 1.5rem 1rem;
   margin: 2rem 0;
+  align-items: start;
 }
 
 .toolsGrid > * {
   min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-self: start;
+  height: auto;
 }
 
 .smallCardsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, minmax(0, 1fr)));
   gap: 1rem;
   margin-bottom: 2rem;
 }
 
 @media (min-width: 1200px) {
   .smallCardsGrid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 1024px) {
   .smallCardsGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   .toolsGrid {
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .smallCardsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

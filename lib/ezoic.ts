@@ -6,12 +6,25 @@ import { getZoneKeyForMonetizationSlot } from '@/lib/ezoicZones';
 export type EzoicPlacementsMap = Partial<Record<EzoicZoneKey, number>>;
 
 /**
- * Ezoic is opt-in at **build time** (static export inlines `NEXT_PUBLIC_*`).
- * Wrangler/Worker secrets do not change already-built HTML — rebuild after changing these.
+ * Production builds (`next build`, `NODE_ENV === 'production'`): Ezoic is **on by default**
+ * so shipped HTML always includes scripts + runner (ads are not accidentally left off).
  *
- * Accepts common truthy strings so `True` / `1` from dashboards still works.
+ * Opt out of Ezoic in a production build: `NEXT_PUBLIC_EZOIC_DISABLED=true`
+ *
+ * Local dev (`next dev`): Ezoic stays **opt-in** via `NEXT_PUBLIC_EZOIC_ENABLED=true` (or 1 / yes).
+ *
+ * Placement IDs still come from `NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON` at build time.
  */
 export function isEzoicActive(): boolean {
+  const disabled = process.env.NEXT_PUBLIC_EZOIC_DISABLED?.trim().toLowerCase();
+  if (disabled === 'true' || disabled === '1' || disabled === 'yes') {
+    return false;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return true;
+  }
+
   const raw = process.env.NEXT_PUBLIC_EZOIC_ENABLED?.trim().toLowerCase();
   return raw === 'true' || raw === '1' || raw === 'yes';
 }

@@ -127,14 +127,14 @@ After deploying, check:
 
 ## Ezoic not visible in production
 
-This app uses **static HTML export**. Ezoic is controlled only by **`NEXT_PUBLIC_EZOIC_ENABLED`** and **`NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON`** at the moment you run **`yarn build`** (or the GitHub Actions build step). Cloudflare Worker environment variables **do not** inject those into already-built pages.
+This app uses **static HTML export**. **`NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON`** is read when you run **`yarn build`**. Ezoic **scripts** are included in **production** builds by default (`lib/ezoic.ts`); opt out with **`NEXT_PUBLIC_EZOIC_DISABLED=true`**. Cloudflare Worker environment variables **do not** change already-built HTML.
 
 **Checklist:**
 
-1. In **`.env.local`** (local deploy) or **GitHub Actions variables** (scheduled workflow), set `NEXT_PUBLIC_EZOIC_ENABLED` to `true` (or `1` / `yes`).
+1. **`NEXT_PUBLIC_EZOIC_DISABLED`** must not be `true` in the build env (production enables Ezoic by default — see `lib/ezoic.ts`).
 2. Set **`NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON`** to a **single-line** JSON object whose keys match `lib/ezoicZones.ts` (numeric placement IDs from the Ezoic dashboard).
 3. Run **`yarn deploy:cloudflare`** again (or push/trigger CI) so a **new** build is produced and uploaded.
-4. Verify the live HTML: View source on the homepage and search for **`ezojs.com`** — if it is missing, the build did not see the env vars.
+4. Verify the live HTML: View source on the homepage and search for **`ezojs.com`** — if it is missing, the build was not production or Ezoic was disabled.
 5. **`ads.txt`**: ensure `/ads.txt` matches Ezoic (Worker `EZOIC_ADSTXT_REDIRECT` or a static file) per their dashboard.
 
 6. **Build trap:** Do not add `NEXT_PUBLIC_EZOIC_*` to `next.config.js` → `env` — if those keys are read before `.env.local` is applied, the build can inline **empty** values and Ezoic will never appear. This repo relies on Next’s normal `.env.local` handling for Ezoic (no `next.config` entries for those keys).

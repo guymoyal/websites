@@ -4,28 +4,34 @@ import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { isEzoicActive } from '@/lib/ezoic';
 
-/** Batches showAds(site-wide placeholders on the current DOM) once per navigation. */
+/**
+ * Step 3: queue showAds after sa.min.js processes cmd — see
+ * https://docs.ezoic.com/docs/ezoicads/implementation/
+ * Do not guard on showAds before pushing; the queue runs when the library is ready.
+ */
 
-function flushEzoicAds(): void {
-  if (typeof window === 'undefined') return;
-  window.ezstandalone = window.ezstandalone || {};
-  const ez = window.ezstandalone;
-  ez.cmd = ez.cmd || [];
-
+function collectPlaceholderIds(): number[] {
+  if (typeof document === 'undefined') return [];
   const els = document.querySelectorAll('[id^="ezoic-pub-ad-placeholder-"]');
   const ids = [...els]
     .map((el) => parseInt(el.id.replace(/^ezoic-pub-ad-placeholder-/, ''), 10))
     .filter((n) => Number.isFinite(n));
+  return [...new Set(ids)];
+}
 
-  const uniq = [...new Set(ids)];
-  if (!uniq.length) return;
+function queueEzoicShowAds(): void {
+  if (typeof window === 'undefined') return;
+  window.ezstandalone = window.ezstandalone || {};
+  window.ezstandalone.cmd = window.ezstandalone.cmd || [];
+  const ids = collectPlaceholderIds();
 
-  ez.cmd.push(function () {
-    const g = window.ezstandalone as typeof window.ezstandalone & {
-      showAds?: (...placementIds: number[]) => void;
-    };
-    if (typeof g?.showAds === 'function') {
-      g.showAds(...uniq);
+  window.ezstandalone.cmd.push(function () {
+    const root = window.ezstandalone;
+    if (!root || typeof root.showAds !== 'function') return;
+    if (ids.length > 0) {
+      root.showAds(...ids);
+    } else {
+      root.showAds();
     }
   });
 }
@@ -35,8 +41,22 @@ export default function EzoicRunner() {
 
   useEffect(() => {
     if (!isEzoicActive()) return;
-    const timer = window.setTimeout(flushEzoicAds, 0);
-    return () => window.clearTimeout(timer);
+
+    queueEzoicShowAds();
+
+    const onLoad = () => queueEzoicShowAds();
+    if (document.readyState === 'complete') {
+      onLoad();
+    } else {
+      window.addEventListener('load', onLoad);
+    }
+
+    const delayed = window.setTimeout(queueEzoicShowAds, 1500);
+
+    return () => {
+      window.removeEventListener('load', onLoad);
+      window.clearTimeout(delayed);
+    };
   }, [pathname]);
 
   return null;
