@@ -125,4 +125,18 @@ After deploying, check:
 2. **If using Ezoic:** complete setup in their dashboard and monitor placement performance
 3. **Submit sitemap** to Google Search Console for SEO
 
+## Ezoic not visible in production
+
+This app uses **static HTML export**. Ezoic is controlled only by **`NEXT_PUBLIC_EZOIC_ENABLED`** and **`NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON`** at the moment you run **`yarn build`** (or the GitHub Actions build step). Cloudflare Worker environment variables **do not** inject those into already-built pages.
+
+**Checklist:**
+
+1. In **`.env.local`** (local deploy) or **GitHub Actions variables** (scheduled workflow), set `NEXT_PUBLIC_EZOIC_ENABLED` to `true` (or `1` / `yes`).
+2. Set **`NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON`** to a **single-line** JSON object whose keys match `lib/ezoicZones.ts` (numeric placement IDs from the Ezoic dashboard).
+3. Run **`yarn deploy:cloudflare`** again (or push/trigger CI) so a **new** build is produced and uploaded.
+4. Verify the live HTML: View source on the homepage and search for **`ezojs.com`** — if it is missing, the build did not see the env vars.
+5. **`ads.txt`**: ensure `/ads.txt` matches Ezoic (Worker `EZOIC_ADSTXT_REDIRECT` or a static file) per their dashboard.
+
+6. **Build trap:** Do not add `NEXT_PUBLIC_EZOIC_*` to `next.config.js` → `env` — if those keys are read before `.env.local` is applied, the build can inline **empty** values and Ezoic will never appear. This repo relies on Next’s normal `.env.local` handling for Ezoic (no `next.config` entries for those keys).
+
 Your site is ready to deploy! 🎉

@@ -17,7 +17,9 @@ export type EzoicZoneKey =
   | 'articleBottom'
   | 'toolTop'
   | 'toolSidebar'
-  | 'toolBottom';
+  | 'toolBottom'
+  /** One slot in global Footer — every route (about, category, etc.) */
+  | 'sitewideFooter';
 
 const SLOT_TO_ZONE: Record<string, EzoicZoneKey> = {
   'homepage-banner': 'homeTop',
@@ -34,6 +36,7 @@ const SLOT_TO_ZONE: Record<string, EzoicZoneKey> = {
   'tool-top': 'toolTop',
   'tool-sidebar': 'toolSidebar',
   'tool-bottom': 'toolBottom',
+  'sitewide-footer': 'sitewideFooter',
 };
 
 export function getZoneKeyForMonetizationSlot(slug: string): EzoicZoneKey | undefined {

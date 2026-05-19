@@ -20,8 +20,8 @@ const nextConfig = {
     WEBSITE_URL: process.env.WEBSITE_URL,
     GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
-    NEXT_PUBLIC_EZOIC_ENABLED: process.env.NEXT_PUBLIC_EZOIC_ENABLED,
-    NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON: process.env.NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON,
+    // NEXT_PUBLIC_EZOIC_* — do not list here: next.config is evaluated before .env.local is merged
+    // in some setups, which would inline undefined. Next inlines NEXT_PUBLIC_* from the real env at build time.
   },
   webpack: (config) => {
     config.resolve.fallback = {

@@ -5,8 +5,15 @@ import { getZoneKeyForMonetizationSlot } from '@/lib/ezoicZones';
 
 export type EzoicPlacementsMap = Partial<Record<EzoicZoneKey, number>>;
 
+/**
+ * Ezoic is opt-in at **build time** (static export inlines `NEXT_PUBLIC_*`).
+ * Wrangler/Worker secrets do not change already-built HTML — rebuild after changing these.
+ *
+ * Accepts common truthy strings so `True` / `1` from dashboards still works.
+ */
 export function isEzoicActive(): boolean {
-  return process.env.NEXT_PUBLIC_EZOIC_ENABLED === 'true';
+  const raw = process.env.NEXT_PUBLIC_EZOIC_ENABLED?.trim().toLowerCase();
+  return raw === 'true' || raw === '1' || raw === 'yes';
 }
 
 /** Map dashboard placement IDs (JSON keyed by zone) from Ezoic “Step 3” docs. */
@@ -49,6 +56,7 @@ function isZoneKey(k: string): k is EzoicZoneKey {
       'toolTop',
       'toolSidebar',
       'toolBottom',
+      'sitewideFooter',
     ].includes(k)
   );
 }

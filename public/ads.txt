@@ -1,1 +1,9 @@
-google.com, pub-2201239508910470, DIRECT, f08c47fec0942fa0
+# This file is served at https://YOUR_DOMAIN/ads.txt after build (everything in public/ is copied to out/).
+#
+# Ezoic Step 2 — pick ONE approach:
+#   A) Recommended: 301 redirect from Cloudflare Worker (see wrangler.toml → EZOIC_ADSTXT_REDIRECT).
+#      Ezoic gives you a URL like https://srv.adstxtmanager.com/.../yourdomain.com — use that exact URL.
+#   B) Static file: delete these comment lines and paste the FULL ads.txt text Ezoic shows in your dashboard
+#      (same authorized-sellers list a redirect would return). Redeploy when Ezoic updates it.
+#
+# Docs: https://docs.ezoic.com/docs/ezoicads/adstxt/
