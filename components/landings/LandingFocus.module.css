@@ -1,0 +1,92 @@
+.root {
+  --landing-max: 42rem;
+  --landing-pad: clamp(1rem, 4vw, 2rem);
+  --landing-fg: #0f172a;
+  --landing-muted: #475569;
+  --landing-bg: #f8fafc;
+  --landing-accent: #2563eb;
+  --landing-accent-hover: #1d4ed8;
+  color-scheme: light;
+  min-height: 100vh;
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif;
+  background: var(--landing-bg);
+  color: var(--landing-fg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.inner {
+  max-width: var(--landing-max);
+  margin: 0 auto;
+  padding: var(--landing-pad);
+  padding-top: clamp(2.5rem, 8vw, 4rem);
+  padding-bottom: clamp(2rem, 6vw, 3rem);
+}
+
+.kicker {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--landing-muted);
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 2.8vw, 1.125rem);
+  color: var(--landing-muted);
+  margin: 0 0 1.75rem;
+  max-width: 36ch;
+  text-wrap: pretty;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: var(--landing-accent);
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.cta:hover {
+  background: var(--landing-accent-hover);
+}
+
+.cta:active {
+  transform: scale(0.98);
+}
+
+.disclosure {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--landing-muted);
+  max-width: 40ch;
+  line-height: 1.45;
+}
+
+/* Hint to the browser: below-the-fold is not critical for first paint */
+.deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 120px;
+}

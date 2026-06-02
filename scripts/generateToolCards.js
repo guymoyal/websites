@@ -2,12 +2,13 @@ const fs = require('fs-extra');
 const path = require('path');
 const slugify = require('slugify');
 
-// Load environment variables from .env.local
+// Load environment variables (.env.local overrides .env)
+require('dotenv').config();
 require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
 class ToolCardsGenerator {
   constructor() {
-    this.deepseekApiKey = process.env.DEEPSEEK_API_KEY || "sk-43d9c74deaf54e14be37d49afe836bc3";
+    this.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
     this.contentDir = path.join(__dirname, '..', 'content');
   }
 

@@ -32,7 +32,7 @@ BMAD `project_knowledge` in `_bmad/bmm/config.yaml` points to this `docs/` folde
 | Homepage | `app/page.tsx`, `app/page.module.css` |
 | Tools UI | `app/tools/`, `components/tools/` |
 | Blog | `app/blog/` |
-| Content scripts | `scripts/generateContent.js` (DeepSeek), `scripts/sitePublish.js` |
+| Content scripts | `scripts/generateContent.js` (DeepSeek), `scripts/sitePublish.js`, `scripts/fetchAdmitadPrograms.js` (`yarn fetch:admitad`; `ADMIT_FETCH_MODE=catalog` + `ADMIT_WEBSITE_ID` for store catalog → `content/admitad-landings.json`) |
 
 ## Quality bar (cross-role)
 

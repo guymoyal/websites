@@ -44,7 +44,7 @@ async function callDeepSeek(systemPrompt, userPrompt, maxTokens = 4000) {
 
 async function generateArticleContent() {
   if (!DEEPSEEK_API_KEY) {
-    throw new Error('DEEPSEEK_API_KEY is required. Set it in .env.local (https://platform.deepseek.com).');
+    throw new Error('DEEPSEEK_API_KEY is required. Set it in .env or .env.local (https://platform.deepseek.com).');
   }
 
   const currentYear = new Date().getFullYear();
@@ -170,7 +170,7 @@ async function generateContent() {
   console.log('🚀 Starting content generation with DeepSeek…');
 
   if (!DEEPSEEK_API_KEY) {
-    console.error('❌ DEEPSEEK_API_KEY is required. Add it to .env.local — https://platform.deepseek.com');
+    console.error('❌ DEEPSEEK_API_KEY is required. Add it to .env or .env.local — https://platform.deepseek.com');
     process.exit(1);
   }
 

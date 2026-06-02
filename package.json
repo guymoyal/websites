@@ -35,6 +35,7 @@
     "site:refresh": "node scripts/updateContentDates.js && node scripts/copyContentToPublic.js",
     "site:publish": "node scripts/sitePublish.js",
     "copy:content": "node scripts/copyContentToPublic.js",
+    "fetch:admitad": "node scripts/fetchAdmitadPrograms.js",
     "setup": "npm install && cp .env.local.example .env.local",
     "cursor": "./scripts/cursor-open.sh"
   },

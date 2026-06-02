@@ -17,7 +17,8 @@ async function copyContentToPublic() {
     'tool-cards.json',
     'categories.json',
     'articles.json',
-    'config.json'
+    'config.json',
+    'admitad-landings.json'
   ];
 
   console.log('📋 Copying content files to public/content...');

@@ -1,7 +1,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-// Load environment variables from .env.local
+// Load environment variables (.env.local overrides .env)
+require('dotenv').config();
 require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
 class LogoGenerator {

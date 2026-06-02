@@ -1,0 +1,10 @@
+# pnpm 10+: allow dependency postinstall/build scripts (avoids ERR_PNPM_IGNORED_BUILDS).
+# https://pnpm.io/settings
+packages:
+  - '.'
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+  unrs-resolver: true

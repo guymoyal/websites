@@ -17,12 +17,16 @@ class ImageGenerator {
     this.replicateApiToken = process.env.REPLICATE_API_TOKEN;
     this.openaiApiKey = process.env.OPENAI_API_KEY;
     this.geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
+    this.openrouterApiKey = process.env.OPEN_ROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+    /** @see https://openrouter.ai/models?output_modalities=image */
+    this.openrouterImageModel =
+      process.env.OPENROUTER_IMAGE_MODEL || 'google/gemini-2.5-flash-image';
     // Default: placeholder only. Paid APIs run ONLY when IMAGE_GENERATION_ENABLED=true (see below).
     this.provider = process.env.IMAGE_PROVIDER || 'placeholder';
     this.paidImagesEnabled = process.env.IMAGE_GENERATION_ENABLED === 'true';
     if (!this.paidImagesEnabled && this.provider !== 'placeholder') {
       console.warn(
-        '⚠️  Paid image generation is OFF (IMAGE_GENERATION_ENABLED is not "true"). Using placeholders only — no Gemini/Replicate/OpenAI image spend.'
+        '⚠️  Paid image generation is OFF (IMAGE_GENERATION_ENABLED is not "true"). Using placeholders only — no Gemini/Replicate/OpenAI/OpenRouter image spend.'
       );
       this.provider = 'placeholder';
     }
@@ -40,6 +44,9 @@ class ImageGenerator {
       this.provider = 'placeholder';
     } else if (this.provider === 'openai' && !this.openaiApiKey) {
       console.warn('⚠️ OPENAI_API_KEY not found. Using placeholder images.');
+      this.provider = 'placeholder';
+    } else if (this.provider === 'openrouter' && !this.openrouterApiKey) {
+      console.warn('⚠️ OPEN_ROUTER_API_KEY (or OPENROUTER_API_KEY) not found. Using placeholder images.');
       this.provider = 'placeholder';
     }
 
@@ -73,6 +80,9 @@ class ImageGenerator {
               break;
             case 'openai':
               imageUrl = await this.generateImageWithOpenAI(prompt);
+              break;
+            case 'openrouter':
+              imageBuffer = await this.generateImageWithOpenRouterWithRetry(prompt);
               break;
             default:
               imageUrl = await this.generatePlaceholderImage(article.slug, article.title);
@@ -323,6 +333,123 @@ Style: professional, modern, vibrant, suitable for tech/AI blog. Tight crop, no 
     } catch (error) {
       console.error('OpenAI API error:', error);
       throw error;
+    }
+  }
+
+  parseOpenRouterModalities() {
+    const raw = process.env.OPENROUTER_MODALITIES || 'image,text';
+    return raw
+      .split(/[\s,]+/)
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+  }
+
+  dataUrlToBuffer(dataUrl) {
+    const m = /^data:image\/[\w+.-]+;base64,(.+)$/i.exec(String(dataUrl));
+    if (!m) {
+      throw new Error('OpenRouter: expected base64 data URL in image response');
+    }
+    return Buffer.from(m[1], 'base64');
+  }
+
+  async generateImageWithOpenRouter(prompt) {
+    if (process.env.IMAGE_GENERATION_ENABLED !== 'true') {
+      throw new Error('OpenRouter image generation blocked: set IMAGE_GENERATION_ENABLED=true to opt in (costs money).');
+    }
+    if (!this.openrouterApiKey) {
+      throw new Error('OPEN_ROUTER_API_KEY or OPENROUTER_API_KEY not found');
+    }
+
+    const modalities = this.parseOpenRouterModalities();
+    const body = {
+      model: this.openrouterImageModel,
+      messages: [{ role: 'user', content: this.enhancePrompt(prompt) }],
+      modalities,
+    };
+
+    if (process.env.OPENROUTER_IMAGE_ASPECT_RATIO || process.env.OPENROUTER_IMAGE_SIZE) {
+      body.image_config = {};
+      if (process.env.OPENROUTER_IMAGE_ASPECT_RATIO) {
+        body.image_config.aspect_ratio = process.env.OPENROUTER_IMAGE_ASPECT_RATIO;
+      }
+      if (process.env.OPENROUTER_IMAGE_SIZE) {
+        body.image_config.image_size = process.env.OPENROUTER_IMAGE_SIZE;
+      }
+    } else {
+      body.image_config = { aspect_ratio: '16:9' };
+    }
+
+    const headers = {
+      Authorization: `Bearer ${this.openrouterApiKey}`,
+      'Content-Type': 'application/json',
+    };
+    const site = process.env.WEBSITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL;
+    if (site) {
+      headers['HTTP-Referer'] = site;
+    }
+    if (process.env.OPENROUTER_APP_NAME) {
+      headers['X-Title'] = process.env.OPENROUTER_APP_NAME;
+    }
+
+    console.log(`🎨 OpenRouter image (${this.openrouterImageModel}): ${prompt.substring(0, 48)}...`);
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(`OpenRouter: invalid JSON (${response.status}): ${text.slice(0, 200)}`);
+    }
+
+    if (!response.ok) {
+      const msg = data?.error?.message || text.slice(0, 400);
+      throw new Error(`OpenRouter ${response.status}: ${msg}`);
+    }
+
+    const message = data?.choices?.[0]?.message;
+    const images = message?.images;
+    if (!Array.isArray(images) || images.length === 0) {
+      const hint =
+        'No images in response. Check OPENROUTER_IMAGE_MODEL supports image output; try OPENROUTER_MODALITIES=image,text or image only.';
+      throw new Error(hint);
+    }
+
+    const first = images[0];
+    const url = first?.image_url?.url || first?.imageUrl?.url;
+    if (!url || typeof url !== 'string') {
+      throw new Error('OpenRouter: missing image URL on first image object');
+    }
+
+    if (url.startsWith('data:')) {
+      return this.dataUrlToBuffer(url);
+    }
+    const r = await fetch(url);
+    if (!r.ok) {
+      throw new Error(`OpenRouter: failed to download image: ${r.status}`);
+    }
+    return Buffer.from(await r.arrayBuffer());
+  }
+
+  async generateImageWithOpenRouterWithRetry(prompt, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await this.generateImageWithOpenRouter(prompt);
+      } catch (err) {
+        console.warn(`  ⚠️ OpenRouter attempt ${attempt}/${maxRetries} failed:`, err.message);
+        if (attempt < maxRetries) {
+          const delay = attempt * 4000;
+          console.log(`  ⏳ Retrying in ${delay / 1000}s...`);
+          await new Promise((r) => setTimeout(r, delay));
+        } else {
+          throw err;
+        }
+      }
     }
   }
 

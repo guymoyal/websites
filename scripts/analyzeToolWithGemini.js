@@ -116,7 +116,7 @@ function parseAnalysisJson(responseText) {
 // Analyze tool website — DeepSeek only (no Gemini spend).
 async function analyzeToolWebsite(tool) {
   if (!DEEPSEEK_API_KEY) {
-    throw new Error('Set DEEPSEEK_API_KEY in .env.local (tool analysis uses DeepSeek text only).');
+    throw new Error('Set DEEPSEEK_API_KEY in .env or .env.local (tool analysis uses DeepSeek text only).');
   }
 
   try {
@@ -199,7 +199,7 @@ async function updateToolWithGemini(toolSlug) {
 // Analyze all tools
 async function analyzeAllTools() {
   if (!DEEPSEEK_API_KEY) {
-    console.error('❌ Set DEEPSEEK_API_KEY in .env.local');
+    console.error('❌ Set DEEPSEEK_API_KEY in .env or .env.local');
     return;
   }
 

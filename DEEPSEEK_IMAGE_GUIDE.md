@@ -21,9 +21,10 @@ yarn generate:images:deepseek
 
 ## ⚙️ Setup
 
-Your DeepSeek API key is already configured in `.env`:
+Your DeepSeek API key in `.env` or `.env.local`:
+
 ```
-DEEPSEEK_API_KEY=sk-43d9c74deaf54e14be37d49afe836bc3
+DEEPSEEK_API_KEY=sk-your-key-here
 ```
 
 ## 📝 Image Prompts

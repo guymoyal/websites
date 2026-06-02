@@ -15,7 +15,7 @@ async function main() {
   if (generator.provider === 'placeholder') {
     console.log(
       'ℹ️  IMAGE_PROVIDER is placeholder (default = free, no image API).\n' +
-        '   Skipping. To pay for images later set IMAGE_PROVIDER=gemini|openai|replicate and IMAGE_GENERATION_ENABLED=true.'
+        '   Skipping. To pay for images later set IMAGE_PROVIDER=gemini|openai|replicate|openrouter and IMAGE_GENERATION_ENABLED=true.'
     );
     return;
   }
@@ -61,6 +61,9 @@ async function main() {
           break;
         case 'openai':
           imageUrl = await generator.generateImageWithOpenAI(prompt);
+          break;
+        case 'openrouter':
+          imageBuffer = await generator.generateImageWithOpenRouterWithRetry(prompt);
           break;
         default:
           break;
