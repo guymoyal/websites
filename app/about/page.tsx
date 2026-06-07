@@ -1,22 +1,28 @@
 import React from 'react';
 import { Users, Target, Award, Zap } from 'lucide-react';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
+import AffiliateStrip from '@/components/ads/AffiliateStrip';
 import styles from './page.module.css';
 
 export default function AboutPage() {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <h1 className={styles.title}>About AI Tool Finder</h1>
+        <h1 className={styles.title}>About AI Buzz World</h1>
         <p className={styles.subtitle}>
           Your trusted companion in discovering the best AI tools for every need
         </p>
       </div>
 
+      <MonetizationLeaderboard slot="categories-top" className={styles.adSlot} />
+      <AffiliateStrip variant="row" className={styles.adSlot} />
+
       <div className={styles.content}>
         <section className={styles.section}>
           <h2>Our Mission</h2>
           <p>
-            At AI Tool Finder, we believe that artificial intelligence should be accessible to everyone. 
+            At AI Buzz World, we believe that artificial intelligence should be accessible to everyone. 
             Our mission is to democratize AI by helping individuals and businesses discover, evaluate, 
             and implement the right AI tools for their specific needs.
           </p>
@@ -112,7 +118,7 @@ export default function AboutPage() {
         <section className={styles.section}>
           <h2>Our Team</h2>
           <p>
-            AI Tool Finder is built by a passionate team of AI enthusiasts, 
+            AI Buzz World is built by a passionate team of AI enthusiasts, 
             developers, and researchers who are dedicated to making AI accessible 
             to everyone. We combine technical expertise with practical experience 
             to provide you with the most valuable insights.
@@ -155,6 +161,8 @@ export default function AboutPage() {
           </div>
         </section>
       </div>
+
+      <ResidualDisplayAd slot="categories-bottom" className={styles.adSlot} />
     </div>
   );
 }

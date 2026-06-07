@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 export type AffiliateItem = {
   href: string;
   title: string;
@@ -58,6 +61,31 @@ function parseAffiliates(): AffiliateItem[] {
   }
 }
 
+function loadAffiliatePicksFromContent(): AffiliateItem[] {
+  try {
+    const filePath = path.join(process.cwd(), 'content', 'affiliate-picks.json');
+    if (!fs.existsSync(filePath)) return [];
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((x): x is AffiliateItem =>
+        Boolean(
+          x &&
+            typeof x === 'object' &&
+            typeof (x as AffiliateItem).href === 'string' &&
+            typeof (x as AffiliateItem).title === 'string' &&
+            (x as AffiliateItem).href.startsWith('http')
+        )
+      )
+      .slice(0, 6);
+  } catch {
+    return [];
+  }
+}
+
+/** Env `NEXT_PUBLIC_AFFILIATES_JSON` overrides `content/affiliate-picks.json`. */
 export function getAffiliateItems(): AffiliateItem[] {
-  return parseAffiliates();
+  const fromEnv = parseAffiliates();
+  if (fromEnv.length > 0) return fromEnv;
+  return loadAffiliatePicksFromContent();
 }

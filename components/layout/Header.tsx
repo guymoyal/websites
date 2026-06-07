@@ -50,6 +50,9 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
                 {item.name}
               </Link>
             ))}
+            <Link href="/tools" className={styles.navCta}>
+              Explore tools
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -75,6 +78,13 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
                 {item.name}
               </Link>
             ))}
+            <Link
+              href="/tools"
+              className={styles.mobileNavCta}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Explore tools
+            </Link>
           </nav>
         )}
       </div>

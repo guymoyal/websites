@@ -5,6 +5,9 @@ import { ArrowLeft } from 'lucide-react';
 import { getCategories, getToolsByCategory } from '@/lib/tools';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
+import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
+import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
+import AffiliateStrip from '@/components/ads/AffiliateStrip';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -86,6 +89,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         />
       </Suspense>
 
+      <MonetizationLeaderboard slot="categories-top" className={styles.categoryAd} />
+      <AffiliateStrip variant="row" className={styles.affiliateStrip} />
+
       {tools.length > 0 ? (
         <div className={styles.toolsGrid}>
           {tools.map((tool) => (
@@ -102,6 +108,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           </Link>
         </div>
       )}
+
+      <ResidualDisplayAd slot="categories-bottom" className={styles.categoryAd} />
 
       {/* Related Categories */}
       <section className={styles.relatedCategories}>

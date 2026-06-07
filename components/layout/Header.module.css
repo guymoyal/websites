@@ -47,7 +47,8 @@
 
 .desktopNav {
   display: none;
-  gap: 2rem;
+  gap: 1rem;
+  align-items: center;
 }
 
 .navLink {
@@ -68,6 +69,24 @@
 .navLinkActive {
   color: #1E5FA8;
   background-color: rgba(47, 127, 216, 0.12);
+}
+
+.navCta {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #2f7fd8 0%, #1e5fa8 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(47, 127, 216, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.navCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(47, 127, 216, 0.45);
 }
 
 .mobileMenuButton {
@@ -112,6 +131,18 @@
 .mobileNavLinkActive {
   color: #1E5FA8;
   background-color: rgba(47, 127, 216, 0.12);
+}
+
+.mobileNavCta {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #2f7fd8 0%, #1e5fa8 100%);
+  color: white;
 }
 
 @keyframes slideDown {

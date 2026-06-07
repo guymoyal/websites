@@ -40,39 +40,15 @@ export async function getTool(slug: string): Promise<AITool | null> {
 
 export async function getFeaturedTools(): Promise<AITool[]> {
   const tools = await getTools();
-  // Get only newer tools (created or updated in 2026)
-  const now = new Date();
-  const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000); // 6 months ago
-  
-  const newerTools = tools.filter(tool => {
-    const createdAt = new Date(tool.createdAt);
-    const updatedAt = new Date(tool.updatedAt);
-    // Include tools created or updated in the last 6 months
-    return createdAt >= sixMonthsAgo || updatedAt >= sixMonthsAgo;
-  });
-  
-  // Sort by most recent (updatedAt first, then createdAt), then by rating
-  return newerTools
+  const flagged = tools.filter((t) => t.featured);
+  const pool = flagged.length >= 6 ? flagged : tools;
+
+  return pool
     .sort((a, b) => {
-      const aUpdated = new Date(a.updatedAt).getTime();
-      const bUpdated = new Date(b.updatedAt).getTime();
-      
-      // First sort by most recently updated
-      if (bUpdated !== aUpdated) {
-        return bUpdated - aUpdated;
-      }
-      
-      // Then by creation date
-      const aCreated = new Date(a.createdAt).getTime();
-      const bCreated = new Date(b.createdAt).getTime();
-      if (bCreated !== aCreated) {
-        return bCreated - aCreated;
-      }
-      
-      // Finally by rating
-      return b.rating - a.rating;
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      return b.reviewCount - a.reviewCount;
     })
-    .slice(0, 12); // Show top 12 newest trending tools
+    .slice(0, 12);
 }
 
 export async function getNewToolsThisWeek(): Promise<AITool[]> {

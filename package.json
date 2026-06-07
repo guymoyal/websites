@@ -36,6 +36,8 @@
     "site:publish": "node scripts/sitePublish.js",
     "copy:content": "node scripts/copyContentToPublic.js",
     "fetch:admitad": "node scripts/fetchAdmitadPrograms.js",
+    "monetization:check": "node scripts/checkMonetizationSetup.js",
+    "pm:growth": "node scripts/pmGrowthBundle.js",
     "setup": "npm install && cp .env.local.example .env.local",
     "cursor": "./scripts/cursor-open.sh"
   },

@@ -969,7 +969,7 @@
     "category": "Writing & Content",
     "website": "https://claude.ai",
     "pricing": "Freemium",
-    "pricingDetails": "Free tier available, Pro at $20/month for Claude 3.5 Sonnet",
+    "pricingDetails": "Free tier available, Pro at $20/month for latest Claude models",
     "features": [
       "Advanced reasoning",
       "Long context window",
@@ -1028,11 +1028,11 @@
     "rating": 4.6,
     "reviewCount": 12340,
     "verified": true,
-    "featured": false,
+    "featured": true,
     "createdAt": "2026-02-15T00:00:00.000Z",
-    "updatedAt": "2026-03-14T23:08:37.394Z",
+    "updatedAt": "2026-06-03T12:00:00.000Z",
     "status": "active",
-    "lastUpdated": "2026-02-12T23:08:37.396Z"
+    "lastUpdated": "2026-06-03T12:00:00.000Z"
   },
   {
     "id": "29",
@@ -1477,5 +1477,42 @@
     "updatedAt": "2026-03-14T23:08:37.394Z",
     "status": "active",
     "lastUpdated": "2026-02-12T23:08:37.396Z"
+  },
+  {
+    "id": "41",
+    "name": "Google Gemini",
+    "slug": "google-gemini",
+    "description": "Google's multimodal AI for chat, reasoning, coding, and image understanding",
+    "longDescription": "Google Gemini is Google's flagship AI family integrated across Search, Workspace, and the Gemini app. It supports text, images, and code with strong reasoning and long-context workflows for research and productivity.",
+    "category": "Writing & Content",
+    "website": "https://gemini.google.com",
+    "pricing": "Freemium",
+    "pricingDetails": "Free tier available, Google AI Pro and Advanced plans for higher limits",
+    "features": [
+      "Multimodal chat",
+      "Code and math help",
+      "Image understanding",
+      "Google Workspace integration",
+      "Deep Research",
+      "Long context",
+      "Mobile apps"
+    ],
+    "tags": [
+      "google",
+      "chatbot",
+      "multimodal",
+      "productivity",
+      "gemini"
+    ],
+    "logo": "/images/tool-placeholder.svg",
+    "screenshots": [],
+    "rating": 4.6,
+    "reviewCount": 18900,
+    "verified": true,
+    "featured": true,
+    "createdAt": "2026-06-03T12:00:00.000Z",
+    "updatedAt": "2026-06-03T12:00:00.000Z",
+    "status": "active",
+    "lastUpdated": "2026-06-03T12:00:00.000Z"
   }
 ]

@@ -4,11 +4,13 @@ import Image from 'next/image';
 import { ArrowRight, Search, Star, TrendingUp, Zap, Sparkles, BookOpen } from 'lucide-react';
 import { getSiteConfig, getArticles, formatDate } from '@/lib/content';
 import { getFeaturedTools, getCategories, getNewToolsThisWeek, getTrendingTools } from '@/lib/tools';
+import { getSiteStats } from '@/lib/siteStats';
 import ToolCard from '@/components/tools/ToolCard';
 import SearchBar from '@/components/search/SearchBar';
 import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
 import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
 import AffiliateStrip from '@/components/ads/AffiliateStrip';
+import CompareToolsStrip from '@/components/home/CompareToolsStrip';
 
 import styles from './page.module.css';
 
@@ -19,6 +21,7 @@ export default async function HomePage() {
   const newToolsThisWeek = await getNewToolsThisWeek();
   const trendingTools = await getTrendingTools();
   const articles = await getArticles();
+  const stats = await getSiteStats();
 
   return (
     <div className={styles.container}>
@@ -44,6 +47,23 @@ export default async function HomePage() {
                 Browse Categories
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.statsBar} aria-label="Site overview">
+        <div className={styles.statsInner}>
+          <div className={styles.statItem}>
+            <span className={styles.statValue}>{stats.toolCount}+</span>
+            <span className={styles.statLabel}>AI tools</span>
+          </div>
+          <div className={styles.statItem}>
+            <span className={styles.statValue}>{stats.categoryCount}</span>
+            <span className={styles.statLabel}>categories</span>
+          </div>
+          <div className={styles.statItem}>
+            <span className={styles.statValue}>{stats.articleCount}+</span>
+            <span className={styles.statLabel}>guides</span>
           </div>
         </div>
       </section>
@@ -75,7 +95,7 @@ export default async function HomePage() {
         <AffiliateStrip variant="row" />
       </section>
 
-
+      <CompareToolsStrip />
 
       {/* New Tools This Week */}
       {newToolsThisWeek.length > 0 && (
