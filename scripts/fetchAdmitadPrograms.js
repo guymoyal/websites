@@ -497,12 +497,17 @@ async function main() {
   }
 
   // Preserve AI-generated copy from the previous run (fetch must never erase it).
-  let previous = [];
+  let allPrevious = [];
   try {
-    previous = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')).entries || [];
+    allPrevious = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')).entries || [];
   } catch (_) {
     /* first run or unreadable file */
   }
+  // Manual partner-network entries (scripts/mergePartnerPrograms.js) are not API-sourced:
+  // pass them through untouched — their campaignId/websiteId are null and would collide
+  // in the keyed merge below.
+  const manualEntries = allPrevious.filter((e) => e.fetchMode === 'manual');
+  const previous = allPrevious.filter((e) => e.fetchMode !== 'manual');
   const prevContent = new Map(
     previous
       .filter((e) => e.content && e.admitad)
@@ -525,6 +530,11 @@ async function main() {
   }
   if (disconnected.length > 0) {
     console.log(`[admitad] retained ${disconnected.length} disconnected entries with generated copy`);
+  }
+
+  entries.push(...manualEntries);
+  if (manualEntries.length > 0) {
+    console.log(`[admitad] kept ${manualEntries.length} manual partner-network entries`);
   }
 
   const payload = {

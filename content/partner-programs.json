@@ -1,0 +1,4 @@
+{
+  "_help": "Paste no-approval programs from the Admitad dashboard tab 'Affiliate programs from partners' (store.admitad.com \u2192 your ad space \u2192 catalog \u2192 partners_programs). For each program click 'Get affiliate link', copy the tatrck.com link, and add an object below. Required: name, link. Optional: siteUrl, description, image, categories (array of strings). Then run: yarn partners:sync && yarn build",
+  "programs": []
+}
