@@ -34,12 +34,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     description: `Discover the best ${category.name.toLowerCase()} AI tools. ${category.description}`,
     keywords: [category.name.toLowerCase(), 'ai tools', 'directory', 'reviews'].join(', '),
     alternates: {
-      canonical: `https://aibuzztools.com/category/${category.slug}`,
+      canonical: `https://aibuzz.world/category/${category.slug}`,
     },
     openGraph: {
       title: `${category.name} AI Tools`,
       description: `Discover the best ${category.name.toLowerCase()} AI tools. ${category.description}`,
-      url: `https://aibuzztools.com/category/${category.slug}`,
+      url: `https://aibuzz.world/category/${category.slug}`,
       siteName: 'AI Buzz World',
       type: 'website',
     },

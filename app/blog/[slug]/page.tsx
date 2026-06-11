@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     description: article.metaDescription,
     keywords: article.keywords.join(', '),
     alternates: {
-      canonical: `https://aibuzztools.com/blog/${article.slug}`,
+      canonical: `https://aibuzz.world/blog/${article.slug}`,
     },
     openGraph: {
       title: article.title,
       description: article.metaDescription,
       type: 'article',
-      url: `https://aibuzztools.com/blog/${article.slug}`,
+      url: `https://aibuzz.world/blog/${article.slug}`,
       siteName: 'AI Buzz World',
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
@@ -82,11 +82,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     '@type': 'Article',
     headline: article.title,
     description: article.metaDescription,
-    image: article.image ? `https://aibuzztools.com${article.image}` : undefined,
+    image: article.image ? `https://aibuzz.world${article.image}` : undefined,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
     author: { '@type': 'Organization', name: 'AI Buzz World' },
-    publisher: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzztools.com' },
+    publisher: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzz.world' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': shareUrl },
   };
 

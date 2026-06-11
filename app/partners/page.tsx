@@ -6,14 +6,35 @@ export const metadata: Metadata = {
   title: 'Partner offers — aibuzz.world',
   description: 'Hand-picked partner deals and tools we recommend.',
   alternates: {
-    canonical: 'https://aibuzztools.com/partners',
+    canonical: 'https://aibuzz.world/partners',
   },
 };
 
 export default function PartnersIndexPage() {
   const landings = getPartnerLandings();
+  const itemListJsonLd =
+    landings.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: 'Partner offers on AI Buzz World',
+          numberOfItems: landings.length,
+          itemListElement: landings.map((l, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: l.program.name,
+            url: `https://aibuzz.world/${l.slug}/`,
+          })),
+        }
+      : null;
   return (
     <main className="mx-auto max-w-4xl px-4 py-12">
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      )}
       <h1 className="mb-2 text-4xl font-bold text-gray-900">Partner offers</h1>
       <p className="mb-10 text-gray-600">
         Tools and services from our partners. Pages may contain affiliate links.

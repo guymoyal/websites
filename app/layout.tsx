@@ -12,7 +12,7 @@ import EzoicRunner from '@/components/ads/EzoicRunner'
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://aibuzztools.com'),
+  metadataBase: new URL('https://aibuzz.world'),
   title: 'AI Buzz World - Discover the Best AI Tools',
   description: 'Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.',
   authors: [{ name: 'AI Buzz World' }],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://aibuzztools.com/',
+    canonical: 'https://aibuzz.world/',
   },
   formatDetection: {
     telephone: false,
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'AI Buzz World - Discover the Best AI Tools',
     description: 'Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.',
-    url: 'https://aibuzztools.com/',
+    url: 'https://aibuzz.world/',
     siteName: 'AI Buzz World',
     locale: 'en_US',
     type: 'website',
     images: [
       {
-        url: 'https://aibuzztools.com/og-image.jpg',
+        url: 'https://aibuzz.world/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'AI Buzz World - Discover the Best AI Tools',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     creator: '@aibuzztools',
     title: 'AI Buzz World - Discover the Best AI Tools',
     description: 'Find the perfect AI tools for your needs. Comprehensive reviews, comparisons, and guides for AI-powered productivity and creativity.',
-    images: ['https://aibuzztools.com/og-image.jpg'],
+    images: ['https://aibuzz.world/og-image.jpg'],
   },
   icons: {
     icon: '/favicon.ico',
@@ -105,13 +105,13 @@ export default async function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               name: 'AI Buzz World',
-              url: 'https://aibuzztools.com',
+              url: 'https://aibuzz.world',
               description: 'Discover the best AI tools for every need. Find, compare, and choose from thousands of AI-powered tools.',
               potentialAction: {
                 '@type': 'SearchAction',
                 target: {
                   '@type': 'EntryPoint',
-                  urlTemplate: 'https://aibuzztools.com/tools?search={search_term_string}',
+                  urlTemplate: 'https://aibuzz.world/tools?search={search_term_string}',
                 },
                 'query-input': 'required name=search_term_string',
               },

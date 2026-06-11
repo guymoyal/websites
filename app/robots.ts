@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/_next/'],
       },
     ],
-    sitemap: 'https://aibuzztools.com/sitemap.xml',
+    sitemap: 'https://aibuzz.world/sitemap.xml',
   }
 }

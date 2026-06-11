@@ -5,7 +5,7 @@ import { getCategories } from '@/lib/tools'
 import { getPartnerLandings } from '@/lib/partnerLandings'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://aibuzztools.com'
+  const baseUrl = 'https://aibuzz.world'
   
   // Get all dynamic content
   const articles = await getArticles()

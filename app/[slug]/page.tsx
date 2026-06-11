@@ -30,7 +30,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
     description:
       landing.content?.metaDescription ?? landing.content?.subheadline ?? landing.program.name,
     alternates: {
-      canonical: `https://aibuzztools.com/${params.slug}`,
+      canonical: `https://aibuzz.world/${params.slug}`,
     },
   };
 }
@@ -48,5 +48,30 @@ export default function PartnerCampaignPage({ params }: { params: { slug: string
   }
   const landing = getPartnerLandingBySlug(params.slug);
   if (!landing) notFound();
-  return <CampaignLanding landing={landing} />;
+
+  const faq = landing.content?.faq ?? [];
+  const faqJsonLd =
+    faq.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faq.map((f) => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: { '@type': 'Answer', text: f.answer },
+          })),
+        }
+      : null;
+
+  return (
+    <>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+      <CampaignLanding landing={landing} />
+    </>
+  );
 }

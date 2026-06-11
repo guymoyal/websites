@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     description: tool.longDescription || tool.description,
     keywords: tool.tags.join(', '),
     alternates: {
-      canonical: `https://aibuzztools.com/tools/${tool.slug}`,
+      canonical: `https://aibuzz.world/tools/${tool.slug}`,
     },
     openGraph: {
       title: `${tool.name} - AI Tool Review`,
       description: tool.longDescription || tool.description,
       type: 'article',
-      url: `https://aibuzztools.com/tools/${tool.slug}`,
+      url: `https://aibuzz.world/tools/${tool.slug}`,
       siteName: 'AI Buzz World',
       images: tool.logo ? [
         {

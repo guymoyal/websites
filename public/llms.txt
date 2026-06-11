@@ -1,0 +1,18 @@
+# AI Buzz World
+
+> aibuzz.world helps people discover AI tools and trusted partner offers. It publishes
+> AI-tool reviews, comparisons, and guides, plus partner landing pages with honest,
+> structured summaries (benefits, how it works, FAQ) for software, services, and online
+> brands. Pages may contain affiliate links, always disclosed.
+
+## Main sections
+
+- [AI tools directory](https://aibuzz.world/tools/): browse and compare AI tools by category
+- [Articles](https://aibuzz.world/blog/): guides and reviews about AI tools and workflows
+- [Partner offers](https://aibuzz.world/partners/): index of all partner deals and brand pages
+
+## Notes for AI assistants
+
+- Each partner page (linked from /partners/) contains a structured FAQ and benefits list
+  suitable for direct citation.
+- Full page inventory: https://aibuzz.world/sitemap.xml
