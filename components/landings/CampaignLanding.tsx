@@ -17,7 +17,10 @@ function CtaButton({ href, label }: { href: string; label: string }) {
 }
 
 export function CampaignLanding({ landing }: { landing: PartnerLanding }) {
-  const { program, content, gotolink } = landing;
+  const { program, content } = landing;
+  // First-party redirect instead of the raw tracking link: EasyList hides
+  // anchors pointing at known affiliate domains (e.g. tatrck.com).
+  const goHref = `/go/${landing.slug}/`;
   const headline = content?.headline ?? program.name;
   const subheadline = content?.subheadline ?? program.siteUrl ?? '';
   const ctaLabel = content?.ctaLabel ?? `Visit ${program.name}`;
@@ -40,7 +43,7 @@ export function CampaignLanding({ landing }: { landing: PartnerLanding }) {
         ) : null}
         <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{headline}</h1>
         {subheadline ? <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-600">{subheadline}</p> : null}
-        <CtaButton href={gotolink} label={ctaLabel} />
+        <CtaButton href={goHref} label={ctaLabel} />
         {content?.intro ? <p className="mx-auto mt-10 max-w-2xl text-left text-gray-700">{content.intro}</p> : null}
         {!content && program.description ? (
           <div
@@ -101,7 +104,7 @@ export function CampaignLanding({ landing }: { landing: PartnerLanding }) {
 
       {/* Final CTA + disclosure */}
       <section className="mt-16 text-center">
-        <CtaButton href={gotolink} label={ctaLabel} />
+        <CtaButton href={goHref} label={ctaLabel} />
         <p className="mx-auto mt-8 max-w-2xl text-xs text-gray-400">{DISCLOSURE}</p>
       </section>
     </main>
