@@ -41,6 +41,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'your-google-verification-code',
+    other: {
+      'verify-admitad': '557ea85493',
+    },
   },
   openGraph: {
     title: 'AI Buzz World - Discover the Best AI Tools',
