@@ -1,32 +1,26 @@
 [
   {
-    "href": "https://chat.openai.com",
-    "title": "ChatGPT",
-    "subtitle": "General-purpose AI assistant",
-    "cta": "Try ChatGPT"
+    "href": "https://rzekl.com/g/1e8d114494557ea8549316525dc3e8/",
+    "title": "AliExpress",
+    "subtitle": "Tech gadgets, electronics & accessories — millions of deals",
+    "cta": "Shop deals"
   },
   {
-    "href": "https://claude.ai",
-    "title": "Claude",
-    "subtitle": "Long-context reasoning & writing",
-    "cta": "Try Claude"
-  },
-  {
-    "href": "https://gemini.google.com",
-    "title": "Google Gemini",
-    "subtitle": "Multimodal AI from Google",
-    "cta": "Try Gemini"
-  },
-  {
-    "href": "https://cursor.com",
-    "title": "Cursor",
-    "subtitle": "AI-native code editor",
-    "cta": "Try Cursor"
+    "href": "https://tatrck.com/h/0Jm30_BU0YGb?url=https://fiverr.com",
+    "title": "Fiverr",
+    "subtitle": "Hire freelancers for AI, design, dev & marketing work",
+    "cta": "Find talent"
   },
   {
     "href": "https://www.perplexity.ai",
     "title": "Perplexity",
     "subtitle": "AI search with citations",
     "cta": "Try Perplexity"
+  },
+  {
+    "href": "https://cursor.com",
+    "title": "Cursor",
+    "subtitle": "AI-native code editor",
+    "cta": "Try Cursor"
   }
 ]
