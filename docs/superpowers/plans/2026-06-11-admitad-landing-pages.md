@@ -768,7 +768,7 @@ git commit -m "feat: CampaignLanding template component"
 
 ### Task 8: Root-level dynamic route + example page
 
-**OUTCOME (2026-06-11):** Next 14.2 + output:'export' rejects empty generateStaticParams (build error). Fixed with a noindex placeholder slug 'partner-offers-coming-soon' emitted only when no landings exist (commit <SHA>).
+**OUTCOME (2026-06-11):** Next 14.2 + output:'export' rejects empty generateStaticParams (build error). Fixed with a noindex placeholder slug 'partner-offers-coming-soon' emitted only when no landings exist (commit 7c2d40a).
 
 **Files:**
 - Create: `app/[slug]/page.tsx`
