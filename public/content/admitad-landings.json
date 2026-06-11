@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-05-25T21:11:22.136Z",
+  "fetchedAt": "2026-06-11T10:19:11.336Z",
   "source": "admitad",
   "fetchMode": "connected",
   "apiBase": "https://api.admitad.com",
-  "pathPrefix": "/partners",
+  "pathPrefix": "",
   "count": 0,
   "entries": []
 }
