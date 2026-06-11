@@ -5,6 +5,9 @@ import { getPartnerLandings } from '@/lib/partnerLandings';
 export const metadata: Metadata = {
   title: 'Partner offers — aibuzz.world',
   description: 'Hand-picked partner deals and tools we recommend.',
+  alternates: {
+    canonical: 'https://aibuzztools.com/partners',
+  },
 };
 
 export default function PartnersIndexPage() {

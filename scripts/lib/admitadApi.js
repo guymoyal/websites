@@ -71,13 +71,4 @@ async function apiGetPaged(token, urlPath, searchParams = {}) {
   return all;
 }
 
-/** POST that returns {ok, status, data, text} instead of throwing (attach/detach report errors inline). */
-async function apiPost(token, urlPath) {
-  return apiRequest(token, 'POST', urlPath);
-}
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-module.exports = { API_BASE, fetchToken, apiGet, apiGetPaged, apiPost, sleep };
+module.exports = { API_BASE, fetchToken, apiGet, apiGetPaged };

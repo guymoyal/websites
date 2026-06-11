@@ -29,6 +29,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
     title: landing.content?.metaTitle ?? `${landing.program.name} — aibuzz.world`,
     description:
       landing.content?.metaDescription ?? landing.content?.subheadline ?? landing.program.name,
+    alternates: {
+      canonical: `https://aibuzztools.com/${params.slug}`,
+    },
   };
 }
 

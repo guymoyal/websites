@@ -8,7 +8,7 @@ function CtaButton({ href, label }: { href: string; label: string }) {
     <a
       href={href}
       target="_blank"
-      rel="sponsored noopener noreferrer"
+      rel="sponsored nofollow noopener noreferrer"
       className="inline-block rounded-xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-blue-700"
     >
       {label}

@@ -87,7 +87,7 @@ function validateContent(c) {
 async function main() {
   if (!DEEPSEEK_API_KEY) throw new Error('DEEPSEEK_API_KEY is required (set in .env.local).');
   const payload = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-  const targets = (payload.entries || []).filter((e) => !e.content && e.admitad.gotolink);
+  const targets = (payload.entries || []).filter((e) => !e.content && e.admitad?.gotolink);
   console.log(`[copy] entries: ${payload.entries?.length ?? 0}; needing copy: ${targets.length}`);
 
   const delay = Number(process.env.COPY_DELAY_MS) || 1000;

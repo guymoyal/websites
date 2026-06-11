@@ -51,14 +51,13 @@ campaign — with AI-generated copy and the campaign's tracking link as the CTA.
 
 ### Pipeline — `yarn partners:sync` (runs steps 2–3; step 1 is its own command)
 
-1. **Discover & apply** — `scripts/discoverAdmitadPrograms.js` (new), `yarn partners:discover`
+1. **Discover** — `scripts/discoverAdmitadPrograms.js` (new), `yarn partners:discover`
    - Pull the full catalog, filter to active programs in target categories
      (configurable allowlist; default: Программы и IT-сервисы / Интернет-услуги /
      Онлайн-образование / June AI Fest, plus a name/description keyword filter for AI relevance).
-   - For each candidate, fetch detail for ad space 2945005 to determine moderation status.
-   - Auto-attach instant-approval programs via `POST /advcampaigns/{id}/attach/2945005/`.
-   - Print a table of manual-moderation candidates (name, categories, commission) for the user.
-   - Never mass-applies to manual-moderation programs (account-flagging risk).
+   - Print a filtered, rating-sorted candidate table (name, categories, commission) with
+     manual-join guidance: visit the Admitad dashboard and apply to chosen programs there.
+   - Read-only and advisory only — the attach API is retired (410 Gone); no auto-attaching.
 2. **Fetch approved** — `scripts/fetchAdmitadPrograms.js` (existing, minor tweaks)
    - Connected mode for ad space 2945005 → `content/admitad-landings.json`
      (slug, path, gotolink, program metadata, `content` slot).
@@ -86,7 +85,7 @@ campaign — with AI-generated copy and the campaign's tracking link as the CTA.
 ### Data flow
 
 ```
-Admitad API ──discover/apply──▶ (connections on Admitad)
+Admitad dashboard (manual join) ──▶ (connections on Admitad)
 Admitad API ──fetch──▶ content/admitad-landings.json ──generate copy──▶ same JSON (content filled)
 admitad-landings.json ──next build──▶ out/<slug>/index.html ──wrangler deploy──▶ aibuzz.world/<slug>/
 ```
@@ -107,8 +106,8 @@ admitad-landings.json ──next build──▶ out/<slug>/index.html ──wran
 ## Testing / verification
 
 - Run discovery against the live account; verify the candidate table looks sane before any attach.
-- Test-attach one program (user-confirmed) and verify `connection_status` then `gotolink`
-  via the fetch script.
+- Join one program manually in the Admitad dashboard and verify `connection_status` then
+  `gotolink` appear via the fetch script.
 - Generate copy for the first approved program(s); human-review quality once.
 - `yarn build`, open the built page locally, click the CTA, and confirm the outgoing URL is the
   Admitad tracking link (contains the campaign/ad-space identifiers).

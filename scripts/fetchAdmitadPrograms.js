@@ -513,6 +513,20 @@ async function main() {
     if (prevContent.has(key)) e.content = prevContent.get(key);
   }
 
+  // Retain entries for disconnected/declined programs that already have generated copy,
+  // so a re-approval doesn't lose the copy. Set gotolink to null so the loader excludes
+  // the page from the build and the copy generator skips it (content is already set).
+  const freshKeys = new Set(entries.map((e) => `${e.admitad.campaignId}:${e.admitad.websiteId}`));
+  const disconnected = previous.filter(
+    (e) => e.content && e.admitad && !freshKeys.has(`${e.admitad.campaignId}:${e.admitad.websiteId}`)
+  );
+  for (const e of disconnected) {
+    entries.push({ ...e, admitad: { ...e.admitad, gotolink: null } });
+  }
+  if (disconnected.length > 0) {
+    console.log(`[admitad] retained ${disconnected.length} disconnected entries with generated copy`);
+  }
+
   const payload = {
     fetchedAt: new Date().toISOString(),
     source: 'admitad',
