@@ -32,7 +32,10 @@ require('dotenv').config();
 require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
 const ADMIT_API_BASE = (process.env.ADMIT_API_BASE || 'https://api.admitad.com').replace(/\/$/, '');
-const PATH_PREFIX = (process.env.ADMIT_LANDING_PATH_PREFIX || '/partners').replace(/\/$/, '');
+const PATH_PREFIX = (process.env.ADMIT_LANDING_PATH_PREFIX !== undefined
+  ? process.env.ADMIT_LANDING_PATH_PREFIX
+  : '/partners'
+).replace(/\/$/, '');
 const OUTPUT = path.join(__dirname, '..', 'content', 'admitad-landings.json');
 
 function getTokenScopes() {
@@ -491,6 +494,23 @@ async function main() {
     await runConnected(accessToken, usedSlugs, entries);
   } else {
     throw new Error(`Unknown ADMIT_FETCH_MODE="${mode}". Use connected or catalog.`);
+  }
+
+  // Preserve AI-generated copy from the previous run (fetch must never erase it).
+  let previous = [];
+  try {
+    previous = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')).entries || [];
+  } catch (_) {
+    /* first run or unreadable file */
+  }
+  const prevContent = new Map(
+    previous
+      .filter((e) => e.content)
+      .map((e) => [`${e.admitad.campaignId}:${e.admitad.websiteId}`, e.content])
+  );
+  for (const e of entries) {
+    const key = `${e.admitad.campaignId}:${e.admitad.websiteId}`;
+    if (prevContent.has(key)) e.content = prevContent.get(key);
   }
 
   const payload = {
