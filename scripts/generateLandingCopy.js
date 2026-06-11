@@ -5,7 +5,8 @@
  * Failures leave content null (page falls back to program description).
  *
  * Usage: yarn partners:copy
- * Env: DEEPSEEK_API_KEY, optional COPY_LANGUAGE (default "en"), COPY_DELAY_MS (default 1000)
+ * Env: DEEPSEEK_API_KEY, optional COPY_LANGUAGE (default "en"), COPY_DELAY_MS (default 1000),
+ *      COPY_CONCURRENCY (parallel DeepSeek calls, default 4)
  */
 const fs = require('fs');
 const path = require('path');
@@ -91,25 +92,42 @@ async function main() {
   console.log(`[copy] entries: ${payload.entries?.length ?? 0}; needing copy: ${targets.length}`);
 
   const delay = Number(process.env.COPY_DELAY_MS) || 1000;
+  const concurrency = Math.max(1, Number(process.env.COPY_CONCURRENCY) || 4);
   let ok = 0;
+  let done = 0;
   const failed = [];
-  for (const entry of targets) {
-    const { systemPrompt, userPrompt } = buildPrompts(entry);
-    try {
-      const content = await callDeepSeekJson(systemPrompt, userPrompt);
-      const problem = validateContent(content);
-      if (problem) throw new Error(`invalid copy (${problem})`);
-      entry.content = { ...content, language: LANGUAGE, generatedAt: new Date().toISOString() };
-      ok += 1;
-      console.log(`[copy] ✓ ${entry.program.name}`);
-    } catch (err) {
-      failed.push(`${entry.program.name}: ${err.message.slice(0, 120)}`);
-      console.log(`[copy] ✗ ${entry.program.name}: ${err.message.slice(0, 120)}`);
-    }
-    await new Promise((r) => setTimeout(r, delay));
-  }
 
-  fs.writeFileSync(DATA_FILE, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+  const saveProgress = () =>
+    fs.writeFileSync(DATA_FILE, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+
+  let next = 0;
+  const worker = async () => {
+    while (next < targets.length) {
+      const entry = targets[next];
+      next += 1;
+      const { systemPrompt, userPrompt } = buildPrompts(entry);
+      try {
+        const content = await callDeepSeekJson(systemPrompt, userPrompt);
+        const problem = validateContent(content);
+        if (problem) throw new Error(`invalid copy (${problem})`);
+        entry.content = { ...content, language: LANGUAGE, generatedAt: new Date().toISOString() };
+        ok += 1;
+      } catch (err) {
+        failed.push(`${entry.program.name}: ${err.message.slice(0, 120)}`);
+        console.log(`[copy] ✗ ${entry.program.name}: ${err.message.slice(0, 120)}`);
+      }
+      done += 1;
+      // Periodic save so an interrupted long run keeps its progress (script is idempotent).
+      if (done % 25 === 0) {
+        saveProgress();
+        console.log(`[copy] progress: ${done}/${targets.length} (${ok} ok)`);
+      }
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  };
+  await Promise.all(Array.from({ length: concurrency }, worker));
+
+  saveProgress();
   console.log(`[copy] done: ${ok} generated, ${failed.length} failed.`);
   if (failed.length) console.log(failed.map((f) => `  - ${f}`).join('\n'));
 }
