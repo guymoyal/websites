@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { getArticles } from '@/lib/content'
 import { getTools } from '@/lib/tools'
 import { getCategories } from '@/lib/tools'
+import { getPartnerLandings } from '@/lib/partnerLandings'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://aibuzztools.com'
@@ -69,5 +70,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...staticPages, ...toolPages, ...categoryPages, ...articlePages]
+  const partnerLandings = getPartnerLandings()
+  const partnerPages: MetadataRoute.Sitemap = [
+    ...(partnerLandings.length > 0
+      ? [{
+          url: `${baseUrl}/partners`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.6,
+        }]
+      : []),
+    ...partnerLandings.map((l) => ({
+      url: `${baseUrl}/${l.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+  ]
+
+  return [...staticPages, ...toolPages, ...categoryPages, ...articlePages, ...partnerPages]
 }
