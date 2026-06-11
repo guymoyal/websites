@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 
-const WEBSITE_ID = process.env.ADMIT_WEBSITE_ID || '2945005';
+const WEBSITE_ID = process.env.ADMIT_WEBSITE_ID || '2951457';
 const CATALOG_URL = `https://store.admitad.com/en/webmaster/websites/${WEBSITE_ID}/catalog/partners_programs/`;
 const PROFILE_DIR = path.join(__dirname, '..', '.admitad-profile');
 const NETLOG_FILE = path.join(__dirname, '..', '.admitad-network-log.json');

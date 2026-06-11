@@ -5,13 +5,13 @@
  * Modes (ADMIT_FETCH_MODE):
  * - connected (default): each ad space → GET /advcampaigns/website/{w_id}/ (programs tied to that space; usually has gotolink when active).
  * - catalog: GET /advcampaigns/?website={id} — same catalog as the store “public programs” list for that ad space (needs scope `advcampaigns`).
- *   Your store URL …/websites/2945005/… → set ADMIT_WEBSITE_ID=2945005
+ *   Your store URL …/websites/2951457/… → set ADMIT_WEBSITE_ID=2951457
  *
  * Docs: https://developers.mitgo.com/hc/en-us/articles/34481349447058-Affiliate-programs
  *
  * Usage:
  *   yarn fetch:admitad
- *   ADMIT_FETCH_MODE=catalog ADMIT_WEBSITE_ID=2945005 yarn fetch:admitad
+ *   ADMIT_FETCH_MODE=catalog ADMIT_WEBSITE_ID=2951457 yarn fetch:admitad
  *
  * Env:
  *   ADMIT_CLIENT_ID, ADMIT_CLIENT_SECRET | ADMIT_BASE64_HEADER
@@ -397,7 +397,7 @@ async function runCatalog(accessToken, usedSlugs, entries) {
   const websiteIdStr = process.env.ADMIT_WEBSITE_ID && String(process.env.ADMIT_WEBSITE_ID).trim();
   if (!websiteIdStr) {
     throw new Error(
-      'ADMIT_FETCH_MODE=catalog requires ADMIT_WEBSITE_ID (digits from the store URL, e.g. …/websites/2945005/… → 2945005).'
+      'ADMIT_FETCH_MODE=catalog requires ADMIT_WEBSITE_ID (digits from the store URL, e.g. …/websites/2951457/… → 2951457).'
     );
   }
 

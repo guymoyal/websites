@@ -39,7 +39,7 @@
     "partners:discover": "node scripts/discoverAdmitadPrograms.js",
     "partners:harvest": "node scripts/harvestPartnerPrograms.js",
     "partners:login": "node scripts/admitadLogin.js",
-    "partners:fetch": "ADMIT_WEBSITE_ID=2945005 ADMIT_LANDING_PATH_PREFIX= node scripts/fetchAdmitadPrograms.js",
+    "partners:fetch": "ADMIT_WEBSITE_ID=2951457 ADMIT_LANDING_PATH_PREFIX= node scripts/fetchAdmitadPrograms.js",
     "partners:manual": "node scripts/mergePartnerPrograms.js",
     "partners:copy": "node scripts/generateLandingCopy.js",
     "partners:sync": "yarn partners:fetch && yarn partners:manual && yarn partners:copy",

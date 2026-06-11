@@ -21,7 +21,7 @@ polished landing page at `aibuzz.world/<program-slug>/`, fully automated.
 - Login session is saved once via Playwright (real Chrome, automation fingerprint disabled so
   Google SSO works) into `.admitad-profile/` (gitignored, local only).
 - **Tracking links are tied to an ad space.** Swift Herb AI (id 2913701, swiftherb.com) is already
-  connected to the partner catalog; **AI Buzz world (id 2945005, aibuzz.world) is NOT yet connected** —
+  connected to the partner catalog; **AI Buzz world (id 2951457, aibuzz.world) is NOT yet connected** —
   its Get-link modal says "To receive affiliate links, connect your ad space to the program catalog."
 
 ## Pipeline (all commands exist and are committed)
@@ -35,7 +35,7 @@ polished landing page at `aibuzz.world/<program-slug>/`, fully automated.
 | 4. Deploy | `yarn deploy:cloudflare` | Publishes to aibuzz.world (run only when ready) |
 
 Useful env vars:
-- `HARVEST_WEBSITE_ID` — ad space for harvesting (default `2913701` Swift Herb; **switch to `2945005` once AI Buzz world is connected**)
+- `HARVEST_WEBSITE_ID` — ad space for harvesting (default `2913701` Swift Herb; **switch to `2951457` once AI Buzz world is connected**)
 - `HARVEST_LIMIT`, `HARVEST_KEYWORDS`, `HARVEST_DELAY_MS` — partial/filtered harvests
 - `COPY_CONCURRENCY` (default 4), `COPY_DELAY_MS`, `COPY_LANGUAGE` — copy generation
 
@@ -63,7 +63,7 @@ In the Admitad dashboard:
 Tell Claude (or run yourself):
 
 ```bash
-HARVEST_WEBSITE_ID=2945005 yarn partners:harvest   # regenerate all links under aibuzz.world (~30-45 min)
+HARVEST_WEBSITE_ID=2951457 yarn partners:harvest   # regenerate all links under aibuzz.world (~30-45 min)
 yarn partners:sync                                  # re-merge; all existing AI copy is preserved (keyed by slug)
 yarn build && yarn deploy:cloudflare                # rebuild + publish
 ```
@@ -74,7 +74,7 @@ Only the `link` values change — slugs, copy, and pages stay identical, so the 
 
 - **Attribution mismatch (temporary):** until the re-harvest, links are attributed to the
   swiftherb.com ad space while pages live on aibuzz.world. Commissions could in theory be
-  rejected for traffic-source mismatch — this is why the re-harvest under 2945005 matters.
+  rejected for traffic-source mismatch — this is why the re-harvest under 2951457 matters.
 - **SEO (accepted by user):** publishing 3,519 thin affiliate pages at once risks Google's
   "scaled content abuse" policies and could affect existing rankings. User chose all 3,519.
 - **Session expiry:** harvest fails with "session expired" → run `yarn partners:login` again.

@@ -12,13 +12,13 @@
  *   yarn partners:discover
  *
  * Env:
- *   ADMIT_WEBSITE_ID   — ad space (default 2945005 = aibuzz.world)
+ *   ADMIT_WEBSITE_ID   — ad space (default 2951457 = aibuzz.world)
  *   ADMIT_CATEGORIES   — comma-separated category names (default below)
  *   ADMIT_KEYWORDS     — optional case-insensitive regex over name+description
  */
 const { fetchToken, apiGetPaged } = require('./lib/admitadApi');
 
-const WEBSITE_ID = String(process.env.ADMIT_WEBSITE_ID || '2945005');
+const WEBSITE_ID = String(process.env.ADMIT_WEBSITE_ID || '2951457');
 const DEFAULT_CATEGORIES = [
   'Программы и IT-сервисы',
   'Интернет-услуги',
