@@ -16,7 +16,7 @@
 - Catalog: `GET /advcampaigns/?limit=&offset=` → `{results, _meta:{count}}`, 1,320 rows. Rows have `id, name, description, raw_description, site_url, image, status, connected, rating, rate_of_approve, regions, categories, allow_deeplink, currency, ...` — **no `moderation` field**.
 - `GET /advcampaigns/?website=<id>` returns 0 (quirk) — always use the unfiltered catalog.
 - `GET /advcampaigns/{id}/website/{w_id}/` → **404 for non-connected programs**; for connected ones it returns `gotolink`, `connection_status`.
-- Apply: `POST /advcampaigns/{c_id}/attach/{w_id}/` (untested; Task 3 exercises it once, with user confirmation). Detach: `POST /advcampaigns/{c_id}/detach/{w_id}/`.
+- Apply: `POST /advcampaigns/{c_id}/attach/{w_id}/` — **RETIRED (2026-06-11): returns 410 Gone (`{"error":"This API method is no longer available"}`). No replacement endpoint exists. Auto-apply is impossible; users must join programs manually in the Admitad dashboard.** Detach: `POST /advcampaigns/{c_id}/detach/{w_id}/` (status unknown).
 - Instant approval is only observable AFTER attach: re-fetch the program for the website; `connection_status: "active"` immediately = instant, `"pending"` = moderated.
 
 **Repo facts:**
@@ -306,6 +306,8 @@ git commit -m "feat: add Admitad program discovery script (dry-run + explicit ap
 ---
 
 ### Task 3: Live test-attach of ONE program — ⚠️ USER CHECKPOINT
+
+**OUTCOME (2026-06-11):** attach API returns 410 Gone (retired by Admitad; docs confirm, no replacement). Auto-apply impossible — user joins programs manually in the dashboard (first pick: Udemy WW, id 22448). Discovery script reduced to read-only in commit <COMMIT_SHA_PLACEHOLDER>.
 
 This is the spec's "prove attach works" milestone. Applying is visible to the advertiser, so:
 

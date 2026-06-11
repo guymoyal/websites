@@ -13,7 +13,7 @@ campaign — with AI-generated copy and the campaign's tracking link as the CTA.
 ## Verified feasibility (checked live against the Admitad API, 2026-06-11)
 
 - OAuth2 client-credentials auth works with the existing `ADMIT_CLIENT_ID`/`ADMIT_CLIENT_SECRET` in `.env.local`.
-- Granted scopes: `websites`, `advcampaigns`, `advcampaigns_for_website`, `manage_advcampaigns` (apply/detach via API), `deeplink_generator`.
+- Granted scopes: `websites`, `advcampaigns`, `advcampaigns_for_website`, `manage_advcampaigns`, `deeplink_generator`. Note: `manage_advcampaigns` is useless for attaching — see "Known API quirks" below.
 - Ad spaces: `2913701` swiftherb.com, `2945005` aibuzz.world — both active.
 - Full catalog (`GET /advcampaigns/`) returns 1,320 programs. ~102 active programs in
   software/IT-services/education categories; a "June AI Fest" category holds 86 AI-related
@@ -29,12 +29,13 @@ campaign — with AI-generated copy and the campaign's tracking link as the CTA.
   unfiltered catalog, then check per-program availability via
   `GET /advcampaigns/{id}/website/{w_id}/`.
 - The catalog list response does NOT include the `moderation` (instant-approval) flag.
-  Detect instant approval from the per-program detail response, or by attempting
-  `POST /advcampaigns/{id}/attach/{w_id}/` and inspecting the resulting `connection_status`.
 - List responses sometimes omit `gotolink`; the fetch script already enriches from the detail
   endpoint (keep that behavior).
-- The attach endpoint has not yet been exercised; the first implementation task is a live
-  test-attach of one relevant program, confirmed with the user before running.
+- **Attach API retired (2026-06-11):** `POST /advcampaigns/{id}/attach/{w_id}/` returns
+  `410 Gone` with body `{"error":"This API method is no longer available"}`. No replacement
+  endpoint exists (v2/connect variants 404). The `manage_advcampaigns` scope is therefore
+  useless for attaching. Publishers must join programs manually in the Admitad dashboard.
+  The discovery script (`yarn partners:discover`) is now read-only and advisory only.
 
 ## Decisions
 
@@ -42,7 +43,7 @@ campaign — with AI-generated copy and the campaign's tracking link as the CTA.
 |---|---|
 | Relation to existing site | Add to the existing aibuzz.world site; keep all current content (helps advertiser approvals). |
 | Page URLs | Root-level, one per campaign: `aibuzz.world/<campaign-slug>/`. The site exports statically with `trailingSlash: true`, so the slash form is canonical; a literal `.html` suffix is not used. Slugs come from `makeSlug()` in the fetch script (program name + campaign/website ids). |
-| Program selection | Niche-fit + instant-approval: filter the catalog to AI/software/IT-services/e-learning categories (and "June AI Fest"); auto-apply only to instant-approval programs; print manual-moderation candidates for the user to decide. |
+| Program selection | Discovery script lists niche-fit candidates (AI/software/IT-services/e-learning categories and "June AI Fest") sorted by rating; user reviews the table and joins chosen programs manually in the Admitad dashboard (attach API retired, 410). |
 | Page generation | One hand-crafted, high-quality landing template (existing Tailwind/component stack); AI (DeepSeek/Gemini, same pattern as `scripts/generateContent.js`) writes structured copy per program. |
 | Automation level | Manual: a single command chains the steps. Scheduled automation is explicitly future work. |
 

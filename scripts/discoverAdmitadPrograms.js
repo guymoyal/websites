@@ -1,24 +1,22 @@
 #!/usr/bin/env node
 /**
- * Discover Admitad programs for an ad space; optionally apply to selected ones.
+ * Discover Admitad programs for an ad space — read-only advisory tool.
  *
- * Dry-run (default): print a table of active catalog programs matching the
- * category allowlist / keyword filter (connected programs are marked CONNECTED when they match the filters).
- * Apply: --apply --ids 123,456 → POST /advcampaigns/{id}/attach/{w_id}/ for
- * EXACTLY those ids, then report the resulting connection status. Never
- * applies to anything not listed in --ids (mass-applying risks account flags).
+ * Admitad retired the program attach API (POST /advcampaigns/{id}/attach/{w_id}/)
+ * on or before 2026-06-11; it now returns 410 Gone with no replacement endpoint.
+ * Publishers must join programs manually in the Admitad dashboard.
+ * This script is therefore discovery-only: it prints a candidate table but never
+ * attempts to attach anything.
  *
  * Usage:
  *   yarn partners:discover
- *   yarn partners:discover --apply --ids 12345
  *
  * Env:
  *   ADMIT_WEBSITE_ID   — ad space (default 2945005 = aibuzz.world)
  *   ADMIT_CATEGORIES   — comma-separated category names (default below)
  *   ADMIT_KEYWORDS     — optional case-insensitive regex over name+description
- *   ADMIT_DETAIL_DELAY_MS — delay between API writes (default 500)
  */
-const { fetchToken, apiGet, apiGetPaged, apiPost, sleep } = require('./lib/admitadApi');
+const { fetchToken, apiGetPaged } = require('./lib/admitadApi');
 
 const WEBSITE_ID = String(process.env.ADMIT_WEBSITE_ID || '2945005');
 const DEFAULT_CATEGORIES = [
@@ -29,23 +27,11 @@ const DEFAULT_CATEGORIES = [
 ];
 
 function parseArgs(argv) {
-  const args = { apply: false, ids: [] };
   for (let i = 2; i < argv.length; i += 1) {
-    if (argv[i] === '--apply') args.apply = true;
-    else if (argv[i] === '--ids' && argv[i + 1]) {
-      args.ids = argv[i + 1].split(',').map((s) => {
-        const n = Number(s.trim());
-        if (!s.trim() || !Number.isInteger(n) || n <= 0) {
-          throw new Error(`Invalid campaign id in --ids: "${s.trim()}"`);
-        }
-        return n;
-      });
-      i += 1;
-    } else if (argv[i].startsWith('--') && argv[i] !== '--apply' && argv[i] !== '--ids') {
+    if (argv[i].startsWith('--')) {
       console.warn(`[discover] Unknown flag "${argv[i]}" — ignored.`);
     }
   }
-  return args;
 }
 
 function matchesFilters(c, categories, keywordRe) {
@@ -77,42 +63,14 @@ function printTable(rows) {
   }
 }
 
-async function applyTo(token, ids, catalogById) {
-  const delay = Number(process.env.ADMIT_DETAIL_DELAY_MS) || 500;
-  for (const id of ids) {
-    const name = catalogById.get(id)?.name || `campaign ${id}`;
-    const res = await apiPost(token, `/advcampaigns/${id}/attach/${WEBSITE_ID}/`);
-    if (!res.ok) {
-      console.log(`[apply] ${name} (${id}): FAILED ${res.status} ${res.text.slice(0, 200)}`);
-      await sleep(delay);
-      continue;
-    }
-    await sleep(delay);
-    // Detail endpoint exists only after a connection (even pending) — read resulting status.
-    let status = 'unknown';
-    try {
-      const detail = await apiGet(token, `/advcampaigns/${id}/website/${WEBSITE_ID}/`);
-      status = detail.connection_status || 'unknown';
-      if (detail.gotolink) status += ' (gotolink ready)';
-    } catch (err) {
-      status = `attach accepted; detail unavailable (${err.message.slice(0, 80)})`;
-    }
-    console.log(`[apply] ${name} (${id}): ${status}`);
-    await sleep(delay);
-  }
-}
-
 async function main() {
-  const args = parseArgs(process.argv);
+  parseArgs(process.argv);
   const categories = process.env.ADMIT_CATEGORIES
     ? process.env.ADMIT_CATEGORIES.split(',').map((s) => s.trim()).filter(Boolean)
     : DEFAULT_CATEGORIES;
   const keywordRe = process.env.ADMIT_KEYWORDS ? new RegExp(process.env.ADMIT_KEYWORDS, 'i') : null;
 
-  const scope = args.apply
-    ? 'advcampaigns advcampaigns_for_website manage_advcampaigns'
-    : 'advcampaigns';
-  const token = await fetchToken(scope);
+  const token = await fetchToken('advcampaigns');
 
   console.log(`[discover] fetching catalog (ad space ${WEBSITE_ID})…`);
   const catalog = await apiGetPaged(token, '/advcampaigns/');
@@ -126,16 +84,11 @@ async function main() {
   );
   printTable(candidates);
 
-  if (!args.apply) {
-    console.log('\nDry run. To apply: yarn partners:discover --apply --ids <id1,id2>');
-    return;
-  }
-  if (args.ids.length === 0) {
-    throw new Error('--apply requires --ids <comma-separated campaign ids> (no mass-apply).');
-  }
-  const catalogById = new Map(catalog.map((c) => [c.id, c]));
-  await applyTo(token, args.ids, catalogById);
-  console.log('\nDone. Run `yarn partners:fetch` to pull tracking links for approved programs.');
+  console.log(
+    `\nAdmitad retired the attach API — join programs manually in your dashboard:` +
+    `\n  https://store.admitad.com/en/webmaster/websites/${WEBSITE_ID}/programs/` +
+    `\nThen run: yarn partners:fetch`
+  );
 }
 
 main().catch((err) => {
