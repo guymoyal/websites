@@ -505,7 +505,7 @@ async function main() {
   }
   const prevContent = new Map(
     previous
-      .filter((e) => e.content)
+      .filter((e) => e.content && e.admitad)
       .map((e) => [`${e.admitad.campaignId}:${e.admitad.websiteId}`, e.content])
   );
   for (const e of entries) {
