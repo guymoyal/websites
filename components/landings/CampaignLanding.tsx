@@ -33,13 +33,19 @@ function hostnameOf(siteUrl: string | null) {
 
 export function CampaignLanding({ landing }: { landing: PartnerLanding }) {
   const { program, content } = landing;
+  // Pilot: these slugs put the raw tracking link straight in the CTA href and
+  // rely on SmartCtaButton's open-then-fallback alone (no /go/ hop).
+  const DIRECT_LINK_SLUGS = new Set(['fiverr-many-geos-2']);
+  const direct = DIRECT_LINK_SLUGS.has(landing.slug);
   // First-party redirect instead of the raw tracking link: the worker 302s
   // /go/<slug>/ to the tracker, so ad blockers never see the tracker URL here.
-  const goHref = `/go/${landing.slug}/`;
+  const goHref = direct ? landing.gotolink : `/go/${landing.slug}/`;
   // Funnel split: impulse clicks at the top earn per-click (CPC) when the
   // program has a CPC link; readers who reach the bottom CTA have shown
   // intent, so that one stays per-sale (CPA).
-  const heroHref = landing.cpcGotolink ? `/go/${landing.slug}~cpc/` : goHref;
+  const heroHref = landing.cpcGotolink
+    ? (direct ? landing.cpcGotolink : `/go/${landing.slug}~cpc/`)
+    : goHref;
   const headline = content?.headline ?? program.name;
   const subheadline = content?.subheadline ?? program.siteUrl ?? '';
   const ctaLabel = content?.ctaLabel ?? `Visit ${program.name}`;
