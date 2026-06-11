@@ -12,6 +12,7 @@ const SAMPLE: PartnerLanding = {
   slug: 'example-campaign',
   path: '/example-campaign',
   gotolink: 'https://example.com',
+  cpcGotolink: null,
   program: {
     name: 'Example AI Suite',
     description: null,

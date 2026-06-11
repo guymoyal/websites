@@ -19,6 +19,8 @@ export interface PartnerLanding {
   slug: string;
   path: string;
   gotolink: string;
+  /** Optional per-click (CPC) link variant — used by the hero CTA when set. */
+  cpcGotolink: string | null;
   program: {
     name: string;
     description: string | null;
@@ -46,6 +48,7 @@ export function getPartnerLandings(): PartnerLanding[] {
       slug: e.slug,
       path: e.path,
       gotolink: e.admitad.gotolink,
+      cpcGotolink: e.admitad.cpcGotolink ?? null,
       program: {
         name: e.program?.name ?? e.slug,
         description: e.program?.description ?? null,

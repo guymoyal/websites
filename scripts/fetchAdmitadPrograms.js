@@ -513,9 +513,16 @@ async function main() {
       .filter((e) => e.content && e.admitad)
       .map((e) => [`${e.admitad.campaignId}:${e.admitad.websiteId}`, e.content])
   );
+  // Manually-added CPC link variants (admitad.cpcGotolink) must also survive refetches.
+  const prevCpc = new Map(
+    previous
+      .filter((e) => e.admitad?.cpcGotolink)
+      .map((e) => [`${e.admitad.campaignId}:${e.admitad.websiteId}`, e.admitad.cpcGotolink])
+  );
   for (const e of entries) {
     const key = `${e.admitad.campaignId}:${e.admitad.websiteId}`;
     if (prevContent.has(key)) e.content = prevContent.get(key);
+    if (prevCpc.has(key)) e.admitad.cpcGotolink = prevCpc.get(key);
   }
 
   // Retain entries for disconnected/declined programs that already have generated copy,

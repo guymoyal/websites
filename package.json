@@ -42,11 +42,12 @@
     "partners:fetch": "ADMIT_WEBSITE_ID=2951457 ADMIT_LANDING_PATH_PREFIX= node scripts/fetchAdmitadPrograms.js",
     "partners:manual": "node scripts/mergePartnerPrograms.js",
     "partners:copy": "node scripts/generateLandingCopy.js",
-    "partners:sync": "yarn partners:fetch && yarn partners:manual && yarn partners:copy",
+    "partners:sync": "yarn partners:fetch && yarn partners:manual && yarn partners:copy && yarn partners:redirects",
     "monetization:check": "node scripts/checkMonetizationSetup.js",
     "pm:growth": "node scripts/pmGrowthBundle.js",
     "setup": "npm install && cp .env.local.example .env.local",
-    "cursor": "./scripts/cursor-open.sh"
+    "cursor": "./scripts/cursor-open.sh",
+    "partners:redirects": "node scripts/generateGoRedirects.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -118,6 +119,7 @@
     "playwright": "^1.60.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7",
     "wrangler": "^4"
   }
 }

@@ -3,14 +3,15 @@ import { notFound } from 'next/navigation';
 import { CampaignLanding } from '@/components/landings/CampaignLanding';
 import { getPartnerLandingBySlug, getPartnerLandings } from '@/lib/partnerLandings';
 
-// Static export: only slugs from generateStaticParams are built; anything else 404s.
-export const dynamicParams = false;
+// Static export: only slugs from generateStaticParams are built; anything else
+// 404s at the host. (No `dynamicParams = false` — it trips a Next 14 dev-mode
+// bug with output:'export' that 500s every page; export behavior is the same.)
 
 // Next 14 + output:'export' rejects an empty generateStaticParams result, so a
 // placeholder page is emitted until the first approved program produces real slugs.
 const PLACEHOLDER_SLUG = 'partner-offers-coming-soon';
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const landings = getPartnerLandings();
   if (landings.length === 0) return [{ slug: PLACEHOLDER_SLUG }];
   return landings.map((e) => ({ slug: e.slug }));

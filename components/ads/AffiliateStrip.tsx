@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
 import { getAffiliateItems } from '@/lib/monetization';
+import { SmartCtaButton } from '@/components/landings/SmartCtaButton';
 import styles from './AffiliateStrip.module.css';
 
 interface AffiliateStripProps {
@@ -27,12 +28,7 @@ export default function AffiliateStrip({
       <ul className={styles.list}>
         {items.map((item) => (
           <li key={item.href} className={styles.item}>
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className={styles.card}
-            >
+            <SmartCtaButton href={item.href} className={styles.card}>
               <span className={styles.cardInner}>
                 <span className={styles.title}>{item.title}</span>
                 {item.subtitle && (
@@ -43,7 +39,7 @@ export default function AffiliateStrip({
                   <ExternalLink size={14} aria-hidden />
                 </span>
               </span>
-            </a>
+            </SmartCtaButton>
           </li>
         ))}
       </ul>

@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4: the old `@tailwind base/components/utilities` directives are
+   silently ignored by the v4 PostCSS plugin — no utilities were generated. */
+@import 'tailwindcss';
+@config '../tailwind.config.ts';
 
 :root {
   --foreground-rgb: 0, 0, 0;
