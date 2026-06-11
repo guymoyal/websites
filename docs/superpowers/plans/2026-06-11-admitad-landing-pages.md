@@ -307,7 +307,7 @@ git commit -m "feat: add Admitad program discovery script (dry-run + explicit ap
 
 ### Task 3: Live test-attach of ONE program — ⚠️ USER CHECKPOINT
 
-**OUTCOME (2026-06-11):** attach API returns 410 Gone (retired by Admitad; docs confirm, no replacement). Auto-apply impossible — user joins programs manually in the dashboard (first pick: Udemy WW, id 22448). Discovery script reduced to read-only in commit <COMMIT_SHA_PLACEHOLDER>.
+**OUTCOME (2026-06-11):** attach API returns 410 Gone (retired by Admitad; docs confirm, no replacement). Auto-apply impossible — user joins programs manually in the dashboard (first pick: Udemy WW, id 22448). Discovery script reduced to read-only in commit 156f262.
 
 This is the spec's "prove attach works" milestone. Applying is visible to the advertiser, so:
 
