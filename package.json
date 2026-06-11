@@ -38,6 +38,8 @@
     "fetch:admitad": "node scripts/fetchAdmitadPrograms.js",
     "partners:discover": "node scripts/discoverAdmitadPrograms.js",
     "partners:fetch": "ADMIT_WEBSITE_ID=2945005 ADMIT_LANDING_PATH_PREFIX= node scripts/fetchAdmitadPrograms.js",
+    "partners:copy": "node scripts/generateLandingCopy.js",
+    "partners:sync": "yarn partners:fetch && yarn partners:copy",
     "monetization:check": "node scripts/checkMonetizationSetup.js",
     "pm:growth": "node scripts/pmGrowthBundle.js",
     "setup": "npm install && cp .env.local.example .env.local",
