@@ -3,7 +3,7 @@
  * Discover Admitad programs for an ad space; optionally apply to selected ones.
  *
  * Dry-run (default): print a table of active catalog programs matching the
- * category allowlist / keyword filter, plus already-connected programs.
+ * category allowlist / keyword filter (connected programs are marked CONNECTED when they match the filters).
  * Apply: --apply --ids 123,456 → POST /advcampaigns/{id}/attach/{w_id}/ for
  * EXACTLY those ids, then report the resulting connection status. Never
  * applies to anything not listed in --ids (mass-applying risks account flags).
@@ -32,9 +32,17 @@ function parseArgs(argv) {
   const args = { apply: false, ids: [] };
   for (let i = 2; i < argv.length; i += 1) {
     if (argv[i] === '--apply') args.apply = true;
-    if (argv[i] === '--ids' && argv[i + 1]) {
-      args.ids = argv[i + 1].split(',').map((s) => Number(s.trim())).filter(Boolean);
+    else if (argv[i] === '--ids' && argv[i + 1]) {
+      args.ids = argv[i + 1].split(',').map((s) => {
+        const n = Number(s.trim());
+        if (!s.trim() || !Number.isInteger(n) || n <= 0) {
+          throw new Error(`Invalid campaign id in --ids: "${s.trim()}"`);
+        }
+        return n;
+      });
       i += 1;
+    } else if (argv[i].startsWith('--') && argv[i] !== '--apply' && argv[i] !== '--ids') {
+      console.warn(`[discover] Unknown flag "${argv[i]}" — ignored.`);
     }
   }
   return args;
@@ -76,6 +84,7 @@ async function applyTo(token, ids, catalogById) {
     const res = await apiPost(token, `/advcampaigns/${id}/attach/${WEBSITE_ID}/`);
     if (!res.ok) {
       console.log(`[apply] ${name} (${id}): FAILED ${res.status} ${res.text.slice(0, 200)}`);
+      await sleep(delay);
       continue;
     }
     await sleep(delay);
