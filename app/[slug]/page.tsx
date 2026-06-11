@@ -6,11 +6,23 @@ import { getPartnerLandingBySlug, getPartnerLandings } from '@/lib/partnerLandin
 // Static export: only slugs from generateStaticParams are built; anything else 404s.
 export const dynamicParams = false;
 
+// Next 14 + output:'export' rejects an empty generateStaticParams result, so a
+// placeholder page is emitted until the first approved program produces real slugs.
+const PLACEHOLDER_SLUG = 'partner-offers-coming-soon';
+
 export function generateStaticParams() {
-  return getPartnerLandings().map((e) => ({ slug: e.slug }));
+  const landings = getPartnerLandings();
+  if (landings.length === 0) return [{ slug: PLACEHOLDER_SLUG }];
+  return landings.map((e) => ({ slug: e.slug }));
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  if (params.slug === PLACEHOLDER_SLUG) {
+    return {
+      title: 'Partner offers coming soon — aibuzz.world',
+      robots: { index: false, follow: false },
+    };
+  }
   const landing = getPartnerLandingBySlug(params.slug);
   if (!landing) return {};
   return {
@@ -21,6 +33,16 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 }
 
 export default function PartnerCampaignPage({ params }: { params: { slug: string } }) {
+  if (params.slug === PLACEHOLDER_SLUG) {
+    return (
+      <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900">Partner offers coming soon</h1>
+        <p className="text-gray-600">
+          We are preparing hand-picked partner deals. Check back shortly.
+        </p>
+      </main>
+    );
+  }
   const landing = getPartnerLandingBySlug(params.slug);
   if (!landing) notFound();
   return <CampaignLanding landing={landing} />;
