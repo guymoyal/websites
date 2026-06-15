@@ -2,6 +2,12 @@
 const nextConfig = {
   output: 'export', // Required for Cloudflare Pages/Workers static deployment
   trailingSlash: true,
+  // Env-gated: serialize the static export to avoid a macOS worker race in
+  // moveExportedPage (ENOENT pages-manifest / ENOTEMPTY .next/export). Unset in
+  // CI so Linux builds keep full parallelism.
+  ...(process.env.NEXT_BUILD_CPUS
+    ? { experimental: { cpus: Number(process.env.NEXT_BUILD_CPUS), workerThreads: false } }
+    : {}),
   images: {
     unoptimized: true,
     domains: ['images.unsplash.com', 'replicate.delivery'],

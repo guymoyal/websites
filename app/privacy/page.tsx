@@ -87,7 +87,7 @@ export default function PrivacyPage() {
       <h2>Contact Us</h2>
       <p>
         If you have questions about this Privacy Policy, contact us at
-        <a href="mailto:hello@aibuzz.world"> hello@aibuzz.world</a>.
+        <a href="mailto:guysites1@gmail.com"> guysites1@gmail.com</a>.
       </p>
     </LegalLayout>
   );
