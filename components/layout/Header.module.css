@@ -29,20 +29,38 @@
   transition: transform 0.2s ease;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .logo:hover {
   transform: scale(1.05);
 }
 
+.logoIcon {
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .logoText {
   font-size: 1.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #1E5FA8 0%, #2F7FD8 50%, #FFD700 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   letter-spacing: -0.02em;
+  color: #111111;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .logoIcon {
+    height: 36px;
+    width: 36px;
+  }
+
+  .logoText {
+    font-size: 1.25rem;
+  }
 }
 
 .desktopNav {

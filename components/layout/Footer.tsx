@@ -46,8 +46,8 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/compare" className={styles.link}>
-                    Comparisons
+                  <Link href="/categories" className={styles.link}>
+                    Categories
                   </Link>
                 </li>
                 <li>

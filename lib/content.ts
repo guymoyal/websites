@@ -150,7 +150,13 @@ export async function getPageContent(): Promise<PageContent> {
 }
 
 export function parseMarkdown(content: string): string {
-  return marked(content);
+  const html = marked(content) as string;
+  // The page template already renders the article/tool title as the single <h1>.
+  // A leading "# Heading" in the markdown body would render a second <h1>, which
+  // trips SEO audits ("more than one h1 tag"). Demote any in-body h1 to h2.
+  return html
+    .replace(/<h1(\s[^>]*)?>/gi, '<h2>')
+    .replace(/<\/h1>/gi, '</h2>');
 }
 
 export function getReadingTime(content: string): number {

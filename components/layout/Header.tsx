@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { SiteConfig } from '@/lib/content';
@@ -36,6 +37,14 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
       <div className={styles.container}>
         <div className={styles.nav}>
           <Link href="/" className={styles.logo}>
+            <Image
+              src="/buzz-logo-80.png"
+              alt="AI Buzz World bee logo"
+              width={80}
+              height={80}
+              className={styles.logoIcon}
+              priority
+            />
             <span className={styles.logoText}>AI Buzz World</span>
           </Link>
 

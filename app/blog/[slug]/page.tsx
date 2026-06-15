@@ -11,6 +11,15 @@ import styles from './page.module.css';
 
 export const dynamicParams = false;
 
+// Build an SEO-friendly <title>: append the brand only when the title doesn't
+// already contain it and the result stays within ~60 chars. Otherwise use the
+// bare title so the tag doesn't trip "title too long" audits.
+function seoTitle(base: string, brand = 'AI Buzz World'): string {
+  if (base.includes(brand)) return base;
+  const withBrand = `${base} | ${brand}`;
+  return withBrand.length <= 60 ? withBrand : base;
+}
+
 export async function generateStaticParams() {
   const articles = await getArticles();
   
@@ -30,7 +39,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${article.title} | AI Buzz World`,
+    title: seoTitle(article.title),
     description: article.metaDescription,
     keywords: article.keywords.join(', '),
     alternates: {
