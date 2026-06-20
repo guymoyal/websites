@@ -47,7 +47,8 @@
     "pm:growth": "node scripts/pmGrowthBundle.js",
     "setup": "npm install && cp .env.local.example .env.local",
     "cursor": "./scripts/cursor-open.sh",
-    "partners:redirects": "node scripts/generateGoRedirects.js"
+    "partners:redirects": "node scripts/generateGoRedirects.js",
+    "test": "node --test 'tests/*.test.js'"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
