@@ -68,3 +68,4 @@ Thumbs.db
 .admitad-session.json
 .admitad-network-log.json
 .admitad-profile/
+content/.relevance-cache.json

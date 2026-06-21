@@ -32,6 +32,16 @@ export interface PartnerLanding {
 }
 
 const DATA_FILE = path.join(process.cwd(), 'content', 'admitad-landings.json');
+const ALLOWLIST_FILE = path.join(process.cwd(), 'content', 'relevant-slugs.json');
+
+function loadAllowlist(): Set<string> | null {
+  try {
+    const slugs = JSON.parse(fs.readFileSync(ALLOWLIST_FILE, 'utf8')) as string[];
+    return Array.isArray(slugs) && slugs.length ? new Set(slugs) : null;
+  } catch {
+    return null; // no allowlist yet → behave as before (all entries)
+  }
+}
 
 /** Entries that can become live pages: approved programs with a tracking link. */
 export function getPartnerLandings(): PartnerLanding[] {
@@ -42,8 +52,9 @@ export function getPartnerLandings(): PartnerLanding[] {
     return [];
   }
   const entries: any[] = Array.isArray(payload?.entries) ? payload.entries : [];
+  const allow = loadAllowlist();
   return entries
-    .filter((e) => e?.admitad?.gotolink && e?.slug)
+    .filter((e) => e?.admitad?.gotolink && e?.slug && (!allow || allow.has(e.slug)))
     .map((e) => ({
       slug: e.slug,
       path: e.path,

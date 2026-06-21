@@ -48,6 +48,10 @@
     "setup": "npm install && cp .env.local.example .env.local",
     "cursor": "./scripts/cursor-open.sh",
     "partners:redirects": "node scripts/generateGoRedirects.js",
+    "partners:classify": "node scripts/classifyRelevantMerchants.js",
+    "partners:connect-list": "node scripts/generateConnectList.js",
+    "partners:prune": "node scripts/prunePartnerPages.js",
+    "partners:link-articles": "node scripts/linkArticlesToMerchants.js",
     "test": "node --test 'tests/*.test.js'"
   },
   "dependencies": {

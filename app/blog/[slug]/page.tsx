@@ -3,9 +3,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Clock, User, ArrowLeft, RefreshCw } from 'lucide-react';
-import { getArticle, getArticles, getRelatedArticles, formatDate, parseMarkdown, getSiteConfig } from '@/lib/content';
+import { getArticle, getArticles, getRelatedArticles, categorySlug, formatDate, parseMarkdown, getSiteConfig } from '@/lib/content';
 import MonetizationLeaderboard from '@/components/ads/MonetizationLeaderboard';
 import ResidualDisplayAd from '@/components/ads/ResidualDisplayAd';
+import ArticleAffiliatePicks from '@/components/ads/ArticleAffiliatePicks';
 import AffiliateStrip from '@/components/ads/AffiliateStrip';
 import styles from './page.module.css';
 
@@ -86,6 +87,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const origin = site.url.replace(/\/+$/, '');
   const shareUrl = `${origin}/blog/${article.slug}/`;
 
+  const categoryUrl = `${origin}/blog/category/${categorySlug(article.category)}`;
+  const wordCount = article.content ? article.content.trim().split(/\s+/).length : undefined;
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -94,9 +98,34 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     image: article.image ? `https://aibuzz.world${article.image}` : undefined,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
-    author: { '@type': 'Organization', name: 'AI Buzz World' },
-    publisher: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzz.world' },
+    inLanguage: 'en',
+    keywords: article.keywords.join(', '),
+    wordCount,
+    articleSection: article.category,
+    author: { '@type': 'Organization', name: 'AI Buzz World', url: 'https://aibuzz.world' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Buzz World',
+      url: 'https://aibuzz.world',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://aibuzz.world/images/bee-mascot.png',
+        width: 83,
+        height: 96,
+      },
+    },
     mainEntityOfPage: { '@type': 'WebPage', '@id': shareUrl },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${origin}/blog` },
+      { '@type': 'ListItem', position: 3, name: article.category, item: categoryUrl },
+      { '@type': 'ListItem', position: 4, name: article.title, item: shareUrl },
+    ],
   };
 
   return (
@@ -105,14 +134,25 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <article className={styles.article}>
         <header className={styles.articleHeader}>
-          <div className={styles.breadcrumb}>
+          <nav className={styles.breadcrumb} aria-label="Breadcrumb">
             <Link href="/blog" className={styles.breadcrumbLink}>
               <ArrowLeft size={16} />
-              Back to Blog
+              Blog
             </Link>
-          </div>
+            <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+            <Link
+              href={`/blog/category/${categorySlug(article.category)}`}
+              className={styles.breadcrumbLink}
+            >
+              {article.category}
+            </Link>
+          </nav>
           
           <div className={styles.articleMeta}>
             <span className={styles.category}>{article.category}</span>
@@ -172,6 +212,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
+
+        <ArticleAffiliatePicks articleSlug={article.slug} />
 
         <ResidualDisplayAd
           slot="article-middle"

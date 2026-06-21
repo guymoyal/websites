@@ -1,9 +1,10 @@
 import goLinks from './goLinks.json';
+import prunedSlugs from './prunedSlugs.json';
+
+const prunedSet = new Set(prunedSlugs as string[]);
 
 interface WorkerEnv {
   ASSETS: { fetch: typeof fetch };
-  /** Optional: ads.txt redirect from Ezoic (Step 2) — https://docs.ezoic.com/docs/ezoicads/adstxt/ */
-  EZOIC_ADSTXT_REDIRECT?: string;
 }
 
 export default {
@@ -28,21 +29,23 @@ export default {
       }
     }
 
+    // De-indexed merchant pages: return 410 Gone (not soft-404) so search engines
+    // drop the ~3,400 pruned partner landing pages cleanly.
+    const slugMatch = url.pathname.match(/^\/([^/]+)\/?$/);
+    if (slugMatch && prunedSet.has(decodeURIComponent(slugMatch[1]))) {
+      return new Response('Gone', {
+        status: 410,
+        headers: { 'X-Robots-Tag': 'noindex, nofollow', 'Cache-Control': 'no-store' },
+      });
+    }
+
     if (url.pathname.startsWith('/api/')) {
       return new Response(JSON.stringify({ name: 'Cloudflare' }), {
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const redirectUrl = env.EZOIC_ADSTXT_REDIRECT?.trim();
-    if (
-      redirectUrl &&
-      /^https:\/\/.+/.test(redirectUrl) &&
-      (url.pathname === '/ads.txt' || url.pathname === '/ads.txt/')
-    ) {
-      return Response.redirect(redirectUrl, 301);
-    }
-
+    // /ads.txt is served from the static public/ads.txt (AdSense authorized sellers).
     return env.ASSETS.fetch(request);
   },
 };

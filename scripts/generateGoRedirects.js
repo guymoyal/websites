@@ -16,10 +16,17 @@ const OUTPUT = path.join(__dirname, '..', 'src', 'goLinks.json');
 const payload = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 const entries = Array.isArray(payload?.entries) ? payload.entries : [];
 
+let allow = null;
+try {
+  const slugs = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'content', 'relevant-slugs.json'), 'utf8'));
+  if (Array.isArray(slugs) && slugs.length) allow = new Set(slugs);
+} catch { /* no allowlist → emit all, unchanged behavior */ }
+
 const map = {};
 let skipped = 0;
 let cpc = 0;
 for (const e of entries) {
+  if (allow && !allow.has(e.slug)) { skipped++; continue; }
   const link = e?.admitad?.gotolink;
   if (e?.slug && typeof link === 'string' && /^https:\/\//.test(link)) {
     map[e.slug] = link;
