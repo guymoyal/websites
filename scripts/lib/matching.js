@@ -17,12 +17,14 @@ function scoreMerchant(article, merchant) {
   return score;
 }
 
-// Returns up to `limit` active merchants with score > 0, best first.
-function matchMerchants(article, merchants, limit = 3) {
+// Returns up to `limit` merchants with score > 0, best first. By default only
+// active (connected) merchants are linked so every link earns; pass
+// { requireActive: false } to also include not-yet-connected merchants.
+function matchMerchants(article, merchants, limit = 3, { requireActive = true, minScore = 1 } = {}) {
   return merchants
-    .filter((m) => m.connectionStatus === 'active')
+    .filter((m) => !requireActive || m.connectionStatus === 'active')
     .map((m) => ({ m, score: scoreMerchant(article, m) }))
-    .filter((x) => x.score > 0)
+    .filter((x) => x.score >= minScore)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((x) => x.m);

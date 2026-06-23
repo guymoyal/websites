@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { prefilter } = require('./lib/relevance.js');
+const { prefilter, inferCategory } = require('./lib/relevance.js');
 const { classifyJson } = require('./lib/deepseek.js');
 
 const ROOT = path.join(__dirname, '..');
@@ -13,6 +13,9 @@ const CATEGORIES = ['Writing & Content', 'Design & Creative', 'Productivity', 'D
 
 const args = process.argv.slice(2);
 const DRY = args.includes('--dry');
+// --no-llm: skip LLM verification; keep all keyword candidates with a heuristic
+// category. Lower precision, but usable when no LLM provider is available.
+const NO_LLM = args.includes('--no-llm');
 const tier = (args.find((a) => a.startsWith('--tier=')) || '--tier=broad').split('=')[1];
 
 const SYSTEM = 'You classify affiliate merchants for an AI-tools blog. Reply with valid JSON only, no markdown.';
@@ -42,6 +45,23 @@ async function main() {
   if (DRY) {
     candidates.forEach((e) => console.log('  -', e.program?.name));
     console.log('[classify] dry run — no LLM calls, no file written');
+    return;
+  }
+
+  if (NO_LLM) {
+    const relevant = candidates.map((e) => ({
+      slug: e.slug,
+      name: e.program?.name ?? e.slug,
+      gotolink: e.admitad.gotolink,
+      connectionStatus: e.admitad.connectionStatus ?? null,
+      campaignId: e.admitad.campaignId ?? null,
+      websiteId: e.admitad.websiteId ?? null,
+      category: inferCategory(e),
+      anchorIdeas: [],
+    }));
+    relevant.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+    writeAtomic(OUT, relevant);
+    console.log(`[classify] --no-llm: wrote ${relevant.length} keyword-matched merchants to ${OUT}`);
     return;
   }
 

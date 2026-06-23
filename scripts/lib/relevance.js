@@ -22,4 +22,24 @@ function prefilter(entries, tier = 'broad') {
   return entries.filter((e) => isRelevant(e, tier));
 }
 
-module.exports = { merchantText, isRelevant, prefilter, TIERS };
+// Maps merchant text to one of the article categories. Used as a no-LLM fallback
+// to give each merchant a category for article matching. First match wins.
+const CATEGORY_RULES = [
+  ['Writing & Content', ['writing', 'copywriting', 'content', 'blog', 'article', 'ebook', 'seo', 'translation']],
+  ['Design & Creative', ['design', 'logo', 'art', 'image', 'photo', 'graphic', 'template', 'font', 'creative']],
+  ['Audio & Video', ['audio', 'video', 'music', 'podcast', 'voice', 'sound', 'transcri', 'youtube', 'streaming']],
+  ['Development', ['code', 'develop', ' api', 'software', 'hosting', 'domain', 'cloud', 'server', 'wordpress', 'website builder', 'no-code', 'no code']],
+  ['Marketing', ['marketing', 'ads', 'advertis', 'analytics', 'email', 'crm', 'social media', 'campaign']],
+  ['Education', ['course', 'learning', 'education', 'training', 'tutorial', 'academy', 'school']],
+  ['Productivity', ['productiv', 'automation', 'workflow', 'task', 'note', 'calendar', 'meeting', 'assistant', 'chatbot']],
+];
+
+function inferCategory(entry) {
+  const text = merchantText(entry);
+  for (const [cat, keys] of CATEGORY_RULES) {
+    if (keys.some((k) => text.includes(k))) return cat;
+  }
+  return 'General';
+}
+
+module.exports = { merchantText, isRelevant, prefilter, inferCategory, TIERS };

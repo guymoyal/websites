@@ -8,7 +8,11 @@ const ARTICLES = path.join(ROOT, 'content', 'articles.json');
 const RELEVANT = path.join(ROOT, 'content', 'relevant-merchants.json');
 const OUT = path.join(ROOT, 'content', 'article-affiliates.json');
 
-const DRY = process.argv.slice(2).includes('--dry');
+const ARGV = process.argv.slice(2);
+const DRY = ARGV.includes('--dry');
+// --include-pending: also link merchants not yet connected in Admitad (links
+// resolve via /go/ but only earn once the program is joined). Default: active-only.
+const INCLUDE_PENDING = ARGV.includes('--include-pending');
 const SYSTEM = 'You write concise, honest affiliate CTA copy. Reply with valid JSON only.';
 
 function writeAtomic(p, data) {
@@ -41,7 +45,8 @@ async function main() {
 
   const map = {};
   for (const a of articles) {
-    const picks = matchMerchants(a, merchants, 3);
+    // minScore 10 = require a category match (drops noisy keyword-only overlaps).
+    const picks = matchMerchants(a, merchants, 3, { requireActive: !INCLUDE_PENDING, minScore: 10 });
     if (!picks.length) continue;
     map[a.slug] = [];
     for (const m of picks) {
