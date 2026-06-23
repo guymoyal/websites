@@ -22,9 +22,28 @@ Affiliate income = **Traffic × Relevance × Conversion × Commission**. Today a
 
 ---
 
-## Curated Admitad connect-list (~40 of 140 worth joining)
+## ⭐ Best Admitad programs by REAL performance data (connect these first)
 
-These are the genuinely AI/software/adjacent merchants from your catalog. Connect by searching the name on your catalog page. The rest of the 140 keyword matches are off-topic — don't bother. (Full raw list: `content/connect-list.md`.)
+Pulled live from the Admitad API (June 2026) — these are the **global, English-market, tech-relevant programs that actually convert**, ranked by real conversion rate / rating / deep-link support. Connect these ~15 first; they're proven earners, not keyword guesses.
+
+| Program | Conv. rate | Rating | Deep-link | Use it on |
+|---|---|---|---|---|
+| **WPS Office WW** | **21%** | 3.6 | yes | "best office / AI document" posts |
+| **NordVPN WW** | 1.1% | 3.7 | no | privacy / "AI & security" posts |
+| **Notta AI WW** | 2.6% | 3.3 | yes | **AI transcription** — directly on-topic |
+| **The Great Courses US** | 2.9% | 2.5 | yes | "learn AI / online courses" posts |
+| **Keeper Security** | — | 2.7 | yes | security / password posts |
+| **ExpressVPN / Proton VPN / PureVPN / TurboVPN** | — | — | yes | privacy content |
+| **Cloudways / Liquid Web + Nexcess / TrekMail** | — | — | yes | hosting for "AI web/dev" posts |
+| **AOMEI (backup)** | — | — | yes | utilities / backup posts |
+| **Green Man Gaming WW** | — | — | yes | "AI in gaming" posts |
+| **3DLabPrint** | 1.4% | 2.3 | yes | 3D-printing / maker tech |
+
+_(These are standard-catalog programs and connectable from the dashboard; only 16 of the 1,317 catalog programs are both global and tech-relevant, so this is the realistic universe. Most pay one-time — pair with the recurring off-Admitad programs below for better long-term income.)_
+
+## Curated keyword list (~40 of 140 — secondary)
+
+These are the genuinely AI/software/adjacent merchants from the partner-network harvest. The AI gems here (fireflies.ai, Murf, Plaud, Kling, Lalal, PopAi, SetApp) are **partner-network** programs — connect them under the catalog's **"Affiliate programs for partners"** tab. The rest of the 140 keyword matches are off-topic — don't bother. (Full raw list: `content/connect-list.md`.)
 
 ### AI tools (highest priority — directly on-topic)
 - fireflies.ai · Murf AI · PopAi · Lalal.ai · SetApp · Plaud.AI (FR/SEA/UAE geos) · IM_Kling AI · Talkpal (AI language) · skywork.ai · OnSpace AI · JuicyChat.AI · RecCloud · WeCreat · store.igarden.ai
