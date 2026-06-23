@@ -8,13 +8,26 @@ const GADGET = ['electronics', 'gadget', 'laptop', 'computer', 'tech', 'marketpl
 
 const TIERS = { strict: CORE, moderate: [...CORE, ...ADJ], broad: [...CORE, ...ADJ, ...GADGET] };
 
+// Non-tech merchants that slip through keyword matching (e.g. "Designer Plants"
+// matching "design"). Excluded from all tiers so landing pages stay on-topic.
+const EXCLUDE = ['golf', 'plant', 'slipper', 'scooter', 'wellness', 'aquarium',
+  'fashion', 'mattress', 'wycieraczki', 'massage', 'cosmetic', 'jewel', 'furniture',
+  'home design', 'guidebook', 'observation deck', 'tee time', 'stadium', ' tour',
+  'underwater', 'motor tech', 'auto parts', 'autopiese', 'pet med', 'greenfee'];
+
 function merchantText(entry) {
   return `${entry?.program?.name || ''} ${entry?.program?.description || ''}`.toLowerCase().trim();
+}
+
+function isExcluded(entry) {
+  const text = merchantText(entry);
+  return EXCLUDE.some((k) => text.includes(k));
 }
 
 function isRelevant(entry, tier = 'broad') {
   const keys = TIERS[tier] || TIERS.broad;
   const text = merchantText(entry);
+  if (isExcluded(entry)) return false;
   return keys.some((k) => text.includes(k));
 }
 
@@ -42,4 +55,4 @@ function inferCategory(entry) {
   return 'General';
 }
 
-module.exports = { merchantText, isRelevant, prefilter, inferCategory, TIERS };
+module.exports = { merchantText, isRelevant, isExcluded, prefilter, inferCategory, TIERS };
