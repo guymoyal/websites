@@ -134,59 +134,64 @@ async function dump(page, tag) {
   }
 
   if (MODE === 'connect') {
+    page.setDefaultTimeout(12000);
     await sleep(4000);
     if (!(await isLoggedIn(page))) { console.log('[connect] NOT logged in — run MODE=login first'); await ctx.close(); process.exit(3); }
     const DRY = process.env.DRY === '1';
     const targets = JSON.parse(process.env.TARGETS || '[]');
     const results = [];
     const search = page.locator('input[type="search"]').first();
+    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     for (const name of targets) {
       const r = { name, status: 'unknown' };
       try {
-        await search.click();
-        await search.fill('');
-        await sleep(400);
-        await search.pressSequentially(name, { delay: 70 });
-        await sleep(2800);
-        // click the autocomplete option that starts with the target name
-        const opt = page.locator('li').filter({ hasText: new RegExp('^' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') }).first();
-        if (await opt.count()) {
-          await opt.click();
-          await sleep(3500);
+        // reset to catalog each iteration (clicking a suggestion navigates away)
+        await page.goto(CATALOG, { waitUntil: 'domcontentloaded' });
+        await sleep(2500);
+        const box = page.locator('input[type="search"]').first();
+        await box.click();
+        await box.fill('');
+        await sleep(500);
+        await box.pressSequentially(name, { delay: 60 });
+        // wait for autocomplete options to render
+        await page.waitForSelector('li', { timeout: 6000 }).catch(() => {});
+        await sleep(1800);
+        const opt = page.locator('li', { hasText: new RegExp('^\\s*' + esc(name), 'i') })
+          .filter({ has: page.locator('*') }).first();
+        const optVisible = await opt.isVisible().catch(() => false);
+        if (!optVisible) {
+          // fallback: press Enter to run the search, then look at the grid
+          await page.keyboard.press('Enter').catch(() => {});
+          await sleep(2500);
         } else {
-          r.status = 'no-autocomplete-match';
-          results.push(r); console.log(`  ✗ ${name}: no autocomplete match`); continue;
+          await opt.click({ timeout: 6000 }).catch(() => {});
+          await sleep(3000);
         }
-        // find the green Join button on the filtered card
+        // locate a Join button (green). Exact text avoids tooltip "Join the promotion".
         const join = page.getByRole('button', { name: 'Join', exact: true }).first();
-        const joinLink = page.locator('a').filter({ hasText: /^Join$/ }).first();
-        const target = (await join.count()) ? join : (await joinLink.count() ? joinLink : null);
-        if (!target) {
-          // maybe already joined?
-          const joined = await page.getByText(/joined|pending|in progress|на модерации/i).first().count().catch(() => 0);
+        let hasJoin = await join.isVisible().catch(() => false);
+        if (!hasJoin) {
+          const joined = await page.getByText(/joined|pending|moderation|in progress/i).first().isVisible().catch(() => false);
           r.status = joined ? 'already-joined-or-pending' : 'no-join-button';
           results.push(r); console.log(`  ${joined ? '•' : '✗'} ${name}: ${r.status}`); continue;
         }
-        if (DRY) {
-          r.status = 'would-join';
-          results.push(r); console.log(`  → ${name}: Join button found (DRY, not clicked)`); continue;
-        }
-        await target.click();
+        if (DRY) { r.status = 'would-join'; results.push(r); console.log(`  → ${name}: Join found (DRY)`); continue; }
+        await join.click({ timeout: 8000 });
         await sleep(2500);
-        // handle a possible confirmation modal
-        const confirm = page.getByRole('button', { name: /^(Join|Confirm|Yes|Connect|Apply)$/i }).last();
-        if (await confirm.count()) { await confirm.click().catch(() => {}); await sleep(2000); }
+        // confirmation modal, if any
+        const confirm = page.getByRole('button', { name: /^(Join|Confirm|Yes|Connect|Apply|Add)$/i }).last();
+        if (await confirm.isVisible().catch(() => false)) { await confirm.click().catch(() => {}); await sleep(2000); }
+        await page.screenshot({ path: `${OUT}/joined-${name.replace(/[^a-z0-9]+/gi, '_')}.png` }).catch(() => {});
         r.status = 'joined';
         results.push(r); console.log(`  ✓ ${name}: joined`);
       } catch (e) {
-        r.status = 'error: ' + e.message.slice(0, 80);
+        r.status = 'error: ' + e.message.split('\n')[0].slice(0, 70);
         results.push(r); console.log(`  ✗ ${name}: ${r.status}`);
       }
     }
     fs.writeFileSync(`${OUT}/connect-results.json`, JSON.stringify(results, null, 2));
-    await page.screenshot({ path: `${OUT}/connect-final.png`, fullPage: true }).catch(() => {});
-    console.log('[connect] done:', JSON.stringify(results.map((r) => r.name + '=' + r.status)));
+    console.log('[connect] SUMMARY:', JSON.stringify(results.map((r) => r.name + '=' + r.status)));
     await ctx.close();
     return;
   }
