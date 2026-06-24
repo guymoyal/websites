@@ -20,7 +20,17 @@
 }
 
 .breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.breadcrumbSep {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  user-select: none;
 }
 
 .breadcrumbLink {

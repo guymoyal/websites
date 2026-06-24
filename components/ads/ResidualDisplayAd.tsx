@@ -1,21 +1,17 @@
-'use client';
-
 import React from 'react';
-import EzoicPlaceholder from '@/components/ads/EzoicPlaceholder';
-import { getEzoicPlacementForSlot } from '@/lib/ezoic';
 
 interface ResidualDisplayAdProps {
-  /** Maps to zones in NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON via lib/ezoicZones.ts */
+  /** Kept for call-site compatibility; AdSense Auto ads decides placement. */
   slot: string;
   className?: string;
 }
 
-/** Secondary horizontal placement (Ezoic only in this codebase). */
-export default function ResidualDisplayAd({
-  slot,
-  className,
-}: ResidualDisplayAdProps) {
-  const ezoId = getEzoicPlacementForSlot(slot);
-  if (ezoId == null) return null;
-  return <EzoicPlaceholder placementId={ezoId} className={className} />;
+/**
+ * In-content display slot. Under AdSense Auto ads, Google injects display and
+ * in-article units automatically across the page, so this renders nothing.
+ * To run an explicit AdSense unit in a given spot instead, replace the body
+ * with an <ins class="adsbygoogle" data-ad-slot="…"> for that placement.
+ */
+export default function ResidualDisplayAd(_props: ResidualDisplayAdProps) {
+  return null;
 }

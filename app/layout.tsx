@@ -5,8 +5,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getSiteConfig } from '@/lib/content'
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
-import EzoicHead from '@/components/ads/EzoicHead'
-import EzoicRunner from '@/components/ads/EzoicRunner'
+import GoogleAdsense from '@/components/ads/GoogleAdsense'
 
 
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
@@ -40,7 +39,12 @@ export const metadata: Metadata = {
     email: false,
   },
   verification: {
-    google: 'your-google-verification-code',
+    // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION to the token from Search Console
+    // (Settings → Ownership verification → HTML tag). Omitted when unset so we
+    // never ship a bogus google-site-verification tag that fails verification.
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
     other: {
       'verify-admitad': '557ea85493',
     },
@@ -69,7 +73,11 @@ export const metadata: Metadata = {
     images: ['https://aibuzz.world/og-image.jpg'],
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
     apple: '/apple-touch-icon.png',
   },
   viewport: {
@@ -90,11 +98,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <EzoicHead />
+        <GoogleAdsense />
       </head>
       <body className={dmSans.className}>
         <GoogleAnalytics />
-        <EzoicRunner />
         <a href="#main-content" className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-[#2F7FD8] focus-visible:text-white focus-visible:rounded">
           Skip to main content
         </a>
@@ -107,6 +114,7 @@ export default async function RootLayout({
               name: 'AI Buzz World',
               url: 'https://aibuzz.world',
               description: 'Discover the best AI tools for every need. Find, compare, and choose from thousands of AI-powered tools.',
+              publisher: { '@id': 'https://aibuzz.world/#organization' },
               potentialAction: {
                 '@type': 'SearchAction',
                 target: {
@@ -115,6 +123,25 @@ export default async function RootLayout({
                 },
                 'query-input': 'required name=search_term_string',
               },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              '@id': 'https://aibuzz.world/#organization',
+              name: 'AI Buzz World',
+              url: 'https://aibuzz.world',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://aibuzz.world/images/bee-mascot.png',
+                width: 83,
+                height: 96,
+              },
+              sameAs: ['https://twitter.com/aibuzztools'],
             }),
           }}
         />

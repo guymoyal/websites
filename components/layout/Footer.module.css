@@ -30,17 +30,6 @@
   margin-bottom: 2rem;
 }
 
-/* Wrapper only — do not style the inner Ezoic placeholder div per Ezoic guidance */
-.ezoicFooterWrap {
-  width: 100%;
-  max-width: 728px;
-  margin: 0 auto 1.5rem;
-  min-height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .brand {
   text-align: center;
 }

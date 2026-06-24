@@ -2,8 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Twitter, Linkedin, Github } from 'lucide-react';
 import { SiteConfig } from '@/lib/content';
-import EzoicPlaceholder from '@/components/ads/EzoicPlaceholder';
-import { getEzoicPlacementForSlot } from '@/lib/ezoic';
 import styles from './Footer.module.css';
 
 interface FooterProps {
@@ -12,7 +10,6 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ config }) => {
   const currentYear = new Date().getFullYear();
-  const sitewideEzoicId = getEzoicPlacementForSlot('sitewide-footer');
 
   return (
     <footer className={styles.footer}>
@@ -113,12 +110,6 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
             </div>
           </div>
         </div>
-
-        {typeof sitewideEzoicId === 'number' && (
-          <div className={styles.ezoicFooterWrap}>
-            <EzoicPlaceholder placementId={sitewideEzoicId} />
-          </div>
-        )}
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>

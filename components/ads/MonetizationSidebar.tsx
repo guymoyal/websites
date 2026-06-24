@@ -2,33 +2,28 @@
 
 import React from 'react';
 import AffiliateStrip from '@/components/ads/AffiliateStrip';
-import EzoicPlaceholder from '@/components/ads/EzoicPlaceholder';
 import SponsorBanner from '@/components/ads/SponsorBanner';
 import { getAffiliateItems, getSponsorConfig } from '@/lib/monetization';
-import { getEzoicPlacementForSlot } from '@/lib/ezoic';
 import styles from './MonetizationSidebar.module.css';
 
 interface MonetizationSidebarProps {
-  /** Maps to zones in NEXT_PUBLIC_EZOIC_PLACEMENTS_JSON via lib/ezoicZones.ts */
+  /** Kept for call-site compatibility; display ads are placed by AdSense Auto ads. */
   slot: string;
   className?: string;
 }
 
-/** Sidebar: affiliate compact strip, sponsor, then Ezoic when mapped. */
+/** Sidebar: affiliate compact strip + sponsor banner. Display ads are injected
+ *  sitewide by AdSense Auto ads. */
 export default function MonetizationSidebar({
-  slot,
+  slot: _slot,
   className,
 }: MonetizationSidebarProps) {
   const hasSponsor = Boolean(getSponsorConfig());
-  const ezoSidebarId = getEzoicPlacementForSlot(slot);
 
   return (
     <div className={`${styles.stack} ${className ?? ''}`}>
       <AffiliateStrip variant="compact" maxItems={2} />
       {hasSponsor && <SponsorBanner variant="compact" />}
-      {ezoSidebarId != null ? (
-        <EzoicPlaceholder placementId={ezoSidebarId} className={styles.adSlot} />
-      ) : null}
     </div>
   );
 }
