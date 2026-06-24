@@ -185,6 +185,14 @@ export async function getAllCategories(): Promise<string[]> {
   return categories.sort();
 }
 
+export function categorySlug(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 export async function getRelatedArticles(currentSlug: string, limit: number = 3): Promise<Article[]> {
   const articles = await getArticles();
   const currentArticle = articles.find(article => article.slug === currentSlug);

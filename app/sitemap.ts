@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getArticles } from '@/lib/content'
+import { getArticles, getAllCategories, categorySlug } from '@/lib/content'
 import { getTools } from '@/lib/tools'
 import { getCategories } from '@/lib/tools'
 import { getPartnerLandings } from '@/lib/partnerLandings'
@@ -62,6 +62,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
+  // Blog category pages
+  const blogCategories = await getAllCategories()
+  const blogCategoryPages: MetadataRoute.Sitemap = blogCategories.map((category) => ({
+    url: `${baseUrl}/blog/category/${categorySlug(category)}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
+
   // Dynamic article pages
   const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${baseUrl}/blog/${article.slug}`,
@@ -88,5 +97,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  return [...staticPages, ...toolPages, ...categoryPages, ...articlePages, ...partnerPages]
+  return [...staticPages, ...toolPages, ...categoryPages, ...blogCategoryPages, ...articlePages, ...partnerPages]
 }
