@@ -37,10 +37,9 @@
 }
 
 .logoIcon {
-  height: 44px;
-  width: 44px;
-  border-radius: 50%;
-  object-fit: cover;
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 

@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
         <div className={styles.nav}>
           <Link href="/" className={styles.logo}>
             <Image
-              src="/buzz-logo-80.png"
+              src="/buzz-logo.png"
               alt="AI Buzz World bee logo"
               width={80}
               height={80}
